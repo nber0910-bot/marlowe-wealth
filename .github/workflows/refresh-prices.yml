@@ -27,8 +27,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - - name: Install dependencies
-  run: python -m pip install yfinance requests beautifulsoup4
+      - name: Install dependencies
+        run: python -m pip install yfinance requests beautifulsoup4
 
       - name: Update market prices
         run: python update_market.py
