@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-11T11:41:15+00:00",
+  "updated_at": "2026-11-11T11:53:27+00:00",
   "fx": {
-    "value": 32.842999,
+    "value": 32.841,
     "date": "2026-11-11",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -29,6 +29,16 @@
     "FUBON_NASDAQ100": {
       "value": 11.33,
       "date": "2026-11-10",
+      "source": "MoneyDJ published fund NAV"
+    },
+    "YUANTA_NEW": {
+      "value": 144.69,
+      "date": "2026-11-11",
+      "source": "MoneyDJ published fund NAV"
+    },
+    "YUANTA_DIV": {
+      "value": 43.46,
+      "date": "2026-11-11",
       "source": "MoneyDJ published fund NAV"
     }
   },
