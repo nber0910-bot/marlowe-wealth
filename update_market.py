@@ -1,5 +1,5 @@
 
-"""WEALTH V2.1 - delayed ETF quotes and verified fund NAVs.
+"""WEALTH V2.1 - delayed ETF quotes and fund NAVs.
 
 Never invent prices, dates, or share classes.
 Keep previous verified prices if a source is unavailable.
@@ -136,7 +136,7 @@ except Exception as exc:
     print("FX unavailable", exc)
 
 
-# Fund share classes confirmed from NEXT BANK holdings.
+# Confirmed NEXT BANK fund share classes
 FUNDS = {
     "FUBON_SP500": {
         "code": "AFB0018",
@@ -156,16 +156,20 @@ FUNDS = {
     },
 }
 
-# Public NAV listings; availability and page format
-# must be validated by the first GitHub Actions run.
+
+# Fubon and Yuanta MoneyDJ NAV listings
 NAV_PAGES = [
     "https://fundv3new.moneydj.com/W2/ww/ww01.djhtm?a=BFZFPA&aspid=",
-    "https://tsb.moneydj.com/w/ww/ww02.djhtm",
+    "https://fundv3new.moneydj.com/W2/ww/ww01.djhtm?a=BFZYTA&aspid=",
 ]
 
 
 def normalize(text):
-    return re.sub(r"[\s\-－–—（）()]", "", text).upper()
+    return re.sub(
+        r"[\s\-－–—（）()]",
+        "",
+        text,
+    ).upper()
 
 
 def parse_nav_date(text):
@@ -173,6 +177,7 @@ def parse_nav_date(text):
         r"(20\d{2})[/-](\d{1,2})[/-](\d{1,2})",
         text,
     )
+
     if not match:
         return None
 
@@ -201,7 +206,8 @@ def fetch_fund_navs():
                 cells = [
                     cell.get_text(" ", strip=True)
                     for cell in row.find_all(
-                        ["td", "th"], recursive=False
+                        ["td", "th"],
+                        recursive=False,
                     )
                 ]
 
@@ -209,52 +215,43 @@ def fetch_fund_navs():
                     continue
 
                 for asset_id, fund in FUNDS.items():
-                    if asset_id in found:
-                        continue
-
-                    # Match the exact share-class name.
                     target = normalize(fund["name"])
 
+                    # Allow trailing fund disclosures,
+                    # but require the exact share-class prefix.
                     name_cells = [
-                        cell for cell in cells
-                        if normalize(cell) == target
-                        or normalize(cell).startswith(
-                            target + "本基金"
-                        )
+                        cell
+                        for cell in cells
+                        if normalize(cell).startswith(target)
                     ]
 
                     if len(name_cells) != 1:
                         continue
 
                     date = None
-                    value = None
+                    date_index = None
 
-                    for cell in cells:
+                    for i, cell in enumerate(cells):
                         candidate = parse_nav_date(cell)
+
                         if candidate:
                             date = candidate
+                            date_index = i
                             break
 
                     if not date:
                         continue
 
-                    date_index = next(
-                        (
-                            i for i, cell in enumerate(cells)
-                            if parse_nav_date(cell) == date
-                        ),
-                        None,
-                    )
+                    value = None
 
-                    if date_index is None:
-                        continue
-
-                    # NAV must be the first numeric field
-                    # after the full NAV date.
+                    # Read the first numeric field after
+                    # the published NAV date.
                     for cell in cells[date_index + 1:]:
                         cleaned = cell.replace(",", "").strip()
+
                         if re.fullmatch(
-                            r"\d+(?:\.\d+)?", cleaned
+                            r"\d+(?:\.\d+)?",
+                            cleaned,
                         ):
                             value = float(cleaned)
                             break
@@ -262,11 +259,19 @@ def fetch_fund_navs():
                     if not value or value <= 0:
                         continue
 
-                    found[asset_id] = {
+                    item = {
                         "value": value,
                         "date": date,
                         "source": "MoneyDJ published fund NAV",
                     }
+
+                    previous = found.get(asset_id)
+
+                    if (
+                        previous is None
+                        or item["date"] > previous["date"]
+                    ):
+                        found[asset_id] = item
 
             print("NAV page checked:", url)
 
@@ -313,7 +318,11 @@ payload = {
 }
 
 OUT.write_text(
-    json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+    json.dumps(
+        payload,
+        ensure_ascii=False,
+        indent=2,
+    ) + "\n",
     encoding="utf-8",
 )
 
