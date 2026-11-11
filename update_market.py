@@ -1,7 +1,7 @@
 """Best-effort delayed quotes. Never invent values or dates."""
 import json,datetime,urllib.request,urllib.parse,time,pathlib
 ROOT=pathlib.Path(__file__).parent
-OUT=ROOT/'data'/'market.json'
+OUT=ROOT/'market.json'
 try: old=json.loads(OUT.read_text())
 except Exception: old={}
 prices=old.get('prices',{})
