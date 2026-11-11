@@ -1,1 +1,26 @@
-{"updated_at":null,"fx":null,"prices":{},"notes":"No verified quotes yet. GitHub Actions updates available sources."}
+{
+  "updated_at": "2026-11-11T10:42:58+00:00",
+  "fx": {
+    "value": 32.84,
+    "date": "2026-11-11",
+    "source": "Yahoo Finance daily close (delayed)"
+  },
+  "prices": {
+    "009816": {
+      "value": 15.35,
+      "date": "2026-11-11",
+      "source": "Yahoo Finance daily close (delayed)"
+    },
+    "00646": {
+      "value": 78.300003,
+      "date": "2026-11-11",
+      "source": "Yahoo Finance daily close (delayed)"
+    },
+    "VOO": {
+      "value": 689.5,
+      "date": "2026-11-10",
+      "source": "Yahoo Finance daily close (delayed)"
+    }
+  },
+  "notes": "Daily delayed closes, not intraday. Fund NAV sources pending verified identifiers."
+}
