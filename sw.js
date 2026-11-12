@@ -1,10 +1,11 @@
 
 'use strict';
 
-// MARLOWE WEALTH V3.5
-// Service Worker：離線快取與版本更新
+// MARLOWE WEALTH
+// Version: V26.1113
+// iPhone PWA Service Worker
 
-const CACHE = 'marlowe-wealth-v35-20261113';
+const CACHE = 'marlowe-wealth-v26.1113';
 
 const APP_FILES = [
   './',
@@ -13,39 +14,38 @@ const APP_FILES = [
   './manifest.webmanifest'
 ];
 
-// 安裝新版 Service Worker
+// 安裝：預先快取網站主要檔案
 self.addEventListener('install', event => {
-  self.skipWaiting();
-
   event.waitUntil(
-    caches.open(CACHE).then(cache =>
-      cache.addAll(APP_FILES)
-    )
+    caches.open(CACHE)
+      .then(cache => cache.addAll(APP_FILES))
+      .then(() => self.skipWaiting())
   );
 });
 
-// 啟用新版並清除舊版網站快取
+// 啟用：清除舊版快取
 self.addEventListener('activate', event => {
   event.waitUntil(
-    (async () => {
-      const keys = await caches.keys();
-
-      await Promise.all(
-        keys
-          .filter(key =>
-            (key.startsWith('marlowe-wealth-') ||
-             key.startsWith('wealth-')) &&
-            key !== CACHE
-          )
-          .map(key => caches.delete(key))
-      );
-
-      await self.clients.claim();
-    })()
+    Promise.all([
+      caches.keys().then(keys =>
+        Promise.all(
+          keys
+            .filter(key =>
+              key !== CACHE &&
+              (
+                key.startsWith('marlowe-wealth-') ||
+                key.startsWith('wealth-v')
+              )
+            )
+            .map(key => caches.delete(key))
+        )
+      ),
+      self.clients.claim()
+    ])
   );
 });
 
-// 網站檔案優先讀取網路最新版
+// 網路優先，離線時使用快取
 self.addEventListener('fetch', event => {
   const request = event.request;
 
@@ -53,10 +53,10 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(request.url);
 
-  // 不攔截外部網站
+  // 不攔截其他網站的請求
   if (url.origin !== self.location.origin) return;
 
-  // 行情資料永遠優先取得最新版本
+  // 行情檔：永遠優先網路，不使用舊快取冒充最新行情
   if (url.pathname.endsWith('/market.json')) {
     event.respondWith(
       fetch(request, { cache: 'no-store' })
@@ -64,11 +64,20 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // 其他網站檔案：網路優先，離線時使用快取
+  // 只處理 WEALTH 專案路徑
+  const scope = new URL(self.registration.scope);
+
+  if (!url.pathname.startsWith(scope.pathname)) {
+    return;
+  }
+
   event.respondWith(
     (async () => {
       try {
-        const response = await fetch(request);
+        // 優先取得最新網站資源
+        const response = await fetch(request, {
+          cache: 'no-store'
+        });
 
         if (response.ok) {
           const cache = await caches.open(CACHE);
@@ -76,15 +85,21 @@ self.addEventListener('fetch', event => {
         }
 
         return response;
+
       } catch (error) {
-        const cached = await caches.match(request);
+        const cached = await caches.match(request, {
+          ignoreSearch: true
+        });
 
         if (cached) return cached;
 
-        // 離線開啟網站時，回傳首頁
+        // 網站首頁離線時，回退到 index.html
         if (request.mode === 'navigate') {
-          const homepage = await caches.match('./index.html');
-          if (homepage) return homepage;
+          const fallback = await caches.match(
+            new URL('./index.html', scope).href
+          );
+
+          if (fallback) return fallback;
         }
 
         return Response.error();
