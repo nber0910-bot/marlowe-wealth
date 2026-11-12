@@ -1,44 +1,44 @@
 {
-  "updated_at": "2026-11-11T11:53:27+00:00",
+  "updated_at": "2026-11-12T11:26:43+00:00",
   "fx": {
-    "value": 32.841,
-    "date": "2026-11-11",
+    "value": 32.924999,
+    "date": "2026-11-12",
     "source": "Yahoo Finance daily close (delayed)"
   },
   "prices": {
     "009816": {
-      "value": 15.35,
-      "date": "2026-11-11",
+      "value": 15.03,
+      "date": "2026-11-12",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00646": {
-      "value": 78.300003,
-      "date": "2026-11-11",
+      "value": 78.650002,
+      "date": "2026-11-12",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 689.5,
-      "date": "2026-11-10",
+      "value": 698.349976,
+      "date": "2026-11-11",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "FUBON_SP500": {
-      "value": 11.65,
-      "date": "2026-11-10",
+      "value": 11.8,
+      "date": "2026-11-11",
       "source": "MoneyDJ published fund NAV"
     },
     "FUBON_NASDAQ100": {
-      "value": 11.33,
-      "date": "2026-11-10",
+      "value": 11.58,
+      "date": "2026-11-11",
       "source": "MoneyDJ published fund NAV"
     },
     "YUANTA_NEW": {
-      "value": 144.69,
-      "date": "2026-11-11",
+      "value": 137.43,
+      "date": "2026-11-12",
       "source": "MoneyDJ published fund NAV"
     },
     "YUANTA_DIV": {
-      "value": 43.46,
-      "date": "2026-11-11",
+      "value": 42.12,
+      "date": "2026-11-12",
       "source": "MoneyDJ published fund NAV"
     }
   },
