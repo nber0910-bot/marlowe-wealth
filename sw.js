@@ -1,5 +1,9 @@
 
-const CACHE = 'wealth-v3-20261111';
+'use strict';
+
+// MARLOWE WEALTH V3.4
+// 更新此版本號可觸發 Service Worker 更新
+const CACHE = 'wealth-v3.4-20261112';
 
 const APP_FILES = [
   './',
@@ -12,9 +16,17 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 
   event.waitUntil(
-    caches.open(CACHE).then(cache =>
-      cache.addAll(APP_FILES)
-    )
+    (async () => {
+      const cache = await caches.open(CACHE);
+
+      await cache.addAll(
+        APP_FILES.map(path =>
+          new Request(path, {
+            cache: 'reload'
+          })
+        )
+      );
+    })()
   );
 });
 
@@ -44,32 +56,54 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(request.url);
 
-  if (url.origin !== self.location.origin) return;
+  if (url.origin !== self.location.origin) {
+    return;
+  }
 
-  // Always request fresh market data.
+  // 不攔截其他路徑的請求
+  const scope = new URL(
+    self.registration.scope
+  );
+
+  if (!url.pathname.startsWith(scope.pathname)) {
+    return;
+  }
+
+  // 行情資料：每次向網路取得最新版本
   if (url.pathname.endsWith('/market.json')) {
     event.respondWith(
-      fetch(request, { cache: 'no-store' })
+      fetch(request, {
+        cache: 'no-store'
+      })
     );
     return;
   }
 
-  // Use the latest online version, with offline fallback.
+  // HTML、JS、CSS：優先取得網路最新版
   event.respondWith(
     (async () => {
+      const cache = await caches.open(CACHE);
+
       try {
-        const response = await fetch(request);
+        const response = await fetch(request, {
+          cache: 'no-store'
+        });
 
         if (response.ok) {
-          const cache = await caches.open(CACHE);
-          await cache.put(request, response.clone());
+          await cache.put(
+            request,
+            response.clone()
+          );
         }
 
         return response;
-      } catch (error) {
-        const cached = await caches.match(request);
 
-        if (cached) return cached;
+      } catch (error) {
+        const cached = await cache.match(request);
+
+        if (cached) {
+          return cached;
+        }
 
         throw error;
       }
