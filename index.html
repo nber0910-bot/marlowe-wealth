@@ -4,763 +4,165 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1019">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Wealth">
+<meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>WEALTH V3.3 | Marlowe</title>
+<title>MARLOWE WEALTH V3.5</title>
 <style>
-:root{
-  color-scheme:dark;
-  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;
-  --bg:#0b1019;--surface:#151f2e;--border:#2d3d52;
-  --text:#edf3fc;--muted:#99abc2;--accent:#b5d6ff;
-  --profit:#f1848e;--loss:#74d4aa
-}
+:root{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;color:#eaf0fa;background:#10151f}
 *{box-sizing:border-box}
-body{
-  margin:0;color:var(--text);min-height:100vh;
-  background:radial-gradient(ellipse at 20% -10%,#203650,transparent 43%),var(--bg)
-}
-header,main{max-width:760px;margin:auto;padding:20px}
-header{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
-  padding-top:calc(20px + env(safe-area-inset-top))
-}
-h1{font-size:22px;letter-spacing:3px;margin:0 0 5px}
-h2{font-size:18px;margin:0 0 15px}
-.eyebrow{font-size:10px;letter-spacing:2px;color:#8da6c5}
-small,.muted{color:var(--muted)}
-small{font-size:12px}
-.card{
-  background:linear-gradient(145deg,#1f2e43,#121d2c);
-  border:1px solid var(--border);border-radius:23px;
-  padding:20px;margin:13px 0
-}
-.hero{
-  background:linear-gradient(130deg,#243a56,#16253a 53%,#101b2a);
-  border-color:#3a526d;padding:25px 22px
-}
-.big{
-  font-size:clamp(32px,7vw,48px);font-weight:760;
-  letter-spacing:-1.7px;margin:15px 0 10px;overflow-wrap:anywhere
-}
+body{margin:0}
+main{max-width:780px;margin:auto;padding:24px 16px 110px}
+h1{font-size:20px;letter-spacing:2px}
+h2{font-size:17px}
+h3{font-size:15px}
+.card{background:#1c2635;border:1px solid #2b3a4f;border-radius:17px;padding:18px;margin:14px 0}
+.item{padding:13px 0;border-bottom:1px solid #354154}
+.item:last-child{border-bottom:0}
+.between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.big{font-size:34px;font-weight:750;margin:10px 0}
+.muted,.hint,small{color:#a2b3c9}
+small,.hint{font-size:12px;line-height:1.6}
+.positive{color:#78d9b2}
+.negative{color:#ff9d9d}
+button,input,select{font:inherit}
+button{background:#9fc8f5;color:#10151f;border:0;border-radius:10px;padding:10px 14px;font-weight:650;cursor:pointer}
+button.secondary{background:#34465e;color:#e8f0fc}
+input,select{width:100%;background:#111a27;color:white;border:1px solid #43536b;border-radius:10px;padding:12px;margin:5px 0 12px}
+label{display:block;font-size:13px;color:#b7c5d7;margin-top:8px}
+.bar{height:10px;background:#394456;border-radius:10px;overflow:hidden}
+.fill{height:100%;background:#9fc8f5}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.grid .card{margin:0;min-width:0}
-.grid h2{font-size:clamp(18px,4vw,25px);overflow-wrap:anywhere;margin:9px 0 0}
-.positive{color:var(--loss)}
-.negative{color:var(--profit)}
-button,select,input{
-  font:inherit;border-radius:12px;padding:12px;
-  background:#101b2b;color:white;border:1px solid #465873;max-width:100%
-}
-button{
-  background:var(--accent);color:#102039;font-weight:700;
-  border:0;cursor:pointer
-}
-button.secondary{background:#30425d;color:#e9eff8}
-input,select{width:100%;margin:5px 0 12px}
-label{display:block;color:#b9c8da;font-size:13px}
-.item{padding:14px 0;border-bottom:1px solid #34455e}
-.item:last-child{border:0}
-.between{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.tabs{
-  position:fixed;z-index:20;bottom:0;left:0;right:0;
-  background:rgba(13,21,33,.97);border-top:1px solid #35445b;
-  display:flex;justify-content:space-around;
-  padding:9px 4px calc(10px + env(safe-area-inset-bottom));
-  backdrop-filter:blur(18px)
-}
-.tabs button{
-  background:transparent;color:#aabbd0;padding:9px 2px;
-  font-size:11px;min-width:0;flex:1
-}
-.tabs button.active{background:#314762;color:white;border-radius:12px}
+.grid .card{margin:0}
 .hidden{display:none!important}
-main{padding-top:4px;padding-bottom:calc(110px + env(safe-area-inset-bottom))}
-.bar{background:#34445c;border-radius:20px;height:9px;overflow:hidden;margin-top:8px}
-.bar div{background:linear-gradient(90deg,#8cb9ec,#c4e1ff);height:100%}
-.hint{font-size:12px;line-height:1.65;color:#aabbd0}
-.status{
-  font-size:11px;padding:8px 10px;border-radius:20px;
-  background:#2c3b50;white-space:nowrap
-}
-a{color:#a3cbfa}
-summary{cursor:pointer;color:#c9d9ed}
-.section-head{
-  display:flex;justify-content:space-between;align-items:center;
-  margin:22px 3px 12px
-}
-.section-head h2{margin:0}
-.asset-label{display:flex;gap:8px;align-items:center}
-.asset-label:before{
-  content:"";height:7px;width:7px;background:#9ac4f4;border-radius:50%
-}
-.allocation-layout{
-  display:grid;grid-template-columns:1fr 1fr;align-items:center;
-  gap:16px;margin-top:12px
-}
-.allocation-chart{
-  width:100%;max-width:220px;aspect-ratio:1;border-radius:50%;
-  background:#304056;display:grid;place-items:center;margin:auto
-}
-.allocation-hole{
-  width:67%;aspect-ratio:1;border-radius:50%;background:#172438;
-  display:flex;flex-direction:column;justify-content:center;
-  align-items:center;gap:5px
-}
-.allocation-hole strong{font-size:23px}
-.allocation-legend{display:flex;flex-direction:column;gap:13px;font-size:13px}
-.allocation-item{display:flex;align-items:center;gap:9px}
-.allocation-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
-.allocation-name{flex:1;color:#a9bbd1}
-.allocation-percent{font-weight:700}
-.cal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.cal-month{font-size:19px;font-weight:750}
-.cal-arrow{background:#293a50;color:#d9e9fc;padding:9px 13px;font-size:18px}
-.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
-.cal-weekday{text-align:center;font-size:11px;color:#a9bad0;padding:8px 0}
-.cal-day{
-  min-height:72px;padding:7px 4px;border:1px solid #304056;
-  border-radius:12px;background:#142033;display:flex;
-  flex-direction:column;justify-content:space-between;
-  align-items:flex-end;color:#b9c7d8
-}
-.cal-day.empty{background:transparent;border-color:transparent}
-.cal-day.today{border-color:#9cc7f5}
-.cal-day .date{font-size:12px}
-.cal-day .dash{align-self:center;font-size:10px;margin:auto;color:#6e829c}
-.cal-legend{display:flex;gap:15px;justify-content:center;margin:15px 0;font-size:12px;color:#9eb1c8}
-.dot{width:9px;height:9px;display:inline-block;border-radius:3px;margin-right:5px}
-.cal-weekly .item{display:flex;justify-content:space-between;gap:8px}
-.cal-weekly strong{text-align:right;color:#a8b9d0}
-.month-amount{font-size:clamp(30px,8vw,43px);font-weight:750;margin:12px 0}
-.month-bar{
-  display:flex;align-items:flex-end;justify-content:space-between;
-  gap:7px;height:160px;margin:18px 0 5px
-}
-.month-col{
-  flex:1;height:100%;display:flex;flex-direction:column;
-  align-items:center;justify-content:flex-end;gap:7px;min-width:0
-}
-.month-fill{
-  width:75%;max-width:38px;border-radius:7px 7px 3px 3px;
-  background:linear-gradient(#a7cafa,#536e95);
-  min-height:2px
-}
-.month-col small{font-size:10px}
-.month-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:13px 0;border-bottom:1px solid #34455e;gap:12px
-}
-.month-row:last-child{border-bottom:0}
-.month-row b{font-variant-numeric:tabular-nums}
-.pill{
-  display:inline-block;padding:5px 9px;border-radius:15px;
-  background:#2c415b;font-size:11px;color:#b8d5f5
-}
-@media(max-width:380px){
-  header,main{padding-left:13px;padding-right:13px}
-  .card{padding:16px}
-  .cal-day{min-height:62px;padding:5px 2px}
-  .allocation-layout{gap:8px}
-  .allocation-legend{font-size:11px}
-  .tabs button{font-size:10px}
-}
+.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:4px;background:#131c2a;border-top:1px solid #334154;padding:9px 7px calc(9px + env(safe-area-inset-bottom))}
+.tabs button{background:transparent;color:#a9b9cd;flex:1;max-width:130px;font-size:12px;padding:10px 3px}
+.tabs button.active{background:#2d405a;color:#fff}
+details{margin:10px 0}
+summary{cursor:pointer;color:#c1d6f1}
+@media(max-width:380px){.big{font-size:28px}}
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <div class="eyebrow">MARLOWE · PRIVATE WEALTH</div>
-    <h1>✦ WEALTH</h1>
-    <small>PERSONAL INVESTMENT DASHBOARD · V3.3</small>
-  </div>
-  <span id="feedstatus" class="status">行情檢查中</span>
-</header>
 <main>
+<header>
+<h1>✦ MARLOWE <span style="color:#b6d5ff">WEALTH</span> <small>V3.5</small></h1>
+<small>PERSONAL INVESTMENT DASHBOARD · BTC READY</small>
+</header>
 
 <section id="overview">
-  <div class="card hero">
-    <small>總資產估值 · TWD</small>
-    <div id="total" class="big">待估值</div>
-    <div id="pnl">損益待確認</div>
-    <p class="hint" id="coverage"></p>
-    <div class="between">
-      <small>30 萬目標</small>
-      <span id="progresslabel">—</span>
-    </div>
-    <div class="bar"><div id="progress" style="width:0%"></div></div>
-  </div>
-  <div class="card">
-    <div class="between">
-      <h2>資產配置</h2><small>ALLOCATION</small>
-    </div>
-    <div class="allocation-layout">
-      <div class="allocation-chart" id="allocationChart">
-        <div class="allocation-hole">
-          <small>總配置</small><strong>—</strong>
-        </div>
-      </div>
-      <div class="allocation-legend" id="allocationLegend">行情讀取中…</div>
-    </div>
-    <p class="hint" id="allocationHint">依目前可估值持倉計算。</p>
-  </div>
-  <div class="section-head">
-    <h2>資產概覽</h2><small>PORTFOLIO</small>
-  </div>
-  <div class="grid">
-    <div class="card"><small class="asset-label">台股 ETF</small><h2 id="twtotal">—</h2></div>
-    <div class="card"><small class="asset-label">美股 ETF</small><h2 id="ustotal">—</h2></div>
-    <div class="card"><small class="asset-label">基金</small><h2 id="fundtotal">—</h2></div>
-    <div class="card"><small class="asset-label">可估值部位</small><h2 id="count">0</h2></div>
-  </div>
-  <div class="card">
-    <div class="between"><h2>行情狀態</h2><small>MARKET DATA</small></div>
-    <div id="marketinfo"></div>
-  </div>
+<div class="card">
+<small>總投資資產估值 · TWD（不含現金）</small>
+<div class="big" id="total">—</div>
+<div id="pnl"></div>
+<p class="hint" id="coverage"></p>
+<div class="between">
+<small>30 萬目標進度</small>
+<b id="progresslabel">—</b>
+</div>
+<div class="bar"><div id="progress" class="fill"></div></div>
+</div>
+<div class="grid">
+<div class="card"><small>台股 ETF</small><h2 id="twtotal">—</h2></div>
+<div class="card"><small>美股 ETF</small><h2 id="ustotal">—</h2></div>
+<div class="card"><small>基金</small><h2 id="fundtotal">—</h2></div>
+<div class="card"><small>₿ 加密貨幣</small><h2 id="cryptototal">—</h2></div>
+</div>
+<div class="card">
+<h2>估值覆蓋</h2>
+<div id="count">—</div>
+<p class="hint">BTC 初始價格來自 2026/11/13 截圖，非即時報價。可到設定更新。</p>
+</div>
 </section>
 
 <section id="holdings" class="hidden">
-  <div class="card">
-    <div class="between"><h2>我的持倉</h2><button onclick="showAddAsset()">＋新增</button></div>
-    <div id="holdlist"></div>
-  </div>
-  <div class="card hidden" id="assetform">
-    <h2>新增資產</h2>
-    <label>代碼 / 基金識別名稱<input id="asymbol" placeholder="例如 QQQ"></label>
-    <label>顯示名稱<input id="aname"></label>
-    <label>類型<select id="atype">
-      <option value="tw">台股 ETF</option>
-      <option value="us">美股 ETF</option>
-      <option value="fund">基金</option>
-    </select></label>
-    <label>計價幣別<select id="acurrency"><option>TWD</option><option>USD</option></select></label>
-    <button onclick="addAsset()">新增</button>
-  </div>
+<div class="card">
+<h2>我的持倉</h2>
+<div id="holdlist"></div>
+</div>
 </section>
 
-<section id="trades" class="hidden">
-  <div class="card">
-    <h2>新增交易</h2>
-    <label>投資標的<select id="tradeasset"></select></label>
-    <label>交易方向<select id="tradeside">
-      <option value="buy">買入</option>
-      <option value="sell">賣出</option>
-    </select></label>
-    <label>成交日期<input type="date" id="tradedate"></label>
-    <label>數量 / 單位數<input type="number" id="tradeqty" step="any" min="0"></label>
-    <label>成交單價（標的原幣）<input type="number" id="tradeprice" step="any" min="0"></label>
-    <label>交易費用（標的原幣）<input type="number" id="tradefee" step="any" min="0" value="0"></label>
-    <button onclick="addTrade()">儲存交易</button>
-    <p class="hint">已計入期初持倉的歷史交易，請勿再次輸入，以免重複增加持倉。</p>
-  </div>
+<section id="trade" class="hidden">
+<div class="card">
+<h2>新增交易</h2>
+<label>投資標的<select id="tradeasset"></select></label>
+<label>方向<select id="tradeside">
+<option value="buy">買入</option>
+<option value="sell">賣出</option>
+</select></label>
+<label>成交日期<input id="tradedate" type="date"></label>
+<label>數量／單位數<input id="tradeqty" type="number" step="any" inputmode="decimal"></label>
+<label>成交單價（原幣）<input id="tradeprice" type="number" step="any" inputmode="decimal"></label>
+<label>手續費（原幣）<input id="tradefee" type="number" step="any" value="0" inputmode="decimal"></label>
+<button onclick="addTrade()">儲存交易</button>
+<p class="hint">2026/11/13 的 BTC 首筆交易已自動匯入，請勿再重複新增。</p>
+</div>
+<div class="card">
+<h2>新增投資標的</h2>
+<button class="secondary" onclick="showAddAsset()">＋新增標的</button>
+<div id="assetform" class="hidden">
+<label>代碼<input id="asymbol"></label>
+<label>名稱<input id="aname"></label>
+<label>類別<select id="atype">
+<option value="tw">台股</option>
+<option value="us">美股</option>
+<option value="fund">基金</option>
+<option value="crypto">加密貨幣</option>
+</select></label>
+<label>計價幣別<select id="acurrency">
+<option value="TWD">TWD</option>
+<option value="USD">USD</option>
+</select></label>
+<button onclick="addAsset()">儲存標的</button>
+</div>
+</div>
 </section>
 
 <section id="records" class="hidden">
-  <div class="card"><h2>交易紀錄</h2><div id="recordlist"></div></div>
-</section>
-
-<section id="contributions" class="hidden">
-  <div class="card hero">
-    <div class="between">
-      <small>MONTHLY CONTRIBUTIONS</small>
-      <span class="pill">ETF 投資計畫</span>
-    </div>
-    <div class="between" style="margin-top:15px">
-      <button class="secondary" id="investPrev">‹</button>
-      <strong id="investMonth">2026 / 11</strong>
-      <button class="secondary" id="investNext">›</button>
-    </div>
-    <small style="display:block;margin-top:18px">本月已記錄投入</small>
-    <div class="month-amount" id="investTotal">NT$0</div>
-    <div class="between">
-      <small>每月目標 NT$30,000</small>
-      <strong id="investPercent">0%</strong>
-    </div>
-    <div class="bar">
-      <div id="investProgress" style="width:0%"></div>
-    </div>
-    <p class="hint" id="investHint"></p>
-  </div>
-  <div class="card">
-    <div class="between">
-      <h2>年度投入趨勢</h2><small>2026</small>
-    </div>
-    <div id="investChart" class="month-bar"></div>
-    <p class="hint">歷史基金申購為已知紀錄；不代表扣除買回後的淨投入。</p>
-  </div>
-  <div class="card">
-    <h2>當月投入明細</h2>
-    <div id="investDetails"></div>
-  </div>
-  <div class="card">
-    <h2>補登投入金額</h2>
-    <p class="hint">適用於尚未登記在「交易」分頁的歷史投入。補登不會更動持倉或成本。</p>
-    <label>投入日期<input id="investDate" type="date"></label>
-    <label>標的或備註<input id="investName" placeholder="例如 009816、VOO"></label>
-    <label>投入金額（新台幣）<input id="investAmount" type="number" min="0.01" step="any"></label>
-    <button id="investAdd">＋新增補登</button>
-    <p class="hint">同一筆買入若已記錄在「交易」，不要再補登。</p>
-    <div id="investManualList"></div>
-  </div>
-  <div class="card">
-    <h2>統計說明</h2>
-    <p class="hint">
-      6～10 月基金資料採用已提供的申購紀錄。
-      3～5 月因缺少完整交易資料，不顯示為零投入。
-      未來以 ETF 為主要投入標的，基金仍保留估值與損益追蹤。
-      美元交易若沒有成交當時匯率，會另行標示為待核對，不用目前匯率冒充實際投入。
-    </p>
-  </div>
-</section>
-
-<section id="calendar" class="hidden">
-  <div class="card">
-    <div class="cal-top">
-      <button class="cal-arrow" id="calprev">‹</button>
-      <span class="cal-month" id="calmonth">—</span>
-      <button class="cal-arrow" id="calnext">›</button>
-    </div>
-    <small>歷史投資損益紀錄</small>
-    <div id="calmonthly" class="month-amount">待累積資料</div>
-    <p class="hint" id="calmonthlyhint"></p>
-    <div class="cal-grid" id="calgrid"></div>
-    <div class="cal-legend">
-      <span><i class="dot" style="background:#a95668"></i>正損益</span>
-      <span><i class="dot" style="background:#3b8c68"></i>負損益</span>
-    </div>
-    <p class="hint">日曆顯示當時的累積未實現損益，不是單日賺賠。</p>
-  </div>
-  <div class="card">
-    <h2>每週紀錄</h2><div id="calweeks" class="cal-weekly"></div>
-  </div>
+<div class="card">
+<h2>交易紀錄</h2>
+<div id="recordlist"></div>
+</div>
 </section>
 
 <section id="settings" class="hidden">
-  <div class="card">
-    <h2>行情與資料</h2>
-    <p id="feeddate" class="hint"></p>
-    <button onclick="loadFeed(true)">重新讀取行情</button>
-    <p class="hint">行情由 GitHub Actions 定期更新，非即時報價。</p>
-  </div>
-  <div class="card">
-    <h2>手動價格備援</h2>
-    <label>標的<select id="manualasset"></select></label>
-    <label>單價（標的原幣）<input type="number" id="manualprice" step="any"></label>
-    <label>價格日期<input type="date" id="manualdate"></label>
-    <button onclick="saveManual()">儲存手動報價</button>
-    <button class="secondary" onclick="clearManual()">清除選定標的手動價格</button>
-  </div>
-  <div class="card">
-    <h2>美元匯率備援</h2>
-    <label>USD/TWD<input type="number" id="fx" step="any"></label>
-    <button onclick="saveFx()">儲存匯率</button>
-  </div>
-  <div class="card">
-    <h2>備份與隱私</h2>
-    <p class="hint">資產及歷史資料儲存在本機，不會自動跨裝置同步。請勿把個人交易資料上傳到公開 GitHub。</p>
-    <button onclick="exportData()">匯出原有資產 JSON 備份</button>
-    <p><label>匯入 V2 資產備份
-      <input type="file" id="importfile" accept="application/json" onchange="importData(event)">
-    </label></p>
-    <button class="secondary" onclick="resetDemo()">重設為空白持倉（需確認）</button>
-    <p class="hint">原有備份功能不包含新分頁的獨立補登紀錄。</p>
-  </div>
+<div class="card">
+<h2>行情與估值</h2>
+<small id="feedstatus">—</small>
+<p class="hint" id="feeddate"></p>
+<div id="marketinfo"></div>
+<button class="secondary" onclick="loadFeed(true)">重新讀取行情</button>
+<h3>手動更新價格</h3>
+<label>標的<select id="manualasset"></select></label>
+<label>價格（原幣）<input id="manualprice" type="number" step="any"></label>
+<label>價格日期<input id="manualdate" type="date"></label>
+<button onclick="saveManual()">儲存手動價格</button>
+<button class="secondary" onclick="clearManual()">清除手動價格</button>
+<p class="hint">手動價格優先於行情檔。BTC/TWD請輸入一枚BTC的台幣價格。</p>
+<label>USD/TWD 匯率（留空使用行情檔）<input id="fx" type="number" step="any"></label>
+<button onclick="saveFx()">更新匯率</button>
+</div>
+<div class="card">
+<h2>資料備份</h2>
+<button onclick="exportData()">匯出 JSON</button>
+<button class="secondary" onclick="document.getElementById('importfile').click()">匯入 JSON</button>
+<input id="importfile" type="file" accept="application/json" style="display:none" onchange="importData(event)">
+<p class="hint">資料保存在目前瀏覽器 localStorage。更新程式不會主動清除既有資料，但仍請先匯出備份。</p>
+</div>
 </section>
 </main>
 
 <nav class="tabs">
-  <button class="active" data-tab="overview">總覽</button>
-  <button data-tab="holdings">持倉</button>
-  <button data-tab="trades">交易</button>
-  <button data-tab="records">紀錄</button>
-  <button id="investTab" type="button">投入</button>
-  <button id="calendarTab" type="button">日曆</button>
-  <button data-tab="settings">設定</button>
+<button data-tab="overview" class="active">總覽</button>
+<button data-tab="holdings">持倉</button>
+<button data-tab="trade">交易</button>
+<button data-tab="records">紀錄</button>
+<button data-tab="settings">設定</button>
 </nav>
 
-<script src="app.js?v=3.3.0"></script>
+<script src="app.js?v=35"></script>
 <script>
-(function(){
-"use strict";
-
-const HIST_KEY="marlowe_wealth_history_v1";
-const INVEST_KEY="marlowe_wealth_contributions_v1";
-const $=id=>document.getElementById(id);
-const pad=n=>String(n).padStart(2,"0");
-const today=()=>{
-  const d=new Date();
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-};
-const money=n=>"NT$"+Math.round(n).toLocaleString("zh-TW");
-const signed=n=>(n>=0?"+":"")+Math.round(n).toLocaleString("zh-TW");
-function read(key){
-  try{return JSON.parse(localStorage.getItem(key))||{}}
-  catch{return {}}
-}
-function store(key,value){
-  try{localStorage.setItem(key,JSON.stringify(value))}
-  catch(e){alert("本機儲存失敗："+e.message)}
-}
-function showSpecial(id,button){
-  document.querySelectorAll("main > section").forEach(x=>x.classList.add("hidden"));
-  $(id).classList.remove("hidden");
-  document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));
-  button.classList.add("active");
-  window.scrollTo(0,0);
-}
-function bindNormalTabs(){
-  document.querySelectorAll(".tabs button[data-tab]").forEach(b=>{
-    b.addEventListener("click",()=>{
-      $("contributions").classList.add("hidden");
-      $("calendar").classList.add("hidden");
-      $("investTab").classList.remove("active");
-      $("calendarTab").classList.remove("active");
-    });
-  });
-}
-
-/* Allocation */
-function renderAllocation(){
-  try{
-    if(typeof state==="undefined"||typeof valuation!=="function")return;
-    const sums={fund:0,tw:0,us:0};
-    const colors={fund:"#789ee7",tw:"#6bc9b4",us:"#e5ad72"};
-    const names={fund:"基金",tw:"台股 ETF",us:"美股 ETF"};
-    let missing=0;
-    for(const a of state.assets){
-      const z=valuation(a);
-      if(z.q<=0)continue;
-      if(z.value===null||!Number.isFinite(z.value)){missing++;continue}
-      if(a.type in sums)sums[a.type]+=z.value;
-    }
-    const total=Object.values(sums).reduce((a,b)=>a+b,0);
-    const chart=$("allocationChart"),legend=$("allocationLegend");
-    if(total<=0){
-      chart.style.background="#304056";
-      chart.querySelector("strong").textContent="—";
-      legend.textContent="尚無可估值資產";
-      return;
-    }
-    let start=0,stops=[],rows=[];
-    for(const type of ["fund","tw","us"]){
-      if(sums[type]<=0)continue;
-      const end=start+sums[type]/total*100;
-      stops.push(`${colors[type]} ${start}% ${end}%`);
-      rows.push(
-        `<div class="allocation-item">
-          <span class="allocation-dot" style="background:${colors[type]}"></span>
-          <span class="allocation-name">${names[type]}</span>
-          <span class="allocation-percent">${(sums[type]/total*100).toFixed(1)}%</span>
-        </div>`
-      );
-      start=end;
-    }
-    chart.style.background=`conic-gradient(${stops.join(",")})`;
-    chart.querySelector("strong").textContent="100%";
-    legend.innerHTML=rows.join("");
-    $("allocationHint").textContent=missing?
-      `另有 ${missing} 檔缺少報價，未納入比例。`:
-      "依目前可估值持倉市值計算。";
-  }catch(e){console.warn("資產配置更新失敗",e)}
-}
-
-/* Calendar */
-const imported=[
-  ["2026-10-27",1830.83],
-  ["2026-10-28",3071.62],
-  ["2026-10-29",4118.98],
-  ["2026-11-02",-571.93],
-  ["2026-11-03",-3021.71],
-  ["2026-11-04",-2309.93],
-  ["2026-11-05",-1914.84]
-];
-let history=read(HIST_KEY);
-for(const [date,pnl] of imported){
-  if(!(date in history)){
-    history[date]={
-      date,scope:"fund",kind:"cumulative",pnl,
-      note:"基金累積未實現損益，非單日損益"
-    };
-  }
-}
-store(HIST_KEY,history);
-
-let calDate=new Date();
-calDate=new Date(calDate.getFullYear(),calDate.getMonth(),1);
-
-function captureSnapshot(){
-  try{
-    if(typeof state==="undefined"||typeof valuation!=="function"||
-       typeof feed==="undefined"||!feed.updated_at)return;
-    const active=state.assets.map(a=>({a,z:valuation(a)})).filter(x=>x.z.q>0);
-    if(!active.length||active.some(x=>x.z.value===null||x.z.costTwd===null))return;
-    const value=active.reduce((s,x)=>s+x.z.value,0);
-    const cost=active.reduce((s,x)=>s+x.z.costTwd,0);
-    history=read(HIST_KEY);
-    const date=today();
-    if(!history[date]||history[date].kind==="snapshot"){
-      history[date]={
-        date,scope:"portfolio",kind:"snapshot",
-        value,cost,pnl:value-cost,
-        capturedAt:new Date().toISOString(),
-        note:"整體持倉累積未實現損益，非單日損益"
-      };
-      store(HIST_KEY,history);
-    }
-    renderCalendar();
-  }catch(e){console.warn("快照略過",e)}
-}
-function renderCalendar(){
-  history=read(HIST_KEY);
-  const y=calDate.getFullYear(),m=calDate.getMonth();
-  const prefix=`${y}-${pad(m+1)}-`;
-  $("calmonth").textContent=`${y} / ${pad(m+1)}`;
-  const grid=$("calgrid");
-  grid.replaceChildren();
-  for(const name of ["一","二","三","四","五","六","日"]){
-    const el=document.createElement("div");
-    el.className="cal-weekday";el.textContent=name;grid.append(el);
-  }
-  const offset=(new Date(y,m,1).getDay()+6)%7;
-  const days=new Date(y,m+1,0).getDate();
-  const rows=Math.ceil((offset+days)/7);
-  let count=0;
-  for(let i=0;i<rows*7;i++){
-    const day=i-offset+1;
-    const el=document.createElement("div");
-    el.className="cal-day";
-    if(day<1||day>days){
-      el.classList.add("empty");grid.append(el);continue;
-    }
-    const date=prefix+pad(day);
-    if(date===today())el.classList.add("today");
-    const number=document.createElement("span");
-    number.className="date";number.textContent=day;
-    const value=document.createElement("span");
-    value.className="dash";
-    const record=history[date];
-    if(record&&Number.isFinite(record.pnl)){
-      count++;
-      value.textContent=signed(record.pnl);
-      value.style.color=record.pnl>=0?"#e69aaa":"#85d4a9";
-      value.style.fontWeight="700";
-      el.title=(record.scope==="fund"?"基金":"整體組合")+
-        "累積損益："+signed(record.pnl);
-      const tag=document.createElement("span");
-      tag.style.cssText="font-size:8px;opacity:.7";
-      tag.textContent=record.scope==="fund"?"基金累計":"組合累計";
-      el.append(number,value,tag);
-    }else{
-      value.textContent="—";el.append(number,value);
-    }
-    grid.append(el);
-  }
-  $("calmonthly").textContent=count+" 筆歷史紀錄";
-  $("calmonthlyhint").textContent="顯示當時的累積未實現損益，不是每日單獨賺賠。";
-  const weeks=$("calweeks");weeks.replaceChildren();
-  for(let i=0;i<rows;i++){
-    const start=Math.max(1,i*7-offset+1);
-    const end=Math.min(days,(i+1)*7-offset);
-    let n=0;
-    for(let d=start;d<=end;d++)if(history[prefix+pad(d)])n++;
-    const row=document.createElement("div");
-    row.className="item";
-    const label=document.createElement("span");
-    label.textContent=`第 ${i+1} 週 · ${start}–${end} 日`;
-    const value=document.createElement("strong");
-    value.textContent=n?`${n} 筆 · 單週損益待確認`:"尚無資料";
-    row.append(label,value);weeks.append(row);
-  }
-}
-$("calendarTab").addEventListener("click",()=>{
-  showSpecial("calendar",$("calendarTab"));renderCalendar();
-});
-$("calprev").addEventListener("click",()=>{
-  calDate=new Date(calDate.getFullYear(),calDate.getMonth()-1,1);
-  renderCalendar();
-});
-$("calnext").addEventListener("click",()=>{
-  calDate=new Date(calDate.getFullYear(),calDate.getMonth()+1,1);
-  renderCalendar();
-});
-
-/* Monthly contributions */
-const historical={
-  "2026-06":16039,
-  "2026-07":15000,
-  "2026-08":20000,
-  "2026-09":25000,
-  "2026-10":5200
-};
-const TARGET=30000;
-let investDate=new Date();
-investDate=new Date(investDate.getFullYear(),investDate.getMonth(),1);
-let manual=read(INVEST_KEY);
-if(!Array.isArray(manual))manual=[];
-
-function escapeHTML(s){
-  return String(s).replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
-  })[c]);
-}
-function monthlyInfo(key){
-  const old=historical[key];
-  const items=manual.filter(x=>x.date.slice(0,7)===key);
-  const manualTotal=items.reduce((s,x)=>s+x.amount,0);
-  let tw=0,unknownUSD=0;
-  const tradeRows=[];
-  if(typeof state!=="undefined"&&Array.isArray(state.trades)){
-    for(const t of state.trades){
-      if(t.side!=="buy"||!t.date||t.date.slice(0,7)!==key)continue;
-      const a=state.assets.find(x=>x.id===t.asset);
-      if(!a)continue;
-      const amount=t.qty*t.price+(t.fee||0);
-      if(a.currency==="TWD"){
-        tw+=amount;
-        tradeRows.push({name:a.name,amount,date:t.date});
-      }else{
-        unknownUSD+=amount;
-      }
-    }
-  }
-  return {
-    old,items,manualTotal,tw,unknownUSD,tradeRows,
-    total:(old||0)+manualTotal+tw,
-    known:old!==undefined||items.length>0||tradeRows.length>0
-  };
-}
-function renderInvest(){
-  const y=investDate.getFullYear(),m=investDate.getMonth();
-  const key=`${y}-${pad(m+1)}`;
-  $("investMonth").textContent=`${y} / ${pad(m+1)}`;
-  const info=monthlyInfo(key);
-  $("investTotal").textContent=info.known?money(info.total):"待確認";
-  const pct=info.total/TARGET*100;
-  $("investPercent").textContent=info.known?pct.toFixed(1)+"%":"—";
-  $("investProgress").style.width=Math.min(100,pct)+"%";
-  $("investHint").textContent=info.known?
-    "已知申購與補登合計；未扣除歷史基金買回。":
-    "目前沒有可確認的投入紀錄，不代表當月投入為零。";
-
-  const chart=$("investChart");
-  chart.replaceChildren();
-  const values=[];
-  for(let i=0;i<12;i++){
-    values.push(monthlyInfo(`${y}-${pad(i+1)}`));
-  }
-  const max=Math.max(TARGET,...values.map(x=>x.total));
-  values.forEach((v,i)=>{
-    const col=document.createElement("div");
-    col.className="month-col";
-    const bar=document.createElement("div");
-    bar.className="month-fill";
-    bar.style.height=v.known?
-      Math.max(3,v.total/max*125)+"px":"2px";
-    bar.style.opacity=v.known?"1":".25";
-    const label=document.createElement("small");
-    label.textContent=(i+1)+"月";
-    col.append(bar,label);
-    col.title=v.known?money(v.total):"待確認";
-    chart.append(col);
-  });
-
-  const detail=$("investDetails");
-  detail.replaceChildren();
-  function row(name,value){
-    const el=document.createElement("div");
-    el.className="month-row";
-    const a=document.createElement("span");
-    a.textContent=name;
-    const b=document.createElement("b");
-    b.textContent=value;
-    el.append(a,b);detail.append(el);
-  }
-  if(info.old!==undefined)row("歷史基金申購",money(info.old));
-  if(info.tw>0)row("已登記交易 · 台幣",money(info.tw));
-  if(info.manualTotal>0)row("手動補登",money(info.manualTotal));
-  if(info.unknownUSD>0){
-    row("美元交易待換算","US$"+info.unknownUSD.toFixed(2));
-  }
-  if(!info.known&&info.unknownUSD===0){
-    row("當月資料","尚待補登");
-  }
-  if(info.unknownUSD>0){
-    const p=document.createElement("p");
-    p.className="hint";
-    p.textContent="美元交易因缺少成交當時匯率，尚未納入新台幣總額。";
-    detail.append(p);
-  }
-  const list=$("investManualList");
-  list.replaceChildren();
-  for(const x of info.items){
-    const el=document.createElement("div");
-    el.className="month-row";
-    const name=document.createElement("span");
-    name.textContent=x.date+" · "+x.name;
-    const right=document.createElement("div");
-    const amount=document.createElement("b");
-    amount.textContent=money(x.amount)+" ";
-    const del=document.createElement("button");
-    del.className="secondary";del.textContent="刪除";
-    del.addEventListener("click",()=>{
-      if(!confirm("刪除此筆補登？"))return;
-      manual=manual.filter(a=>a.id!==x.id);
-      store(INVEST_KEY,manual);renderInvest();
-    });
-    right.append(amount,del);el.append(name,right);list.append(el);
-  }
-}
-$("investTab").addEventListener("click",()=>{
-  showSpecial("contributions",$("investTab"));
-  renderInvest();
-});
-$("investPrev").addEventListener("click",()=>{
-  investDate=new Date(investDate.getFullYear(),investDate.getMonth()-1,1);
-  renderInvest();
-});
-$("investNext").addEventListener("click",()=>{
-  investDate=new Date(investDate.getFullYear(),investDate.getMonth()+1,1);
-  renderInvest();
-});
-$("investDate").value=today();
-$("investAdd").addEventListener("click",()=>{
-  const date=$("investDate").value;
-  const name=$("investName").value.trim();
-  const amount=Number($("investAmount").value);
-  if(!date||!name||!Number.isFinite(amount)||amount<=0){
-    alert("請輸入日期、標的及有效金額");return;
-  }
-  if(!confirm("確認這筆投入尚未登記在交易紀錄，且不包含在既有歷史基金申購統計內？"))return;
-  manual.push({
-    id:Date.now()+"-"+Math.random().toString(36).slice(2),
-    date,name,amount
-  });
-  store(INVEST_KEY,manual);
-  $("investName").value="";
-  $("investAmount").value="";
-  investDate=new Date(date+"T12:00:00");
-  investDate=new Date(investDate.getFullYear(),investDate.getMonth(),1);
-  renderInvest();
-});
-
-/* Update UI after market refresh */
-window.addEventListener("wealth:feed-loaded",()=>{
-  renderAllocation();
-  captureSnapshot();
-  renderInvest();
-});
-document.addEventListener("click",()=>{
-  setTimeout(renderAllocation,100);
-});
-bindNormalTabs();
-renderCalendar();
-renderAllocation();
-renderInvest();
-})();
+if('serviceWorker' in navigator)
+  navigator.serviceWorker.register('./sw.js?v=35');
 </script>
 </body>
 </html>
