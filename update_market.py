@@ -1,5 +1,9 @@
 
-"""WEALTH V2.1 - delayed ETF quotes and fund NAVs.
+"""MARLOWE WEALTH V26.1113 - Market Data Updater.
+
+ETF: delayed daily close.
+Funds: verified published NAV.
+BTC: BitoPro BTC/TWD public ticker snapshot.
 
 Never invent prices, dates, or share classes.
 Keep previous verified prices if a source is unavailable.
@@ -7,6 +11,7 @@ Keep previous verified prices if a source is unavailable.
 
 import datetime
 import json
+import math
 import pathlib
 import re
 import time
@@ -15,6 +20,8 @@ import urllib.request
 
 ROOT = pathlib.Path(__file__).parent
 OUT = ROOT / "market.json"
+
+UTC = datetime.timezone.utc
 
 try:
     old = json.loads(OUT.read_text(encoding="utf-8"))
@@ -31,6 +38,14 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0",
     "Accept": "text/html,application/json",
 }
+
+
+def utc_now():
+    return datetime.datetime.now(UTC)
+
+
+def iso_utc(value):
+    return value.isoformat(timespec="seconds")
 
 
 def download(url):
@@ -60,12 +75,16 @@ def chart(symbol):
         from zoneinfo import ZoneInfo
         zone = ZoneInfo(timezone_name)
     except Exception:
-        zone = datetime.timezone.utc
+        zone = UTC
 
     valid = [
         (timestamp, close)
         for timestamp, close in zip(timestamps, closes)
-        if isinstance(close, (int, float)) and close > 0
+        if (
+            isinstance(close, (int, float))
+            and math.isfinite(close)
+            and close > 0
+        )
     ]
 
     if not valid:
@@ -89,19 +108,23 @@ def update_price(asset_id, item):
     value = item.get("value")
     date = item.get("date", "")
 
-    if not isinstance(value, (int, float)) or value <= 0:
+    if (
+        not isinstance(value, (int, float))
+        or not math.isfinite(value)
+        or value <= 0
+    ):
         return False
 
     try:
         parsed = datetime.date.fromisoformat(date)
-        if parsed > datetime.datetime.now(
-            datetime.timezone.utc
-        ).date():
+        if parsed > utc_now().date():
             return False
     except (ValueError, TypeError):
         return False
 
     previous = prices.get(asset_id, {})
+    if not isinstance(previous, dict):
+        previous = {}
 
     if date >= previous.get("date", ""):
         prices[asset_id] = item
@@ -110,7 +133,10 @@ def update_price(asset_id, item):
     return False
 
 
-# ETF prices
+# -------------------------------------
+# Taiwan / US ETFs
+# -------------------------------------
+
 for asset_id, symbol in [
     ("009816", "009816.TW"),
     ("00646", "00646.TW"),
@@ -126,17 +152,118 @@ for asset_id, symbol in [
     time.sleep(1)
 
 
+# -------------------------------------
 # USD/TWD
+# -------------------------------------
+
 try:
     item = chart("TWD=X")
+
     if item["date"] >= (fx or {}).get("date", ""):
         fx = item
+
     print("USD/TWD", item)
 except Exception as exc:
     print("FX unavailable", exc)
 
 
+# -------------------------------------
+# BitoPro BTC/TWD
+# -------------------------------------
+
+BITOPRO_TICKER_URL = (
+    "https://api.bitopro.com/v3/tickers/btc_twd"
+)
+
+
+def fetch_bitopro_btc():
+    requested_at = utc_now()
+
+    raw = json.loads(download(BITOPRO_TICKER_URL))
+    data = raw.get("data")
+
+    # The pair-specific endpoint normally returns
+    # an object; support a single-element list too.
+    if isinstance(data, list):
+        matches = [
+            item for item in data
+            if isinstance(item, dict)
+            and str(item.get("pair", "")).lower()
+            == "btc_twd"
+        ]
+
+        if len(matches) != 1:
+            raise ValueError("BTC/TWD pair not uniquely found")
+
+        data = matches[0]
+
+    if not isinstance(data, dict):
+        raise ValueError("Invalid BitoPro ticker response")
+
+    pair = str(data.get("pair", "")).lower()
+
+    if pair != "btc_twd":
+        raise ValueError("Unexpected BitoPro trading pair")
+
+    try:
+        value = float(data["lastPrice"])
+    except (KeyError, TypeError, ValueError):
+        raise ValueError("Invalid BTC lastPrice")
+
+    if not math.isfinite(value) or value <= 0:
+        raise ValueError("BTC price must be positive")
+
+    # REST ticker does not provide an individual
+    # trade timestamp. This is the retrieval time,
+    # NOT the time of the last market transaction.
+    retrieved_at = iso_utc(requested_at)
+
+    return {
+        "value": value,
+        "date": requested_at.date().isoformat(),
+        "source": "BitoPro BTC/TWD last traded price",
+        "retrieved_at": retrieved_at,
+        "quote_type": "last_traded",
+        "currency": "TWD",
+        "pair": "btc_twd",
+    }
+
+
+def update_btc_price(item):
+    previous = prices.get("BTC", {})
+
+    if not isinstance(previous, dict):
+        previous = {}
+
+    previous_time = previous.get("retrieved_at", "")
+    incoming_time = item.get("retrieved_at", "")
+
+    # Never replace a newer snapshot with an older one.
+    if previous_time and incoming_time < previous_time:
+        return False
+
+    # If an older BTC entry has no timestamp, the
+    # new verified snapshot can replace it.
+    prices["BTC"] = item
+    return True
+
+
+try:
+    btc_item = fetch_bitopro_btc()
+
+    if update_btc_price(btc_item):
+        print("BTC UPDATED", btc_item)
+    else:
+        print("BTC older snapshot ignored")
+
+except Exception as exc:
+    print("BTC unavailable; previous quote retained:", exc)
+
+
+# -------------------------------------
 # Confirmed NEXT BANK fund share classes
+# -------------------------------------
+
 FUNDS = {
     "FUBON_SP500": {
         "code": "AFB0018",
@@ -156,8 +283,6 @@ FUNDS = {
     },
 }
 
-
-# Fubon and Yuanta MoneyDJ NAV listings
 NAV_PAGES = [
     "https://fundv3new.moneydj.com/W2/ww/ww01.djhtm?a=BFZFPA&aspid=",
     "https://fundv3new.moneydj.com/W2/ww/ww01.djhtm?a=BFZYTA&aspid=",
@@ -217,8 +342,6 @@ def fetch_fund_navs():
                 for asset_id, fund in FUNDS.items():
                     target = normalize(fund["name"])
 
-                    # Allow trailing fund disclosures,
-                    # but require the exact share-class prefix.
                     name_cells = [
                         cell
                         for cell in cells
@@ -244,8 +367,6 @@ def fetch_fund_navs():
 
                     value = None
 
-                    # Read the first numeric field after
-                    # the published NAV date.
                     for cell in cells[date_index + 1:]:
                         cleaned = cell.replace(",", "").strip()
 
@@ -305,15 +426,20 @@ except Exception as exc:
     print("Fund NAV update unavailable:", exc)
 
 
+# -------------------------------------
+# Write market.json
+# -------------------------------------
+
 payload = {
-    "updated_at": datetime.datetime.now(
-        datetime.timezone.utc
-    ).isoformat(timespec="seconds"),
+    "updated_at": iso_utc(utc_now()),
     "fx": fx,
     "prices": prices,
     "notes": (
-        "Delayed market closes and published fund NAVs. "
-        "Unverified fund NAVs are not inserted."
+        "ETF delayed closes; verified fund NAVs; "
+        "BitoPro BTC/TWD last-traded snapshot. "
+        "Each quote may have a different timestamp. "
+        "Previous verified values are retained "
+        "when sources are unavailable."
     ),
 }
 
@@ -329,5 +455,5 @@ OUT.write_text(
 print(
     "Finished. Available asset prices:",
     len(prices),
-    "/ 7",
+    "/ 8",
 )
