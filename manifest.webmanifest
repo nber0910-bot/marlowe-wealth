@@ -1,1 +1,32 @@
-{"name":"Wealth - Personal Portfolio","short_name":"Wealth","start_url":"./","scope":"./","display":"standalone","background_color":"#0d131d","theme_color":"#101722","icons":[{"src":"icon-512.png","sizes":"512x512","type":"image/png"},{"src":"apple-touch-icon.png","sizes":"180x180","type":"image/png"}]}
+
+{
+  "name": "MARLOWE WEALTH",
+  "short_name": "MARLOWE",
+  "description": "Personal Investment Dashboard — Funds, Taiwan ETFs, US ETFs & Bitcoin",
+  "id": "/marlowe-wealth/",
+  "start_url": "/marlowe-wealth/",
+  "scope": "/marlowe-wealth/",
+  "display": "standalone",
+  "background_color": "#10151f",
+  "theme_color": "#10151f",
+  "orientation": "portrait",
+  "lang": "zh-TW",
+  "categories": [
+    "finance",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
