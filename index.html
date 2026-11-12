@@ -6,47 +6,297 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MARLOWE WEALTH V3.5</title>
+<title>MARLOWE WEALTH V26.1113</title>
+
 <style>
-:root{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;color:#eaf0fa;background:#10151f}
+:root{
+  font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
+  color:#eaf0fa;
+  background:#10151f;
+}
 *{box-sizing:border-box}
 body{margin:0}
 main{max-width:780px;margin:auto;padding:24px 16px 110px}
 h1{font-size:20px;letter-spacing:2px}
 h2{font-size:17px}
 h3{font-size:15px}
-.card{background:#1c2635;border:1px solid #2b3a4f;border-radius:17px;padding:18px;margin:14px 0}
+.card{
+  background:#1c2635;
+  border:1px solid #2b3a4f;
+  border-radius:17px;
+  padding:18px;
+  margin:14px 0;
+}
 .item{padding:13px 0;border-bottom:1px solid #354154}
 .item:last-child{border-bottom:0}
-.between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.between{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
 .big{font-size:34px;font-weight:750;margin:10px 0}
 .muted,.hint,small{color:#a2b3c9}
 small,.hint{font-size:12px;line-height:1.6}
 .positive{color:#78d9b2}
 .negative{color:#ff9d9d}
 button,input,select{font:inherit}
-button{background:#9fc8f5;color:#10151f;border:0;border-radius:10px;padding:10px 14px;font-weight:650;cursor:pointer}
+button{
+  background:#9fc8f5;
+  color:#10151f;
+  border:0;
+  border-radius:10px;
+  padding:10px 14px;
+  font-weight:650;
+  cursor:pointer;
+}
 button.secondary{background:#34465e;color:#e8f0fc}
-input,select{width:100%;background:#111a27;color:white;border:1px solid #43536b;border-radius:10px;padding:12px;margin:5px 0 12px}
-label{display:block;font-size:13px;color:#b7c5d7;margin-top:8px}
-.bar{height:10px;background:#394456;border-radius:10px;overflow:hidden}
+input,select{
+  width:100%;
+  background:#111a27;
+  color:white;
+  border:1px solid #43536b;
+  border-radius:10px;
+  padding:12px;
+  margin:5px 0 12px;
+}
+label{
+  display:block;
+  font-size:13px;
+  color:#b7c5d7;
+  margin-top:8px;
+}
+.bar{
+  height:10px;
+  background:#394456;
+  border-radius:10px;
+  overflow:hidden;
+}
 .fill{height:100%;background:#9fc8f5}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid .card{margin:0}
 .hidden{display:none!important}
-.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:4px;background:#131c2a;border-top:1px solid #334154;padding:9px 7px calc(9px + env(safe-area-inset-bottom))}
-.tabs button{background:transparent;color:#a9b9cd;flex:1;max-width:130px;font-size:12px;padding:10px 3px}
+.tabs{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:center;
+  gap:4px;
+  background:#131c2a;
+  border-top:1px solid #334154;
+  padding:9px 7px calc(9px + env(safe-area-inset-bottom));
+  z-index:20;
+}
+.tabs button{
+  background:transparent;
+  color:#a9b9cd;
+  flex:1;
+  max-width:130px;
+  font-size:12px;
+  padding:10px 3px;
+}
 .tabs button.active{background:#2d405a;color:#fff}
 details{margin:10px 0}
 summary{cursor:pointer;color:#c1d6f1}
-@media(max-width:380px){.big{font-size:28px}}
+
+/* V26.1113：資產分類互動卡片 */
+.asset-card{
+  position:relative;
+  min-height:132px;
+  padding:15px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:
+    border-color .3s ease,
+    background .3s ease,
+    transform .3s ease;
+}
+.asset-card:active{transform:scale(.985)}
+.asset-card:focus-visible{
+  outline:2px solid #9fc8f5;
+  outline-offset:3px;
+}
+.asset-card.is-open{
+  background:#223148;
+  border-color:#54769f;
+}
+.asset-card .asset-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:5px;
+}
+.asset-card .asset-heading small{
+  font-size:12px;
+  font-weight:600;
+}
+.asset-card .asset-indicator{
+  color:#9fc8f5;
+  font-size:15px;
+  transition:transform .3s ease;
+}
+.asset-card.is-open .asset-indicator{
+  transform:rotate(180deg);
+}
+.asset-card .asset-face{
+  display:grid;
+  grid-template-rows:1fr;
+  transition:
+    opacity .22s ease,
+    transform .3s ease;
+}
+.asset-card .asset-face h2{
+  font-size:clamp(15px,3.7vw,21px);
+  overflow-wrap:anywhere;
+  margin:24px 0 4px;
+}
+.asset-card.is-open .asset-face{
+  opacity:0;
+  transform:translateY(-10px);
+  position:absolute;
+  pointer-events:none;
+}
+.asset-card .asset-details{
+  display:none;
+  opacity:0;
+  transform:translateY(12px);
+  font-size:12px;
+}
+.asset-card.is-open .asset-details{
+  display:block;
+  animation:assetReveal .34s ease forwards;
+}
+.asset-detail-row{
+  border-top:1px solid #3a4b62;
+  padding:10px 0;
+}
+.asset-detail-row:first-child{
+  margin-top:12px;
+}
+.asset-detail-name{
+  color:#c6d5e9;
+  font-size:11px;
+  line-height:1.5;
+  margin-bottom:4px;
+}
+.asset-detail-value{
+  color:#f2f6ff;
+  font-weight:650;
+  font-size:14px;
+  overflow-wrap:anywhere;
+}
+.asset-detail-meta{
+  color:#a2b3c9;
+  font-size:11px;
+  margin-top:4px;
+}
+@keyframes assetReveal{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* V26.1113：資產配置圓餅圖 */
+.allocation-layout{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:24px;
+  margin-top:20px;
+}
+.allocation-donut{
+  width:190px;
+  height:190px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:#34465e;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background .4s ease;
+}
+.allocation-donut::after{
+  content:"";
+  position:absolute;
+  inset:34px;
+  border-radius:50%;
+  background:#1c2635;
+}
+.allocation-center{
+  position:relative;
+  z-index:1;
+  text-align:center;
+}
+.allocation-center small{
+  display:block;
+  font-size:11px;
+}
+.allocation-center b{
+  display:block;
+  font-size:18px;
+  margin-top:5px;
+}
+.allocation-legend{
+  flex:1;
+  min-width:175px;
+  max-width:280px;
+}
+.allocation-legend-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:11px 0;
+  font-size:12px;
+}
+.allocation-legend-name{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.allocation-dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.allocation-legend-value{
+  color:#c5d6ea;
+  font-weight:650;
+}
+.allocation-note{
+  margin-top:18px;
+  color:#93a9c3;
+  font-size:11px;
+  line-height:1.6;
+}
+@media(max-width:380px){
+  .big{font-size:28px}
+  .asset-card{padding:12px}
+  .asset-card .asset-heading small{font-size:11px}
+  .allocation-donut{width:165px;height:165px}
+  .allocation-donut::after{inset:30px}
+}
+@media(prefers-reduced-motion:reduce){
+  .asset-card,
+  .asset-card .asset-face,
+  .asset-card .asset-indicator,
+  .allocation-donut{
+    transition:none;
+  }
+  .asset-card.is-open .asset-details{animation:none;opacity:1;transform:none}
+}
 </style>
 </head>
+
 <body>
 <main>
 <header>
-<h1>✦ MARLOWE <span style="color:#b6d5ff">WEALTH</span> <small>V3.5</small></h1>
-<small>PERSONAL INVESTMENT DASHBOARD · BTC READY</small>
+<h1>✦ MARLOWE <span style="color:#b6d5ff">WEALTH</span> <small>V26.1113</small></h1>
+<small>PERSONAL INVESTMENT DASHBOARD</small>
 </header>
 
 <section id="overview">
@@ -61,16 +311,54 @@ summary{cursor:pointer;color:#c1d6f1}
 </div>
 <div class="bar"><div id="progress" class="fill"></div></div>
 </div>
-<div class="grid">
-<div class="card"><small>台股 ETF</small><h2 id="twtotal">—</h2></div>
-<div class="card"><small>美股 ETF</small><h2 id="ustotal">—</h2></div>
-<div class="card"><small>基金</small><h2 id="fundtotal">—</h2></div>
-<div class="card"><small>₿ 加密貨幣</small><h2 id="cryptototal">—</h2></div>
+
+<div class="grid" id="assetGrid">
+<div class="card asset-card" data-asset-type="tw" role="button" tabindex="0" aria-expanded="false">
+  <div class="asset-heading"><small>台股 ETF</small><span class="asset-indicator">⌄</span></div>
+  <div class="asset-face"><h2 id="twtotal">—</h2></div>
+  <div class="asset-details" id="twdetails"></div>
 </div>
+
+<div class="card asset-card" data-asset-type="us" role="button" tabindex="0" aria-expanded="false">
+  <div class="asset-heading"><small>美股 ETF</small><span class="asset-indicator">⌄</span></div>
+  <div class="asset-face"><h2 id="ustotal">—</h2></div>
+  <div class="asset-details" id="usdetails"></div>
+</div>
+
+<div class="card asset-card" data-asset-type="fund" role="button" tabindex="0" aria-expanded="false">
+  <div class="asset-heading"><small>基金</small><span class="asset-indicator">⌄</span></div>
+  <div class="asset-face"><h2 id="fundtotal">—</h2></div>
+  <div class="asset-details" id="funddetails"></div>
+</div>
+
+<div class="card asset-card" data-asset-type="crypto" role="button" tabindex="0" aria-expanded="false">
+  <div class="asset-heading"><small>₿ 加密貨幣</small><span class="asset-indicator">⌄</span></div>
+  <div class="asset-face"><h2 id="cryptototal">—</h2></div>
+  <div class="asset-details" id="cryptodetails"></div>
+</div>
+</div>
+
+<div class="card" id="allocationCard">
+<h2>資產配置</h2>
+<small>依目前可估值資產計算</small>
+<div class="allocation-layout">
+  <div class="allocation-donut" id="allocationDonut" role="img" aria-label="資產配置圓餅圖">
+    <div class="allocation-center">
+      <small>投資資產</small>
+      <b id="allocationCenter">—</b>
+    </div>
+  </div>
+  <div class="allocation-legend" id="allocationLegend">
+    <small>等待估值資料…</small>
+  </div>
+</div>
+<p class="allocation-note">預估入庫部位若已計入持倉，也會反映於資產配置。未估值資產不計入比例。</p>
+</div>
+
 <div class="card">
 <h2>估值覆蓋</h2>
 <div id="count">—</div>
-<p class="hint">BTC 初始價格來自 2026/11/13 截圖，非即時報價。可到設定更新。</p>
+<p class="hint" id="btcPriceNote">加密貨幣報價來源與更新時間請至「設定」查看。若使用手動參考價，並非即時行情。</p>
 </div>
 </section>
 
@@ -96,6 +384,7 @@ summary{cursor:pointer;color:#c1d6f1}
 <button onclick="addTrade()">儲存交易</button>
 <p class="hint">2026/11/13 的 BTC 首筆交易已自動匯入，請勿再重複新增。</p>
 </div>
+
 <div class="card">
 <h2>新增投資標的</h2>
 <button class="secondary" onclick="showAddAsset()">＋新增標的</button>
@@ -141,6 +430,7 @@ summary{cursor:pointer;color:#c1d6f1}
 <label>USD/TWD 匯率（留空使用行情檔）<input id="fx" type="number" step="any"></label>
 <button onclick="saveFx()">更新匯率</button>
 </div>
+
 <div class="card">
 <h2>資料備份</h2>
 <button onclick="exportData()">匯出 JSON</button>
@@ -159,10 +449,11 @@ summary{cursor:pointer;color:#c1d6f1}
 <button data-tab="settings">設定</button>
 </nav>
 
-<script src="app.js?v=35"></script>
+<script src="app.js?v=261113"></script>
 <script>
-if('serviceWorker' in navigator)
-  navigator.serviceWorker.register('./sw.js?v=35');
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js?v=261113');
+}
 </script>
 </body>
 </html>
