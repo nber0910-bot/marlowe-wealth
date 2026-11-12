@@ -1,9 +1,10 @@
 
 'use strict';
 
-// MARLOWE WEALTH V3.4
-// 更新此版本號可觸發 Service Worker 更新
-const CACHE = 'wealth-v3.4-20261112';
+// MARLOWE WEALTH V3.5
+// Service Worker：離線快取與版本更新
+
+const CACHE = 'marlowe-wealth-v35-20261113';
 
 const APP_FILES = [
   './',
@@ -12,24 +13,18 @@ const APP_FILES = [
   './manifest.webmanifest'
 ];
 
+// 安裝新版 Service Worker
 self.addEventListener('install', event => {
   self.skipWaiting();
 
   event.waitUntil(
-    (async () => {
-      const cache = await caches.open(CACHE);
-
-      await cache.addAll(
-        APP_FILES.map(path =>
-          new Request(path, {
-            cache: 'reload'
-          })
-        )
-      );
-    })()
+    caches.open(CACHE).then(cache =>
+      cache.addAll(APP_FILES)
+    )
   );
 });
 
+// 啟用新版並清除舊版網站快取
 self.addEventListener('activate', event => {
   event.waitUntil(
     (async () => {
@@ -38,7 +33,8 @@ self.addEventListener('activate', event => {
       await Promise.all(
         keys
           .filter(key =>
-            key.startsWith('wealth-') &&
+            (key.startsWith('marlowe-wealth-') ||
+             key.startsWith('wealth-')) &&
             key !== CACHE
           )
           .map(key => caches.delete(key))
@@ -49,6 +45,7 @@ self.addEventListener('activate', event => {
   );
 });
 
+// 網站檔案優先讀取網路最新版
 self.addEventListener('fetch', event => {
   const request = event.request;
 
@@ -56,56 +53,41 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(request.url);
 
-  if (url.origin !== self.location.origin) {
-    return;
-  }
+  // 不攔截外部網站
+  if (url.origin !== self.location.origin) return;
 
-  // 不攔截其他路徑的請求
-  const scope = new URL(
-    self.registration.scope
-  );
-
-  if (!url.pathname.startsWith(scope.pathname)) {
-    return;
-  }
-
-  // 行情資料：每次向網路取得最新版本
+  // 行情資料永遠優先取得最新版本
   if (url.pathname.endsWith('/market.json')) {
     event.respondWith(
-      fetch(request, {
-        cache: 'no-store'
-      })
+      fetch(request, { cache: 'no-store' })
     );
     return;
   }
 
-  // HTML、JS、CSS：優先取得網路最新版
+  // 其他網站檔案：網路優先，離線時使用快取
   event.respondWith(
     (async () => {
-      const cache = await caches.open(CACHE);
-
       try {
-        const response = await fetch(request, {
-          cache: 'no-store'
-        });
+        const response = await fetch(request);
 
         if (response.ok) {
-          await cache.put(
-            request,
-            response.clone()
-          );
+          const cache = await caches.open(CACHE);
+          await cache.put(request, response.clone());
         }
 
         return response;
-
       } catch (error) {
-        const cached = await cache.match(request);
+        const cached = await caches.match(request);
 
-        if (cached) {
-          return cached;
+        if (cached) return cached;
+
+        // 離線開啟網站時，回傳首頁
+        if (request.mode === 'navigate') {
+          const homepage = await caches.match('./index.html');
+          if (homepage) return homepage;
         }
 
-        throw error;
+        return Response.error();
       }
     })()
   );
