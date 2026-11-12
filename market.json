@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-12T11:26:43+00:00",
+  "updated_at": "2026-11-12T17:11:10+00:00",
   "fx": {
-    "value": 32.924999,
+    "value": 32.959,
     "date": "2026-11-12",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -17,8 +17,8 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 698.349976,
-      "date": "2026-11-11",
+      "value": 699.674988,
+      "date": "2026-11-12",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "FUBON_SP500": {
@@ -40,7 +40,16 @@
       "value": 42.12,
       "date": "2026-11-12",
       "source": "MoneyDJ published fund NAV"
+    },
+    "BTC": {
+      "value": 2369634.0,
+      "date": "2026-11-12",
+      "source": "BitoPro BTC/TWD last traded price",
+      "retrieved_at": "2026-11-12T17:11:07+00:00",
+      "quote_type": "last_traded",
+      "currency": "TWD",
+      "pair": "btc_twd"
     }
   },
-  "notes": "Delayed market closes and published fund NAVs. Unverified fund NAVs are not inserted."
+  "notes": "ETF delayed closes; verified fund NAVs; BitoPro BTC/TWD last-traded snapshot. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
 }
