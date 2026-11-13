@@ -1,5 +1,5 @@
 'use strict';
-// MARLOWE WEALTH V26.1114.04 — guarded ETH duplicate correction and automatic quote.
+// MARLOWE WEALTH V26.1114.05 — inline trade editing, guarded deletion and USD budget repair.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -56,7 +56,7 @@ function fx(){const v=num(state.fxOverride??feed.fx?.value);return v>0?v:null;}
 function validQuote(p){return !!p&&typeof p==='object'&&p.value!==null&&p.value!==undefined&&p.value!==''&&Number.isFinite(Number(p.value))&&Number(p.value)>0;}
 function validBtcFeedQuote(p){if(!validQuote(p)||p.currency!=='TWD'||p.pair!=='btc_twd')return false;const t=Date.parse(p.retrieved_at||'');return Number.isFinite(t)&&t<=Date.now()+300000;}
 function btcQuote(){const p=feed.prices?.BTC;if(validBtcFeedQuote(p))return {...p,automatic:true};const m=state.manual?.BTC;return validQuote(m)?{...m,automatic:false}:null;}
-function price(a){if(a.id==='BTC')return btcQuote();if(a.id==='ETH'){const live=feed.prices?.ETH;if(validCryptoFeedQuote(live,'eth_twd'))return {...live,automatic:true};const m=state.manual?.ETH;return validQuote(m)?{...m,automatic:false}:validQuote(live)?{...live,automatic:false}:null;}return state.manual[a.id]||feed.prices?.[a.id]||null;}
+function price(a){if(a.id==='BTC')return btcQuote();if(a.id==='ETH'){const live=feed.prices?.ETH;if(validCryptoFeedQuote(live,'eth_twd'))return {...live,automatic:true};const m=state.manual?.ETH;return validQuote(m)?{...m,automatic:false}:null;}return state.manual[a.id]||feed.prices?.[a.id]||null;}
 function validCryptoFeedQuote(p,pair){return validQuote(p)&&p.currency==='TWD'&&p.pair===pair&&Number.isFinite(Date.parse(p.retrieved_at||''))&&Date.parse(p.retrieved_at)<=Date.now()+300000;}
 function btcQuoteStatus(){const p=btcQuote();if(!p)return {label:'無可用報價',detail:'尚未取得 BTC/TWD 價格',stale:true};if(!p.automatic)return {label:'手動參考價',detail:'目前使用手動價格，並非即時行情',stale:true};const stale=Date.now()-Date.parse(p.retrieved_at)>BTC_STALE_HOURS*3600000;return {label:stale?'行情已過期':'自動行情正常',detail:stale?'超過 2 小時未取得新報價，仍顯示最後有效價格':'BitoPro 最近一次成功取得的行情快照',stale};}
 function taiwanTime(value){const t=Date.parse(value||'');return Number.isFinite(t)?new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(t)):'時間未知';}
@@ -442,7 +442,7 @@ function renderHistory(){
       entries.push({date:t.date||'',order:t.created||0,html:`<div class="item">
         <div class="between"><b>${safe(t.asset)} · ${t.side==='buy'?'買入':'賣出'}
         ${t.estimated?' · 🟡 預估入庫':''}</b>
-        <button class="secondary" onclick="deleteTrade(${Number(t.created)})">刪除</button></div>
+        <button class="secondary" onclick="editTradeFromHistory(${Number(t.created)})">編輯</button><button class="secondary" onclick="deleteTradeFromHistory(${Number(t.created)})">刪除</button></div>
         <small>${safe(t.date||'日期待補')} · ${fmtQty(t.qty)} ×
         ${money(Number(t.price),a?.currency||'TWD')} · 費用
         ${money(Number(t.fee)||0,a?.currency||'TWD')}</small>
@@ -586,7 +586,7 @@ async function loadHistoricalArchive(){
 }
 function installHistoryFilters(){for(const id of ['recordYearFilter','recordMonthFilter','recordTypeFilter'])byId(id)?.addEventListener('change',renderHistory);}
 
-function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fund:0,crypto:0};let v=0,c=0,covered=0,all=0;for(const a of state.assets){const z=valuation(a);if(z.q<=0)continue;all++;if(z.value!==null){totals[a.type]=(totals[a.type]||0)+z.value;counts[a.type]=(counts[a.type]||0)+1;v+=z.value;covered++;if(z.costTwd!==null)c+=z.costTwd;}}byId('total').textContent=covered?money(v):'尚無可估值資產';byId('pnl').textContent=covered&&c>0?'可估值部位未實現損益 '+money(v-c)+'（'+((v/c-1)*100).toFixed(2)+'%）':'損益待確認';byId('pnl').className=covered&&v-c<0?'negative':'positive';const estCount=state.trades.filter(t=>t.estimated).length;byId('coverage').textContent=`已估值 ${covered}/${all} 檔；未估值部位不計入總額。美元成本以目前匯率換算，非實際匯兌損益。期初成本待核對。`+(estCount?` 有 ${estCount} 筆預估入庫，股數及損益可能變動。`:'');for(const [type,id] of [['tw','twtotal'],['us','ustotal'],['fund','fundtotal'],['crypto','cryptototal']])byId(id).textContent=counts[type]?money(totals[type]):'待估值';byId('count').textContent=covered+' / '+all;byId('progresslabel').textContent=covered?`${(v/300000*100).toFixed(1)}%（部分估值${estCount?'・含預估':''}）`:'—';byId('progress').style.width=Math.max(0,Math.min(100,v/300000*100))+'%';renderCategoryDetails(totals);renderAllocation(totals);renderBtcStatus();byId('marketinfo').innerHTML=state.assets.map(a=>{const z=valuation(a),s=a.id==='BTC'?btcQuoteStatus():null,time=(a.id==='BTC'||a.id==='ETH')&&z.p?.automatic?taiwanTime(z.p.retrieved_at):z.p?.date||'日期未知';return `<div class="item"><div class="between"><b>${safe(a.name)}</b><small>${safe(time)}</small></div><small>${z.p?money(num(z.p.value),a.currency)+' / 單位 · '+safe(z.p.source||'手動'):'無法估值'}${a.currency==='USD'&&!fx()?' · 缺 USD/TWD':''}</small>${s?`<p class="hint"><span class="${s.stale?'negative':'positive'}">${safe(s.label)}</span> · ${safe(s.detail)}</p>`:''}</div>`;}).join('');byId('holdlist').innerHTML=state.assets.map(a=>{const z=valuation(a),n=estimatedTrades(a.id).length,s=a.id==='BTC'?btcQuoteStatus():null;return `<div class="item"><div class="between"><b>${safe(a.name)}</b><small>${a.type==='fund'?'基金':a.type==='us'?'美股':a.type==='crypto'?'加密貨幣':'台股'}${n?' · 🟡 含預估 '+n+' 筆':''}</small></div><p class="muted">${safe(a.id)} · ${a.type==='crypto'?z.q.toFixed(8):z.q.toFixed(5)} 單位 · 成本 ${money(z.c,a.currency)}</p><div class="between"><b>${money(z.value)}</b><small>${z.value!==null&&z.costTwd!==null?money(z.value-z.costTwd):'損益待確認'}</small></div><small>${z.p?'報價 '+safe(z.p.automatic?taiwanTime(z.p.retrieved_at):z.p.date||'未知'):'尚未取得價格'} · ${a.verified?'已核對':'期初成本待核對'}${n?' · 預估持倉非券商正式股數':''}</small>${s?`<p class="hint ${s.stale?'negative':'positive'}">${safe(s.label)}</p>`:''}<details><summary>校正期初持倉</summary><label>期初數量<input type="number" step="any" id="q-${safe(a.id)}" value="${a.qty}"></label><label>期初總成本（${a.currency}）<input type="number" step="any" id="c-${safe(a.id)}" value="${a.cost}"></label><button onclick="updateBase('${safe(a.id)}')">儲存校正</button><p class="hint">此處只改期初基準，不會清除後續交易。</p></details></div>`;}).join('');for(const id of ['tradeasset','manualasset']){const el=byId(id),selected=el.value;el.innerHTML=state.assets.map(a=>`<option value="${safe(a.id)}">${safe(a.name)}</option>`).join('');if(state.assets.some(a=>a.id===selected))el.value=selected;}byId('feeddate').textContent=feed.updated_at?'行情檔更新：'+taiwanTime(feed.updated_at):'尚未取得自動行情';byId('feedstatus').textContent=feedError?'行情讀取失敗':feed.updated_at?'行情已讀取':'行情未就緒';updateEstimatePreview();renderPendingSummary();renderHistory();renderHistoricalArchive();renderCalendar();renderMonthlyBudget();renderTradeLedger();}
+function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fund:0,crypto:0};let v=0,c=0,covered=0,all=0;for(const a of state.assets){const z=valuation(a);if(z.q<=0)continue;all++;if(z.value!==null){totals[a.type]=(totals[a.type]||0)+z.value;counts[a.type]=(counts[a.type]||0)+1;v+=z.value;covered++;if(z.costTwd!==null)c+=z.costTwd;}}byId('total').textContent=covered?money(v):'尚無可估值資產';byId('pnl').textContent=covered&&c>0?'可估值部位未實現損益 '+money(v-c)+'（'+((v/c-1)*100).toFixed(2)+'%）':'損益待確認';byId('pnl').className=covered&&v-c<0?'negative':'positive';const estCount=state.trades.filter(t=>t.estimated).length;byId('coverage').textContent=`已估值 ${covered}/${all} 檔；未估值部位不計入總額。美元成本以目前匯率換算，非實際匯兌損益。期初成本待核對。`+(estCount?` 有 ${estCount} 筆預估入庫，股數及損益可能變動。`:'');for(const [type,id] of [['tw','twtotal'],['us','ustotal'],['fund','fundtotal'],['crypto','cryptototal']])byId(id).textContent=counts[type]?money(totals[type]):'待估值';byId('count').textContent=covered+' / '+all;byId('progresslabel').textContent=covered?`${(v/300000*100).toFixed(1)}%（部分估值${estCount?'・含預估':''}）`:'—';byId('progress').style.width=Math.max(0,Math.min(100,v/300000*100))+'%';renderCategoryDetails(totals);renderAllocation(totals);renderBtcStatus();byId('marketinfo').innerHTML=state.assets.map(a=>{const z=valuation(a),s=a.id==='BTC'?btcQuoteStatus():null,time=(a.id==='BTC'||a.id==='ETH')&&z.p?.automatic?taiwanTime(z.p.retrieved_at):z.p?.date||'日期未知';return `<div class="item"><div class="between"><b>${safe(a.name)}</b><small>${safe(time)}</small></div><small>${z.p?money(num(z.p.value),a.currency)+' / 單位 · '+safe(z.p.source||'手動'):'無法估值'}${a.currency==='USD'&&!fx()?' · 缺 USD/TWD':''}</small>${s?`<p class="hint"><span class="${s.stale?'negative':'positive'}">${safe(s.label)}</span> · ${safe(s.detail)}</p>`:''}</div>`;}).join('');byId('holdlist').innerHTML=state.assets.map(a=>{const z=valuation(a),n=estimatedTrades(a.id).length,s=a.id==='BTC'?btcQuoteStatus():null;return `<div class="item"><div class="between"><b>${safe(a.name)}</b><small>${a.type==='fund'?'基金':a.type==='us'?'美股':a.type==='crypto'?'加密貨幣':'台股'}${n?' · 🟡 含預估 '+n+' 筆':''}</small></div><p class="muted">${safe(a.id)} · ${a.type==='crypto'?z.q.toFixed(8):z.q.toFixed(5)} 單位 · 成本 ${money(z.c,a.currency)}</p><div class="between"><b>${money(z.value)}</b><small>${z.value!==null&&z.costTwd!==null?money(z.value-z.costTwd):'損益待確認'}</small></div><small>${z.p?'報價 '+safe(z.p.automatic?taiwanTime(z.p.retrieved_at):z.p.date||'未知'):'尚未取得價格'} · ${a.verified?'已核對':'期初成本待核對'}${n?' · 預估持倉非券商正式股數':''}</small>${s?`<p class="hint ${s.stale?'negative':'positive'}">${safe(s.label)}</p>`:''}<details><summary>校正期初持倉</summary><label>期初數量<input type="number" step="any" id="q-${safe(a.id)}" value="${a.qty}"></label><label>期初總成本（${a.currency}）<input type="number" step="any" id="c-${safe(a.id)}" value="${a.cost}"></label><button onclick="updateBase('${safe(a.id)}')">儲存校正</button><p class="hint">此處只改期初基準，不會清除後續交易。</p></details></div>`;}).join('');for(const id of ['tradeasset','manualasset']){const el=byId(id),selected=el.value;el.innerHTML=state.assets.map(a=>`<option value="${safe(a.id)}">${safe(a.name)}</option>`).join('');if(state.assets.some(a=>a.id===selected))el.value=selected;}byId('feeddate').textContent=feed.updated_at?'行情檔更新：'+taiwanTime(feed.updated_at):'尚未取得自動行情';byId('feedstatus').textContent=feedError?'行情讀取失敗':feed.updated_at?'行情已讀取':'行情未就緒';updateEstimatePreview();renderPendingSummary();renderHistory();renderHistoricalArchive();renderCalendar();renderMonthlyBudget();renderTradeLedger();renderEthCostRepair();}
 function updateBase(id){const a=state.assets.find(x=>x.id===id),q=num(byId('q-'+id)?.value),c=num(byId('c-'+id)?.value);if(!a||!Number.isFinite(q)||q<0||!Number.isFinite(c)||c<0)return alert('請填入有效數值');a.qty=q;a.cost=c;a.verified=true;save();render();}
 function showAddAsset(){byId('assetform').classList.toggle('hidden');}
 
@@ -736,8 +736,9 @@ function installTradeLedger(){
   }
   if(!byId('tradeLedgerPanel')){
     const panel=document.createElement('div');panel.className='card';panel.id='tradeLedgerPanel';
-    panel.innerHTML='<h2>交易明細 · 可修改（V26.1114.03）</h2><p class="hint">直接修改原交易，不會重複增加持倉。期初持倉不在此表，請至「持倉」校正。</p><div id="tradeLedgerList"></div>';
-    section.appendChild(panel);
+    panel.innerHTML='<h2>交易明細 · 編輯／刪除</h2><p class="hint">修改原交易，不會新增第二筆。美元買入缺少台幣扣款可直接在此補填。期初持倉請至「持倉」校正。</p><div id="tradeLedgerList"></div>';
+    const firstCard=section.querySelector('.card');
+    if(firstCard)section.insertBefore(panel,firstCard);else section.prepend(panel);
   }
 }
 function renderTradeLedger(){
@@ -746,42 +747,60 @@ function renderTradeLedger(){
   el.innerHTML=rows.length?rows.map((t,i)=>{
     const a=state.assets.find(x=>x.id===t.asset),curr=a?.currency||'TWD';
     const twd=Number(t.twdTotal)>0?money(Number(t.twdTotal)):(curr==='USD'&&Number(t.fxAtEntry)>0?money((Number(t.qty)*Number(t.price)+(Number(t.fee)||0))*Number(t.fxAtEntry)):'待核對');
-    return `<div class="item"><div class="between"><b>${safe(t.asset)} · ${t.side==='sell'?'賣出':'買入'}${t.estimated?' · 🟡 預估':''}</b><small>${safe(t.date||'日期未知')}</small></div><p class="muted">${fmtQty(t.qty)} 股／單位 × ${money(Number(t.price),curr)} · 手續費 ${money(Number(t.fee)||0,curr)}</p>${curr==='USD'?`<small>台幣金額：${twd} · 成交匯率：${Number(t.fxAtEntry)>0?Number(t.fxAtEntry).toFixed(4):'待核對'}</small>`:''}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="secondary" data-edit-trade="${i}">修改交易</button><button type="button" class="secondary" data-delete-trade="${i}">刪除</button></div></div>`;
+    const missing=curr==='USD'&&t.side==='buy'&&!(Number(t.twdTotal)>0)&&!(Number(t.fxAtEntry)>0);
+    return `<div class="item"><div class="between"><b>${safe(t.asset)} · ${t.side==='sell'?'賣出':'買入'}${t.estimated?' · 🟡 預估':''}</b><small>${safe(t.date||'日期未知')}</small></div>
+      <p class="muted">${fmtQty(t.qty)} 單位 × ${money(Number(t.price),curr)} · 手續費 ${money(Number(t.fee)||0,curr)}</p>
+      ${curr==='USD'?`<small>台幣金額：${twd} · 成交匯率：${Number(t.fxAtEntry)>0?Number(t.fxAtEntry).toFixed(4):'待核對'}</small>`:''}
+      ${missing?'<p class="hint" style="color:#ffd36a">⚠ 尚未計入月投入預算；請按「編輯」補成交匯率或實際台幣扣款。</p>':''}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="secondary" data-edit-trade="${i}">編輯</button><button type="button" class="secondary" data-delete-trade="${i}">刪除</button></div>
+      <div id="trade-editor-${i}"></div></div>`;
   }).join(''):'<p class="hint">目前沒有交易明細；期初持倉仍會顯示在「持倉」。</p>';
-  el.querySelectorAll('[data-edit-trade]').forEach(b=>b.addEventListener('click',()=>editTrade(rows[Number(b.dataset.editTrade)])));
+  el.querySelectorAll('[data-edit-trade]').forEach(b=>b.addEventListener('click',()=>editTrade(rows[Number(b.dataset.editTrade)],Number(b.dataset.editTrade))));
   el.querySelectorAll('[data-delete-trade]').forEach(b=>b.addEventListener('click',()=>deleteTradeRecord(rows[Number(b.dataset.deleteTrade)])));
 }
 function deleteTradeRecord(t){
-  if(!t||!confirm(`確定刪除 ${t.date} ${t.asset} 的這筆交易？此操作會改變持倉。`))return;
+  if(!t)return;
+  if(!confirm(`確定刪除 ${t.date} ${t.asset} 的這筆${t.side==='sell'?'賣出':'買入'}交易？\n數量：${fmtQty(t.qty)}，這會影響持倉、成本及月預算。`))return;
+  if(!confirm('最後確認：刪除後無法直接復原。你已經備份資料，確定要刪除嗎？'))return;
   const i=state.trades.indexOf(t);if(i<0)return;
   state.trades.splice(i,1);save();render();
 }
-function editTrade(t){
+function editTrade(t,index){
   if(!t)return;
-  const ask=(label,old)=>prompt(label,String(old??''));
-  const date=ask('成交日期 YYYY-MM-DD',t.date);if(date===null)return;
-  const qtyRaw=ask('成交數量',t.qty);if(qtyRaw===null)return;
-  const priceRaw=ask('成交單價（原幣）',t.price);if(priceRaw===null)return;
-  const feeRaw=ask('手續費（原幣）',t.fee||0);if(feeRaw===null)return;
-  const qty=Number(qtyRaw),unitPrice=Number(priceRaw),fee=Number(feeRaw);
-  if(!dateValid(date)||!(qty>0)||!(unitPrice>0)||!Number.isFinite(fee)||fee<0)return alert('日期、數量、價格或手續費無效，沒有更動。');
-  const a=state.assets.find(x=>x.id===t.asset);let rate=t.fxAtEntry,total=t.twdTotal;
-  if(a?.currency==='USD'){
-    const rateRaw=ask('交易當時 USD/TWD 匯率（可留空）',rate??'');if(rateRaw===null)return;
-    const totalRaw=ask('實際台幣扣款／入帳（可留空）',total??'');if(totalRaw===null)return;
-    if(rateRaw.trim()&&!(Number(rateRaw)>0)||totalRaw.trim()&&!(Number(totalRaw)>0))return alert('匯率與台幣金額必須大於零');
-    rate=rateRaw.trim()?Number(rateRaw):null;total=totalRaw.trim()?Number(totalRaw):null;
-  }
-  if(!confirm('確認修改原交易？不會新增第二筆。'))return;
-  const old={...t};Object.assign(t,{date,qty,price:unitPrice,fee});
-  if(a?.currency==='USD'){t.fxAtEntry=rate;t.twdTotal=total;}
-  if(t.estimated){t.estimated=false;t.confirmedAt=new Date().toISOString();}
-  // Prevent invalid chronological sell balances after the edit.
-  if(a){let q=Number(a.qty)||0;const trades=state.trades.filter(x=>x.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));
-    for(const item of trades){q+=item.side==='buy'?Number(item.qty):-Number(item.qty);if(q< -1e-7){Object.assign(t,old);return alert('修改後會產生超額賣出，已取消。');}}
-  }
-  save();render();alert('原交易已更新。');
+  const holder=byId('trade-editor-'+index);if(!holder)return;
+  if(holder.innerHTML.trim()){holder.innerHTML='';return;}
+  const a=state.assets.find(x=>x.id===t.asset),usd=a?.currency==='USD';
+  const control=(name,label,value,kind='number')=>`<label style="display:block;margin:8px 0">${label}<input data-trade-field="${name}" type="${kind}" ${kind==='number'?'step="any" min="0"':''} value="${safe(value??'')}"></label>`;
+  holder.innerHTML=`<div style="margin-top:12px;padding:12px;border:1px solid #49617c;border-radius:12px">
+    <b>編輯 ${safe(t.asset)} 原交易</b>
+    ${control('date','成交日期',t.date,'date')}
+    ${control('qty','成交數量',t.qty)}
+    ${control('price','成交單價（'+(a?.currency||'TWD')+'）',t.price)}
+    ${control('fee','手續費（'+(a?.currency||'TWD')+'）',t.fee||0)}
+    ${usd?control('fxAtEntry','成交當時 USD/TWD 匯率（可留空）',t.fxAtEntry??'')+control('twdTotal','實際台幣扣款／入帳（可留空，優先計入預算）',t.twdTotal??''):''}
+    <p class="hint">${usd?'只需填匯率或實際台幣金額其中一項；不要把同筆買入再記入「其他已投入」。':'此操作只修改原交易。'}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" data-save-edit>儲存修改</button><button type="button" class="secondary" data-cancel-edit>取消</button></div></div>`;
+  holder.querySelector('[data-cancel-edit]').addEventListener('click',()=>holder.innerHTML='');
+  holder.querySelector('[data-save-edit]').addEventListener('click',()=>{
+    const get=k=>holder.querySelector(`[data-trade-field="${k}"]`)?.value.trim()??'';
+    const date=get('date'),qty=Number(get('qty')),price=Number(get('price')),fee=Number(get('fee'));
+    if(!dateValid(date)||!(qty>0)||!(price>0)||!(fee>=0)||!Number.isFinite(fee))return alert('請填有效日期、正數數量及價格，手續費不可為負數。');
+    const rateRaw=usd?get('fxAtEntry'):'',totalRaw=usd?get('twdTotal'):'';
+    if(rateRaw&&!(Number(rateRaw)>0)||totalRaw&&!(Number(totalRaw)>0))return alert('匯率及台幣扣款必須大於零。');
+    if(!confirm(`確定修改 ${t.asset} ${date} 的原交易？不會新增第二筆。`))return;
+    const old={...t};Object.assign(t,{date,qty,price,fee});
+    if(usd){t.fxAtEntry=rateRaw?Number(rateRaw):null;t.twdTotal=totalRaw?Number(totalRaw):null;}
+    if(t.estimated){t.estimated=false;t.confirmedAt=new Date().toISOString();}
+    if(a){let q=Number(a.qty)||0;
+      const trades=state.trades.filter(x=>x.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));
+      for(const item of trades){q+=item.side==='buy'?Number(item.qty):-Number(item.qty);
+        if(q< -1e-7){Object.assign(t,old);return alert('修改後會超額賣出，已取消。');}}
+    }
+    save();render();alert('已更新原交易及月投入計算。');
+  });
 }
+function editTradeFromHistory(created){const t=state.trades.find(x=>Number(x.created)===Number(created));if(!t)return alert('找不到交易');document.querySelector('[data-tab="trades"]')?.click();renderTradeLedger();const rows=state.trades.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))||(Number(b.created)||0)-(Number(a.created)||0));const i=rows.indexOf(t);if(i>=0){editTrade(t,i);byId('trade-editor-'+i)?.scrollIntoView({behavior:'smooth',block:'center'});}}
+function deleteTradeFromHistory(created){const t=state.trades.find(x=>Number(x.created)===Number(created));deleteTradeRecord(t);}
 function addTrade(){
   const asset=byId('tradeasset').value,side=byId('tradeside').value,date=byId('tradedate').value;
   const qty=Number(byId('tradeqty').value),p=Number(byId('tradeprice').value),fee=Number(byId('tradefee').value||0);
