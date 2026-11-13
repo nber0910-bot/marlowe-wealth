@@ -122,75 +122,90 @@ function setCalendarMonth(offset){
 }
 function calendarSigned(n){return (n>0?'+':'')+money(n);}
 function calendarTone(n){return n>0?'negative':n<0?'positive':'';}
+function calendarArchiveIndex(){
+  const map={};if(!historicalArchive)return map;
+  for(const e of historicalArchive.historical_events||[]){
+    if(!dateValid(e.date))continue;
+    (map[e.date]??={events:[],snapshots:[]}).events.push(e);
+  }
+  for(const s of historicalArchive.asset_snapshots||[]){
+    if(!dateValid(s.date))continue;
+    (map[s.date]??={events:[],snapshots:[]}).snapshots.push(s);
+  }
+  return map;
+}
+function calendarArchiveName(x){return x.asset_name||x.asset_id||'投資紀錄';}
+function calendarScopeName(scope){return ({five_funds_only:'五檔基金',four_funds_only:'四檔基金',funds_only:'基金部位',website_reported_total:'網站總資產'})[scope]||scope||'資產';}
+function installCalendarArchiveStyle(){
+  if(byId('calendarArchiveStyle'))return;
+  const el=document.createElement('style');el.id='calendarArchiveStyle';
+  el.textContent=`.calendar-cell{position:relative}.calendar-archive-dot{display:block;font-size:10px;line-height:1.15;margin-top:3px;color:#a9cfff;font-weight:700}.calendar-archive-legend{font-size:12px;line-height:1.6;opacity:.85;margin:10px 0}.calendar-archive-entry{padding:10px 0;border-bottom:1px solid rgba(160,190,220,.2)}.calendar-archive-entry small{display:block;opacity:.75;margin-top:4px}.calendar-archive-hint{font-size:12px;opacity:.8;margin:7px 0}.calendar-cell .calendar-amount{overflow-wrap:anywhere}`;
+  document.head.appendChild(el);
+}
 function renderCalendar(){
   const grid=byId('calendarGrid');if(!grid)return;
+  installCalendarArchiveStyle();
   const year=calendarDate.getFullYear(),month=calendarDate.getMonth();
   const prefix=`${year}-${String(month+1).padStart(2,'0')}`;
-  const changes=dailyChanges();
+  const changes=dailyChanges(),archive=calendarArchiveIndex();
   byId('calendarMonth').textContent=`${year} 年 ${month+1} 月`;
   const first=new Date(year,month,1),last=new Date(year,month+1,0).getDate();
   const offset=(first.getDay()+6)%7;
   const rows=[];
   for(let start=0;start<Math.ceil((offset+last)/7)*7;start+=7){
-    const days=[];
-    for(let j=0;j<7;j++){
-      const n=start+j-offset+1;days.push(n>=1&&n<=last?n:null);
-    }
-    rows.push(days);
+    const days=[];for(let j=0;j<7;j++){const n=start+j-offset+1;days.push(n>=1&&n<=last?n:null);}rows.push(days);
   }
   const monthEntries=Object.entries(changes).filter(([d])=>d.startsWith(prefix));
   const monthAmount=monthEntries.reduce((sum,[,x])=>sum+x.amount,0);
   const pnl=byId('calendarMonthPnl');
+  // Partial daily observations are not a verified full-month return.
   pnl.textContent=monthEntries.length?calendarSigned(monthAmount):'—';
   pnl.className=monthEntries.length?calendarTone(monthAmount):'';
   byId('calendarMonthReturn').textContent='—';
-  // The CSS originally used six columns; override for the seven-day layout.
   grid.style.gridTemplateColumns='repeat(7,minmax(0,1fr))';
-  let html=['一','二','三','四','五','六','日']
-    .map(s=>`<div class="calendar-head">${s}</div>`).join('');
+  let html=['一','二','三','四','五','六','日'].map(x=>`<div class="calendar-head">${x}</div>`).join('');
   let cumulative=0;
   for(const days of rows){
     let weekAmount=0,weekCount=0;
     for(const n of days){
       if(!n){html+='<div class="calendar-cell empty"></div>';continue;}
-      const d=`${prefix}-${String(n).padStart(2,'0')}`,x=changes[d];
+      const d=`${prefix}-${String(n).padStart(2,'0')}`,x=changes[d],h=archive[d];
       if(x){weekAmount+=x.amount;weekCount++;cumulative+=x.amount;}
+      // Cumulative daily mode only sums known daily P/L; never substitutes a historical
+      // snapshot's cumulative P/L, which may cover only a subset of holdings.
       const shown=x?(calendarMode==='daily'?x.amount:cumulative):null;
-      const amountText=shown===null?'—':(shown>0?'+':'')+
-        Math.round(shown).toLocaleString('zh-TW');
-      const percentText=x&&calendarMode==='daily'&&x.pct!==null?
-        (x.pct>0?'+':'')+x.pct.toFixed(2)+'%':'';
-      html+=`<button type="button" class="calendar-cell ${d===twDate()?'today':''} ${d===calendarSelected?'selected':''}"
-        data-calendar-day="${d}" style="color:inherit;cursor:pointer">
-        <span class="calendar-day">${n}</span>
-        <span class="calendar-amount ${shown===null?'':calendarTone(shown)}">${amountText}</span>
-        <span class="calendar-percent">${percentText}</span></button>`;
+      const amountText=shown===null?'—':(shown>0?'+':'')+Math.round(shown).toLocaleString('zh-TW');
+      const percentText=x&&calendarMode==='daily'&&x.pct!==null?(x.pct>0?'+':'')+x.pct.toFixed(2)+'%':'';
+      const archiveText=h?`<span class="calendar-archive-dot">${h.snapshots.length?'◆ 快照':'● 紀錄'}</span>`:'';
+      html+=`<button type="button" class="calendar-cell ${d===twDate()?'today':''} ${d===calendarSelected?'selected':''}" data-calendar-day="${d}" style="color:inherit;cursor:pointer"><span class="calendar-day">${n}</span><span class="calendar-amount ${shown===null?'':calendarTone(shown)}">${amountText}</span><span class="calendar-percent">${percentText}</span>${archiveText}</button>`;
     }
-    html+=`<div class="calendar-cell week-total" style="grid-column:1/-1;min-height:36px;display:flex;align-items:center;justify-content:space-between;padding:7px 12px">
-      <span class="calendar-day">週損益（${weekCount} 天有資料）</span>
-      <span class="calendar-amount ${weekCount?calendarTone(weekAmount):''}">
-      ${weekCount?calendarSigned(weekAmount):'—'}</span></div>`;
+    html+=`<div class="calendar-cell week-total" style="grid-column:1/-1;min-height:36px;display:flex;align-items:center;justify-content:space-between;padding:7px 12px"><span class="calendar-day">週損益（${weekCount} 天有資料）</span><span class="calendar-amount ${weekCount?calendarTone(weekAmount):''}">${weekCount?calendarSigned(weekAmount):'—'}</span></div>`;
   }
   grid.innerHTML=html;
-  grid.querySelectorAll('[data-calendar-day]').forEach(button=>{
-    button.addEventListener('click',()=>{
-      calendarSelected=button.dataset.calendarDay;renderCalendar();
-    });
-  });
+  grid.querySelectorAll('[data-calendar-day]').forEach(button=>button.addEventListener('click',()=>{calendarSelected=button.dataset.calendarDay;renderCalendar();}));
   const detail=byId('calendarDetail');
   if(detail){
     const x=calendarSelected?changes[calendarSelected]:null;
-    detail.innerHTML=`<h3>${calendarSelected?safe(calendarSelected)+' · ':'每日'}損益明細</h3>`+
-      (x?`<p class="${calendarTone(x.amount)}">${calendarSigned(x.amount)}
-        ${x.pct===null?'':`（${x.pct.toFixed(2)}%）`}</p>
-        <p class="hint">${safe(x.method)}<br>前次觀測：${money(x.previous.value)}<br>
-        當次觀測：${money(x.current.value)}<br>這是觀測行情的估算，非券商官方日結。</p>`:
-        '<p class="hint">此日期沒有可比較的連續兩日完整估值；缺少的歷史行情不會自動補造。</p>');
+    const h=calendarSelected?archive[calendarSelected]:null;
+    let body=x?`<p class="${calendarTone(x.amount)}">${calendarSigned(x.amount)}${x.pct===null?'':`（${x.pct.toFixed(2)}%）`}</p><p class="hint">${safe(x.method)}<br>前次觀測：${money(x.previous.value)}<br>當次觀測：${money(x.current.value)}<br>觀測估算，非券商官方日結。</p>`:'<p class="hint">當日沒有可核實的單日損益，故顯示「—」。</p>';
+    if(h){
+      body+='<h4>歷史投資紀錄（不計入每日損益）</h4>';
+      for(const a of h.snapshots){
+        const status=historicalStatusLabels[a.status]||'待核對';
+        body+=`<div class="calendar-archive-entry"><b>◆ ${safe(calendarScopeName(a.scope))} · 資產快照</b><div>當時市值：${a.approximate?'約 ':''}${historicalMoney(a.market_value_twd)}</div>${historicalNumber(a.cumulative_pnl_twd)!==null?`<div>當時累計損益：${historicalMoney(a.cumulative_pnl_twd)}（非單日損益）</div>`:''}<small>${safe(status)} · ${safe(archiveSource(a.source_id))}</small>${a.notes?`<small>${safe(a.notes)}</small>`:''}</div>`;
+      }
+      for(const a of h.events){
+        const status=historicalStatusLabels[a.status]||'待核對';
+        const parts=[historicalNumber(a.amount_twd)!==null?'回報投入 '+historicalMoney(a.amount_twd):null,historicalNumber(a.twd_total)!==null?'預估扣款 '+historicalMoney(a.twd_total):null,historicalNumber(a.quantity)!==null?'數量 '+fmtQty(a.quantity):null];
+        body+=`<div class="calendar-archive-entry"><b>● ${safe(calendarArchiveName(a))} · ${a.side==='buy'?'買入參考':'投資紀錄'}</b><div>${parts.filter(Boolean).map(safe).join(' · ')||'金額待核對'}</div><small>${safe(status)} · ${safe(archiveSource(a.source_id))}</small></div>`;
+      }
+    }
+    detail.innerHTML=`<h3>${calendarSelected?safe(calendarSelected)+' · ':'每日'}損益明細</h3>`+body;
   }
-  byId('calendarNote').textContent='日曆依開啟網站時記錄的完整行情快照估算；'+
-    '有前後兩天的逐檔報價時，以前一天持倉計算價格變動，排除新買入本金。'+
-    '賣出、缺少報價或沒有連續快照時不強行推算。'+
-    '週／月僅加總有資料的日期，不代表完整期間績效；報酬率因此暫不顯示。';
+  const archiveCount=Object.keys(archive).filter(d=>d.startsWith(prefix)).length;
+  const note=byId('calendarNote');
+  note.textContent=`本月 ${archiveCount} 天有歷史事件／快照標記；${monthEntries.length} 天有可比較的單日損益。`+
+    '◆ 為歷史資產快照，● 為交易或投入紀錄，點日期看詳情。歷史累計損益不等於單日損益；缺乏完整連續行情時維持「—」。週／月損益只加總已有的每日資料，不代表整個期間。';
 }
 
 function installCalendar(){byId('calendarPrev')?.addEventListener('click',()=>setCalendarMonth(-1));byId('calendarNext')?.addEventListener('click',()=>setCalendarMonth(1));byId('calendarDailyMode')?.addEventListener('click',()=>{calendarMode='daily';byId('calendarDailyMode').classList.add('active');byId('calendarCumulativeMode').classList.remove('active');renderCalendar();});byId('calendarCumulativeMode')?.addEventListener('click',()=>{calendarMode='cumulative';byId('calendarCumulativeMode').classList.add('active');byId('calendarDailyMode').classList.remove('active');renderCalendar();});}
@@ -365,7 +380,7 @@ async function loadHistoricalArchive(){
     if(data.schema!=='marlowe-wealth-history-v1'||!Array.isArray(data.historical_events)||!Array.isArray(data.asset_snapshots)||!Array.isArray(data.monthly_overview))throw Error('history.json 格式不符合預期');
     historicalArchive=data;historicalArchiveError='';
   }catch(error){historicalArchive=null;historicalArchiveError='歷史檔案讀取失敗：'+error.message+'。請確認 history.json 已放在與 app.js 相同的 GitHub 根目錄。';}
-  renderHistoricalArchive();
+  renderHistoricalArchive();renderCalendar();
 }
 function installHistoryFilters(){for(const id of ['recordYearFilter','recordMonthFilter','recordTypeFilter'])byId(id)?.addEventListener('change',renderHistory);}
 
