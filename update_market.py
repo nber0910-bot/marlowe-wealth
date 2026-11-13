@@ -27,6 +27,19 @@ except Exception:
 prices = old.get("prices", {})
 if not isinstance(prices, dict):
     prices = {}
+# Recovery only: these dated NAVs were present in the user's earlier
+# market.json, but were lost from the latest file. Never overwrite a
+# valid quote; never label these as newly fetched NAVs.
+RECOVERY_NAVS = {
+    "FUBON_SP500": {"value": 11.8, "date": "2026-11-11", "source": "MoneyDJ published fund NAV", "note": "Restored from prior user-provided market.json; not a new quote"},
+    "FUBON_NASDAQ100": {"value": 11.58, "date": "2026-11-11", "source": "MoneyDJ published fund NAV", "note": "Restored from prior user-provided market.json; not a new quote"},
+}
+for asset_id, recovery in RECOVERY_NAVS.items():
+    existing = prices.get(asset_id)
+    if not isinstance(existing, dict) or not isinstance(existing.get("value"), (int, float)) or not math.isfinite(existing["value"]) or existing["value"] <= 0:
+        prices[asset_id] = dict(recovery)
+        print("RESTORED PREVIOUS NAV", asset_id, recovery["date"])
+
 fx = old.get("fx")
 HEADERS = {"User-Agent": "Mozilla/5.0", "Accept": "text/html,application/json"}
 
