@@ -256,14 +256,14 @@ payload = {
     "prices": prices,
     "notes": (
         "Taiwan/US securities: Yahoo Finance delayed daily close; "
-        "funds: MoneyDJ published NAV; BTC: BitoPro BTC/TWD last-traded snapshot. "
+        "funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. "
         "Each quote may have a different timestamp. "
         "Previous verified values are retained when sources are unavailable."
     ),
 }
 OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-expected_ids = [asset_id for asset_id, _ in MARKET_SECURITIES] + list(FUNDS) + ["BTC"]
+expected_ids = [asset_id for asset_id, _ in MARKET_SECURITIES] + list(FUNDS) + ["BTC", "ETH"]
 available_assets = sum(
     1 for asset_id in expected_ids
     if isinstance(prices.get(asset_id), dict)

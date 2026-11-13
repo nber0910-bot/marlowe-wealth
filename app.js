@@ -1,5 +1,5 @@
 'use strict';
-// MARLOWE WEALTH V26.1114.01 — editable trade ledger and USD transaction basis.
+// MARLOWE WEALTH V26.1114.04 — guarded ETH duplicate correction and automatic quote.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -17,6 +17,28 @@ if(!state.assets.some(a=>a.id==='BTC'))state.assets.push({id:'BTC',name:'Bitcoin
 const btcAsset=state.assets.find(a=>a.id==='BTC');
 if(!(Number(btcAsset.qty)>0)&&!state.trades.some(t=>t.asset==='BTC'))state.trades.push({asset:'BTC',side:'buy',date:'2026-11-13',qty:0.0012974,price:2368360,fee:0,created:1794500000001,feeUnverified:true,note:'BitoPro BTC/TWD spot; fee pending verification'});
 if(!state.manual.BTC)state.manual.BTC={value:2362249,date:'2026-11-13',source:'BitoPro 截圖參考價（非即時）'};
+// ETH 2026-11-14: narrowly scoped repair of the duplicated opening lot and
+// incorrectly entered NT$719 as a per-ETH price. No other asset is changed.
+function repairKnownEthDuplicate(){
+  const a=state.assets.find(x=>x.id==='ETH');
+  const trades=state.trades.filter(t=>t.asset==='ETH');
+  if(!a||trades.length!==1)return false;
+  const t=trades[0];
+  const match=(x,y)=>Math.abs(Number(x)-y)<1e-7;
+  if(t.side!=='buy'||t.date!=='2026-11-14'||!match(t.qty,0.01129778)||
+     !match(t.price,719)||!match(a.qty,0.01129778)||
+     !(Number(a.cost)>=0&&Number(a.cost)<20)||Number(t.fee||0)!==0)return false;
+  // Preserve the observed 0.01129778 ETH account balance. This consolidated
+  // ledger quantity includes dust; exchange execution was 0.0112774 ETH.
+  // Keep the reported NT$719 as provisional total cost until fee reconciliation.
+  a.qty=0;a.cost=0;a.verified=false;
+  t.price=719/Number(t.qty);
+  t.note='2026/11/14 合併持有數量 0.01129778 ETH；交易所現貨成交 0.0112774 ETH，差額 0.00002038 ETH 來源待核對。NT$719 為回報總投入，成本暫估。';
+  t.costProvisional=true;
+  state.ethRepairVersion='2026-11-14-consolidated-v1';
+  return true;
+}
+repairKnownEthDuplicate();
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 save();
 let feed={prices:{},fx:null,updated_at:null},feedError=null;
