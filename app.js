@@ -19,6 +19,7 @@ if(!state.manual.BTC)state.manual.BTC={value:2362249,date:'2026-11-13',source:'B
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 save();
 let feed={prices:{},fx:null,updated_at:null},feedError=null;
+let dailyMarketArchive={schema:'marlowe-market-observations-v1',observations:[]};
 const byId=id=>document.getElementById(id);
 const num=n=>Number(n);
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -148,6 +149,7 @@ function renderCalendar(){
   const year=calendarDate.getFullYear(),month=calendarDate.getMonth();
   const prefix=`${year}-${String(month+1).padStart(2,'0')}`;
   const changes=dailyChanges(),archive=calendarArchiveIndex();
+  const marketDays=Object.fromEntries((dailyMarketArchive.observations||[]).filter(x=>dateValid(x.date)).map(x=>[x.date,x]));
   byId('calendarMonth').textContent=`${year} 年 ${month+1} 月`;
   const first=new Date(year,month,1),last=new Date(year,month+1,0).getDate();
   const offset=(first.getDay()+6)%7;
@@ -176,7 +178,7 @@ function renderCalendar(){
       const shown=x?(calendarMode==='daily'?x.amount:cumulative):null;
       const amountText=shown===null?'—':(shown>0?'+':'')+Math.round(shown).toLocaleString('zh-TW');
       const percentText=x&&calendarMode==='daily'&&x.pct!==null?(x.pct>0?'+':'')+x.pct.toFixed(2)+'%':'';
-      const archiveText=h?`<span class="calendar-archive-dot">${h.snapshots.length?'◆ 快照':'● 紀錄'}</span>`:'';
+      const archiveText=h?`<span class="calendar-archive-dot">${h.snapshots.length?'◆ 快照':'● 紀錄'}</span>`:(marketDays[d]?'<span class="calendar-archive-dot">▣ 行情</span>':'');
       html+=`<button type="button" class="calendar-cell ${d===twDate()?'today':''} ${d===calendarSelected?'selected':''}" data-calendar-day="${d}" style="color:inherit;cursor:pointer"><span class="calendar-day">${n}</span><span class="calendar-amount ${shown===null?'':calendarTone(shown)}">${amountText}</span><span class="calendar-percent">${percentText}</span>${archiveText}</button>`;
     }
     html+=`<div class="calendar-cell week-total" style="grid-column:1/-1;min-height:36px;display:flex;align-items:center;justify-content:space-between;padding:7px 12px"><span class="calendar-day">週損益（${weekCount} 天有資料）</span><span class="calendar-amount ${weekCount?calendarTone(weekAmount):''}">${weekCount?calendarSigned(weekAmount):'—'}</span></div>`;
@@ -187,6 +189,7 @@ function renderCalendar(){
   if(detail){
     const x=calendarSelected?changes[calendarSelected]:null;
     const h=calendarSelected?archive[calendarSelected]:null;
+    const marketDay=calendarSelected?marketDays[calendarSelected]:null;
     let body=x?`<p class="${calendarTone(x.amount)}">${calendarSigned(x.amount)}${x.pct===null?'':`（${x.pct.toFixed(2)}%）`}</p><p class="hint">${safe(x.method)}<br>前次觀測：${money(x.previous.value)}<br>當次觀測：${money(x.current.value)}<br>觀測估算，非券商官方日結。</p>`:'<p class="hint">當日沒有可核實的單日損益，故顯示「—」。</p>';
     if(h){
       body+='<h4>歷史投資紀錄（不計入每日損益）</h4>';
@@ -200,11 +203,16 @@ function renderCalendar(){
         body+=`<div class="calendar-archive-entry"><b>● ${safe(calendarArchiveName(a))} · ${a.side==='buy'?'買入參考':'投資紀錄'}</b><div>${parts.filter(Boolean).map(safe).join(' · ')||'金額待核對'}</div><small>${safe(status)} · ${safe(archiveSource(a.source_id))}</small></div>`;
       }
     }
+    if(marketDay){
+      const quotes=Object.entries(marketDay.prices||{}).map(([id,p])=>`<div class="calendar-archive-entry"><b>${safe(id)}</b>：${validQuote(p)?safe(p.value):'無報價'} <small>報價日期 ${safe(p?.date||'未知')} · ${safe(p?.source||'來源未知')}</small></div>`).join('');
+      body+=`<h4>▣ 當日可得行情（非同步收盤）</h4><p class="hint">擷取時間：${safe(taiwanTime(marketDay.captured_at))}。各標的報價日期可能不同，不能直接當成正式單日損益。</p>${quotes}`;
+    }
     detail.innerHTML=`<h3>${calendarSelected?safe(calendarSelected)+' · ':'每日'}損益明細</h3>`+body;
   }
   const archiveCount=Object.keys(archive).filter(d=>d.startsWith(prefix)).length;
   const note=byId('calendarNote');
-  note.textContent=`本月 ${archiveCount} 天有歷史事件／快照標記；${monthEntries.length} 天有可比較的單日損益。`+
+  const marketCount=Object.keys(marketDays).filter(d=>d.startsWith(prefix)).length;
+  note.textContent=`本月 ${archiveCount} 天有歷史事件／快照標記；${marketCount} 天有行情觀測；${monthEntries.length} 天有可比較的單日損益。`+
     '◆ 為歷史資產快照，● 為交易或投入紀錄，點日期看詳情。歷史累計損益不等於單日損益；缺乏完整連續行情時維持「—」。週／月損益只加總已有的每日資料，不代表整個期間。';
 }
 
@@ -397,6 +405,7 @@ function saveFx(){const raw=byId('fx').value,next=raw===''?null:num(raw);if(next
 function exportData(){const blob=new Blob([JSON.stringify({exported_at:new Date().toISOString(),...state},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='wealth-v2-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 async function importData(e){const file=e.target.files?.[0];if(!file)return;try{const x=JSON.parse(await file.text());if(x.version!==2||!Array.isArray(x.assets)||!Array.isArray(x.trades))throw Error('非 V2 備份');if(!confirm('確定覆蓋目前 V2 資料？請先備份。'))return;state=x;if(!state.manual||typeof state.manual!=='object')state.manual={};if(!state.history||typeof state.history!=='object')state.history={};if(!Array.isArray(state.history.snapshots))state.history.snapshots=[];save();render();}catch(err){alert('匯入失敗：'+err.message);}finally{e.target.value='';}}
 function resetDemo(){if(!confirm('這會清除目前 V2 的持倉與交易，確定嗎？'))return;state={version:2,assets:[],trades:[],manual:{},fxOverride:null,history:{snapshots:[]}};save();render();}
+async function loadDailyMarketArchive(){try{const r=await fetch('daily-history.json',{cache:'no-store'});if(!r.ok)return;const j=await r.json();if(j?.schema!=='marlowe-market-observations-v1'||!Array.isArray(j.observations))return;dailyMarketArchive=j;renderCalendar();}catch(e){console.warn('daily-history unavailable:',e.message);}}
 async function loadFeed(bust=false){try{const r=await fetch('market.json'+(bust?'?t='+Date.now():''),{cache:'no-store'});if(!r.ok)throw Error('行情檔尚未建立');const j=await r.json();if(!j||!j.prices||typeof j.prices!=='object'||Array.isArray(j.prices))throw Error('行情格式不正確');feed=j;feedError=null;recordSnapshot();render();window.dispatchEvent(new Event('wealth:feed-loaded'));}catch(e){feedError=e.message;render();byId('feedstatus').textContent='行情讀取失敗';byId('feeddate').textContent=e.message;}}
 function installEstimatedUI(){const select=byId('tradeasset');if(!select||byId('estimatePanel'))return;const section=select.closest('section')||select.parentElement.parentElement,panel=document.createElement('div');panel.id='estimatePanel';panel.className='item';panel.innerHTML=`<h3>🟡 預估入庫（台幣定期定額）</h3><p class="hint">已下單／扣款但尚未取得正式股數時使用。儲存後立即計入持倉與估值；股數為預估值。</p><label>總投入金額（TWD，含手續費）<input id="estimateTwd" type="number" min="0" step="0.01" value="24600" inputmode="decimal"></label><label>手續費率（%）<input id="estimateFeeRate" type="number" min="0" step="0.001" value="0.1" inputmode="decimal"></label><label>參考 USD/TWD 匯率<input id="estimateFx" type="number" min="0" step="any" placeholder="自動行情匯率，可自行修改" inputmode="decimal"></label><label>參考成交價（USD／股）<input id="estimatePrice" type="number" min="0" step="any" placeholder="自動帶入 VOO 行情，可自行修改" inputmode="decimal"></label><p id="estimatePreview" class="hint">等待參考價格與匯率…</p><button id="estimateSave" type="button">立即預估入庫</button><p class="hint">請勿再用上方「儲存交易」重複新增同一筆。</p>`;section.appendChild(panel);byId('estimateSave').addEventListener('click',addEstimatedTrade);for(const id of ['estimateTwd','estimateFeeRate','estimateFx','estimatePrice'])byId(id).addEventListener('input',updateEstimatePreview);select.addEventListener('change',updateEstimatePreview);byId('tradeside').addEventListener('change',updateEstimatePreview);}
 function estimateInputs(){const a=state.assets.find(x=>x.id===byId('tradeasset')?.value),total=num(byId('estimateTwd')?.value),feeRate=num(byId('estimateFeeRate')?.value),rate=num(byId('estimateFx')?.value)||fx(),p=num(byId('estimatePrice')?.value)||num(a&&price(a)?.value),feeTwd=Math.round(total*feeRate/100*100)/100,principal=total-feeTwd;return {a,total,feeRate,rate,p,feeTwd,principal,qty:principal/rate/p,feeUsd:feeTwd/rate};}
@@ -406,4 +415,4 @@ function confirmEstimatedTrade(created){const t=state.trades.find(t=>t.created==
 function renderPendingSummary(){let el=byId('estimatedSummary');if(!el){const target=byId('total')?.closest('.card')||byId('total')?.parentElement;if(!target)return;el=document.createElement('div');el.id='estimatedSummary';el.className='item';target.appendChild(el);}const pending=state.trades.filter(t=>t.estimated);if(!pending.length){el.style.display='none';return;}el.style.display='';const total=pending.reduce((s,t)=>s+(num(t.twdTotal)||0),0);el.innerHTML=`<b>🟡 預估入庫 · ${pending.length} 筆</b><p>已記入持倉的預估投入：${money(total)}</p><small>此金額已反映於預估持倉，請勿與總資產再相加。實際成交股數、匯率及損益仍待券商確認。</small>`;}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==b.dataset.tab));document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));window.scrollTo(0,0);}));
 byId('tradedate').value=today();byId('manualdate').value=today();
-try{installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
+try{installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
