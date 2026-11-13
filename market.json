@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-13T09:10:28+00:00",
+  "updated_at": "2026-11-13T10:12:15+00:00",
   "fx": {
-    "value": 32.856998,
+    "value": 32.849998,
     "date": "2026-11-13",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -42,10 +42,10 @@
       "source": "MoneyDJ published fund NAV"
     },
     "BTC": {
-      "value": 2276381.0,
+      "value": 2292886.0,
       "date": "2026-11-13",
       "source": "BitoPro BTC/TWD last traded price",
-      "retrieved_at": "2026-11-13T09:10:26+00:00",
+      "retrieved_at": "2026-11-13T10:12:12+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "btc_twd"
