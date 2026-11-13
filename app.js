@@ -2,6 +2,7 @@
 // MARLOWE WEALTH V26.1113.06 — archived daily provisional P/L extension.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
+// V26.1113.07: transparent archive coverage, preserved storage and snapshots.
 const initial=[['009816','009816','tw','TWD',1205,19015],['00646','元大 S&P500','tw','TWD',281,22016],['VOO','VOO','us','USD',0.06109,43.04],['FUBON_SP500','富邦標普500','fund','TWD',3307.47,36700],['FUBON_NASDAQ100','富邦 NASDAQ-100','fund','TWD',2705.29,31000],['YUANTA_NEW','元大新主流','fund','TWD',133.5,24800],['YUANTA_DIV','元大台灣高股息優質龍頭','fund','TWD',212.8,7539],['BTC','Bitcoin (BTC)','crypto','TWD',0,0]];
 const seed=()=>({version:2,assets:initial.map(([id,name,type,currency,qty,cost])=>({id,name,type,currency,qty,cost,verified:false})),trades:[],manual:{},fxOverride:null});
 let state;
@@ -248,13 +249,36 @@ function renderCalendar(){
   for(let start=0;start<Math.ceil((offset+last)/7)*7;start+=7){
     const days=[];for(let j=0;j<7;j++){const n=start+j-offset+1;days.push(n>=1&&n<=last?n:null);}rows.push(days);
   }
+  // Always explain WHY the calendar has no P/L rather than leaving a wall of dashes.
+  let coveragePanel=byId('calendarCoveragePanel');
+  if(!coveragePanel){
+    coveragePanel=document.createElement('div');
+    coveragePanel.id='calendarCoveragePanel';
+    coveragePanel.className='card';
+    coveragePanel.style.cssText='margin:12px 0;padding:15px;border:1px solid #49617c;border-radius:15px';
+    grid.parentNode.insertBefore(coveragePanel,grid);
+  }
+  const monthObserved=Object.keys(marketDays).filter(d=>d.startsWith(prefix)).sort();
+  const localAnchors=(state.history.snapshots||[]).filter(x=>dateValid(x.date)&&x.positions);
+  const newestAnchor=localAnchors.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const allComputed=Object.keys(changes).filter(d=>d.startsWith(prefix));
+  coveragePanel.innerHTML='<b>每日損益資料狀態</b>'+
+    '<p style="margin:7px 0">本月行情封存：'+monthObserved.length+' 天｜可比較損益：'+allComputed.length+' 天｜本機持倉快照：'+localAnchors.length+' 筆</p>'+
+    (allComputed.length
+      ?'<small>≈ 表示依封存行情估算；基金可能延遲，並非券商正式結算。</small>'
+      :'<small>目前尚無連續兩日的可比行情與持倉基準，因此不會編造每日、每週或每月損益。'+
+        (newestAnchor?'持倉基準日：'+safe(newestAnchor.date)+'。':'尚無完整持倉快照。')+
+        (monthObserved.length?'最近封存日：'+safe(monthObserved.at(-1))+'。':'本月尚無行情封存。')+'</small>');
   const monthEntries=Object.entries(changes).filter(([d])=>d.startsWith(prefix));
   const monthAmount=monthEntries.reduce((sum,[,x])=>sum+x.amount,0);
   const pnl=byId('calendarMonthPnl');
   // Partial daily observations are not a verified full-month return.
   pnl.textContent=monthEntries.length?'暫估 '+calendarSigned(monthAmount):'—';
   pnl.className=monthEntries.length?calendarTone(monthAmount):'';
-  byId('calendarMonthReturn').textContent='—';
+  const firstComparable=monthEntries.slice().sort((a,b)=>a[0].localeCompare(b[0]))[0];
+  const baseValue=Number(firstComparable?.[1]?.previous?.value);
+  byId('calendarMonthReturn').textContent=monthEntries.length&&baseValue>0?
+    '≈'+(monthAmount/baseValue*100).toFixed(2)+'%（僅有資料日）':'—';
   grid.style.gridTemplateColumns='repeat(7,minmax(0,1fr))';
   let html=['一','二','三','四','五','六','日'].map(x=>`<div class="calendar-head">${x}</div>`).join('');
   let cumulative=0;
@@ -272,7 +296,7 @@ function renderCalendar(){
       const archiveText=h?`<span class="calendar-archive-dot">${h.snapshots.length?'◆ 快照':'● 紀錄'}</span>`:(marketDays[d]?'<span class="calendar-archive-dot">▣ 行情</span>':'');
       html+=`<button type="button" class="calendar-cell ${d===twDate()?'today':''} ${d===calendarSelected?'selected':''}" data-calendar-day="${d}" style="color:inherit;cursor:pointer"><span class="calendar-day">${n}</span><span class="calendar-amount ${shown===null?'':calendarTone(shown)}">${amountText}</span><span class="calendar-percent">${percentText}</span>${archiveText}</button>`;
     }
-    html+=`<div class="calendar-cell week-total" style="grid-column:1/-1;min-height:36px;display:flex;align-items:center;justify-content:space-between;padding:7px 12px"><span class="calendar-day">週損益（${weekCount} 天有資料）</span><span class="calendar-amount ${weekCount?calendarTone(weekAmount):''}">${weekCount?calendarSigned(weekAmount):'—'}</span></div>`;
+    html+=`<div class="calendar-cell week-total" style="grid-column:1/-1;min-height:36px;display:flex;align-items:center;justify-content:space-between;padding:7px 12px"><span class="calendar-day">週損益（${weekCount?weekCount+' 天可比較':'尚無可比較資料'}）</span><span class="calendar-amount ${weekCount?calendarTone(weekAmount):''}">${weekCount?calendarSigned(weekAmount):'—'}</span></div>`;
   }
   grid.innerHTML=html;
   grid.querySelectorAll('[data-calendar-day]').forEach(button=>button.addEventListener('click',()=>{calendarSelected=button.dataset.calendarDay;renderCalendar();}));
@@ -282,6 +306,15 @@ function renderCalendar(){
     const h=calendarSelected?archive[calendarSelected]:null;
     const marketDay=calendarSelected?marketDays[calendarSelected]:null;
     let body=x?`<p class="${calendarTone(x.amount)}">暫估 ${calendarSigned(x.amount)}${x.pct===null?'':`（${x.pct.toFixed(2)}%）`}</p><p class="hint">${safe(x.method)}<br>前次觀測：${money(x.previous.value)}<br>當次觀測：${money(x.current.value)}<br>觀測估算，非券商官方日結。</p>`:'<p class="hint">當日沒有可核實的單日損益，故顯示「—」。</p>';
+    const localSnapshot=calendarSelected?(state.history.snapshots||[]).find(s=>s.date===calendarSelected&&Number.isFinite(Number(s.value))):null;
+    if(localSnapshot){
+      body+='<h4>◆ 本機資產估值快照（非單日損益）</h4>'+
+        '<div class="calendar-archive-entry"><b>當時市值：'+money(Number(localSnapshot.value))+'</b>'+
+        '<div>當時持倉成本換算：'+money(Number(localSnapshot.cost))+'</div>'+
+        '<div>當時未實現損益：'+money(Number(localSnapshot.unrealized))+'</div>'+
+        '<small>估值時間：'+safe(taiwanTime(localSnapshot.observedAt))+
+        '。價格可能來自不同報價日；成本含以當時匯率換算的美元部位。</small></div>';
+    }
     if(h){
       body+='<h4>歷史投資紀錄（不計入每日損益）</h4>';
       for(const a of h.snapshots){
@@ -382,7 +415,11 @@ function renderHistory(){
     const z=valuation(a);return sum+(z.costTwd??0);
   },0);
   byId('historyTotalCost').textContent=money(totalCost);
-  byId('historyTradeCount').textContent=state.trades.length+' 筆';
+  const costTitle=byId('historyTotalCost')?.parentElement?.querySelector('small, .muted, .label, p');
+  // Cost is current holdings cost translated at today's FX, NOT verified lifetime contributions.
+  if(costTitle&&/已知累積投入本金/.test(costTitle.textContent))costTitle.textContent='目前持倉成本（含匯率換算，非歷年累積投入）';
+  byId('historyTradeCount').textContent=state.trades.filter(t=>!t.estimated).length+
+    ' 筆已記錄／'+state.trades.filter(t=>t.estimated).length+' 筆預估';
   byId('historyUnknownCount').textContent=opening.filter(a=>!a.openingDate).length+' 檔';
   const thisMonth=twDate().slice(0,7);
   let known=0,uncertain=0;
@@ -393,7 +430,7 @@ function renderHistory(){
     else if(Number.isFinite(Number(t.twdTotal))&&Number(t.twdTotal)>0)known+=Number(t.twdTotal);
     else uncertain++;
   }
-  byId('historyMonthInput').textContent=money(known)+(uncertain?'（另有待核對）':'');
+  byId('historyMonthInput').textContent=money(known)+(uncertain?'（另有待核對）':'')+'（僅網站交易簿）';
 }
 
 // External history is DOCUMENTARY ONLY: never add it to assets, trades, or snapshots.
