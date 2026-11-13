@@ -66,7 +66,8 @@ label{
 }
 .tabs button{
   background:transparent;color:#a9b9cd;flex:1;
-  max-width:130px;font-size:12px;padding:10px 3px;
+  min-width:0;max-width:130px;
+  font-size:12px;padding:10px 2px;
 }
 .tabs button.active{background:#2d405a;color:#fff}
 details{margin:10px 0}
@@ -181,7 +182,7 @@ summary{cursor:pointer;color:#c1d6f1}
   font-size:11px;line-height:1.6;
 }
 
-/* P&L calendar — V26.1113 */
+/* P&L calendar */
 .calendar-toolbar{
   display:flex;align-items:center;
   justify-content:space-between;gap:8px;
@@ -302,6 +303,7 @@ summary{cursor:pointer;color:#c1d6f1}
   .calendar-cell{padding:5px 2px;min-height:59px}
   .calendar-amount{font-size:9px}
   .calendar-percent{font-size:8px}
+  .tabs button{font-size:11px;padding:10px 1px}
 }
 @media(prefers-reduced-motion:reduce){
   .asset-card,.asset-face,.asset-indicator,
@@ -320,6 +322,7 @@ summary{cursor:pointer;color:#c1d6f1}
 <small>PERSONAL INVESTMENT DASHBOARD</small>
 </header>
 
+<!-- OVERVIEW -->
 <section id="overview">
 <div class="card">
 <small>總投資資產估值 · TWD（不含現金）</small>
@@ -388,60 +391,6 @@ summary{cursor:pointer;color:#c1d6f1}
 </p>
 </div>
 
-<!-- Restored P&L calendar -->
-<div class="card" id="pnlCalendarCard">
-<div class="between">
-<h2>損益日曆</h2>
-<small>投資績效</small>
-</div>
-<div class="calendar-toolbar">
-<button class="calendar-arrow" id="calendarPrev"
- type="button" aria-label="上一個月">‹</button>
-<div class="calendar-month" id="calendarMonth">
-2026 年 11 月
-</div>
-<button class="calendar-arrow" id="calendarNext"
- type="button" aria-label="下一個月">›</button>
-</div>
-
-<div class="calendar-summary">
-<div class="calendar-stat">
-<small>本月投資損益</small>
-<strong id="calendarMonthPnl">—</strong>
-</div>
-<div class="calendar-stat">
-<small>本月報酬率</small>
-<strong id="calendarMonthReturn">—</strong>
-</div>
-</div>
-
-<div class="calendar-view">
-<button type="button" class="active"
- id="calendarDailyMode">每日損益</button>
-<button type="button"
- id="calendarCumulativeMode">累積損益</button>
-</div>
-
-<div class="calendar-grid" id="calendarGrid"
- aria-label="投資損益月曆">
-<div class="calendar-head">一</div>
-<div class="calendar-head">二</div>
-<div class="calendar-head">三</div>
-<div class="calendar-head">四</div>
-<div class="calendar-head">五</div>
-<div class="calendar-head">週損益</div>
-</div>
-
-<div class="calendar-detail" id="calendarDetail">
-<h3>每日損益明細</h3>
-<p class="hint">選擇日期後查看已確認的投資績效。</p>
-</div>
-<p class="calendar-note" id="calendarNote">
-尚未載入歷史損益資料。沒有可靠估值的日期不顯示金額。
-存入本金不計算為投資獲利。
-</p>
-</div>
-
 <div class="card">
 <h2>估值覆蓋</h2>
 <div id="count">—</div>
@@ -452,6 +401,7 @@ summary{cursor:pointer;color:#c1d6f1}
 </div>
 </section>
 
+<!-- HOLDINGS -->
 <section id="holdings" class="hidden">
 <div class="card">
 <h2>我的持倉</h2>
@@ -459,6 +409,7 @@ summary{cursor:pointer;color:#c1d6f1}
 </div>
 </section>
 
+<!-- TRADE -->
 <section id="trade" class="hidden">
 <div class="card">
 <h2>新增交易</h2>
@@ -509,6 +460,7 @@ summary{cursor:pointer;color:#c1d6f1}
 </div>
 </section>
 
+<!-- RECORDS -->
 <section id="records" class="hidden">
 <div class="card">
 <h2>投資歷程</h2>
@@ -587,6 +539,65 @@ summary{cursor:pointer;color:#c1d6f1}
 </div>
 </section>
 
+<!-- CALENDAR: INDEPENDENT TAB -->
+<section id="calendar" class="hidden">
+<div class="card" id="pnlCalendarCard">
+<div class="between">
+<h2>損益日曆</h2>
+<small>投資績效</small>
+</div>
+
+<div class="calendar-toolbar">
+<button class="calendar-arrow" id="calendarPrev"
+ type="button" aria-label="上一個月">‹</button>
+<div class="calendar-month" id="calendarMonth">
+2026 年 11 月
+</div>
+<button class="calendar-arrow" id="calendarNext"
+ type="button" aria-label="下一個月">›</button>
+</div>
+
+<div class="calendar-summary">
+<div class="calendar-stat">
+<small>本月投資損益</small>
+<strong id="calendarMonthPnl">—</strong>
+</div>
+<div class="calendar-stat">
+<small>本月報酬率</small>
+<strong id="calendarMonthReturn">—</strong>
+</div>
+</div>
+
+<div class="calendar-view">
+<button type="button" class="active"
+ id="calendarDailyMode">每日損益</button>
+<button type="button"
+ id="calendarCumulativeMode">累積損益</button>
+</div>
+
+<div class="calendar-grid" id="calendarGrid"
+ aria-label="投資損益月曆">
+<div class="calendar-head">一</div>
+<div class="calendar-head">二</div>
+<div class="calendar-head">三</div>
+<div class="calendar-head">四</div>
+<div class="calendar-head">五</div>
+<div class="calendar-head">週損益</div>
+</div>
+
+<div class="calendar-detail" id="calendarDetail">
+<h3>每日損益明細</h3>
+<p class="hint">選擇日期後查看已記錄的投資績效。</p>
+</div>
+
+<p class="calendar-note" id="calendarNote">
+尚未載入歷史損益資料。沒有可靠估值的日期不顯示金額。
+存入本金不計算為投資獲利。
+</p>
+</div>
+</section>
+
+<!-- SETTINGS -->
 <section id="settings" class="hidden">
 <div class="card">
 <h2>行情與估值</h2>
@@ -596,6 +607,7 @@ summary{cursor:pointer;color:#c1d6f1}
 <button class="secondary" onclick="loadFeed(true)">
 重新讀取行情
 </button>
+
 <h3>手動更新價格</h3>
 <label>標的<select id="manualasset"></select></label>
 <label>價格（原幣）
@@ -610,6 +622,7 @@ summary{cursor:pointer;color:#c1d6f1}
 手動價格優先於行情檔。
 BTC/TWD 請輸入一枚 BTC 的台幣價格。
 </p>
+
 <label>USD/TWD 匯率（留空使用行情檔）
 <input id="fx" type="number" step="any"></label>
 <button onclick="saveFx()">更新匯率</button>
@@ -634,18 +647,20 @@ BTC/TWD 請輸入一枚 BTC 的台幣價格。
 </section>
 </main>
 
+<!-- SIX TABS -->
 <nav class="tabs">
 <button data-tab="overview" class="active">總覽</button>
 <button data-tab="holdings">持倉</button>
 <button data-tab="trade">交易</button>
 <button data-tab="records">紀錄</button>
+<button data-tab="calendar">日曆</button>
 <button data-tab="settings">設定</button>
 </nav>
 
-<script src="app.js?v=261113"></script>
+<script src="app.js?v=26111302"></script>
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=261113');
+  navigator.serviceWorker.register('./sw.js?v=26111302');
 }
 </script>
 </body>
