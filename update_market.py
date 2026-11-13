@@ -137,11 +137,14 @@ def update_price(asset_id, item):
 # Taiwan / US ETFs
 # -------------------------------------
 
-for asset_id, symbol in [
+ETFS = [
     ("009816", "009816.TW"),
     ("00646", "00646.TW"),
+    ("00713", "00713.TW"),
     ("VOO", "VOO"),
-]:
+]
+
+for asset_id, symbol in ETFS:
     try:
         item = chart(symbol)
         update_price(asset_id, item)
@@ -452,8 +455,27 @@ OUT.write_text(
     encoding="utf-8",
 )
 
+expected_assets = len(ETFS) + len(FUNDS) + 1
+
+available_assets = sum(
+    1
+    for asset_id in (
+        [asset_id for asset_id, _ in ETFS]
+        + list(FUNDS.keys())
+        + ["BTC"]
+    )
+    if isinstance(prices.get(asset_id), dict)
+    and isinstance(
+        prices[asset_id].get("value"),
+        (int, float),
+    )
+    and math.isfinite(prices[asset_id]["value"])
+    and prices[asset_id]["value"] > 0
+)
+
 print(
     "Finished. Available asset prices:",
-    len(prices),
-    "/ 8",
+    available_assets,
+    "/",
+    expected_assets,
 )
