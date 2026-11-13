@@ -1,7 +1,7 @@
 """MARLOWE WEALTH - Market Data Updater.
 
 ETFs and US stocks: Yahoo Finance delayed daily close.
-Funds: verified published NAV. BTC: BitoPro BTC/TWD ticker snapshot.
+Funds: verified published NAV. BTC/ETH: BitoPro TWD ticker snapshots.
 Keep previously verified quotes when a source is unavailable.
 This script updates market.json only, never holdings or transactions.
 """
@@ -27,19 +27,6 @@ except Exception:
 prices = old.get("prices", {})
 if not isinstance(prices, dict):
     prices = {}
-# Recovery only: these dated NAVs were present in the user's earlier
-# market.json, but were lost from the latest file. Never overwrite a
-# valid quote; never label these as newly fetched NAVs.
-RECOVERY_NAVS = {
-    "FUBON_SP500": {"value": 11.8, "date": "2026-11-11", "source": "MoneyDJ published fund NAV", "note": "Restored from prior user-provided market.json; not a new quote"},
-    "FUBON_NASDAQ100": {"value": 11.58, "date": "2026-11-11", "source": "MoneyDJ published fund NAV", "note": "Restored from prior user-provided market.json; not a new quote"},
-}
-for asset_id, recovery in RECOVERY_NAVS.items():
-    existing = prices.get(asset_id)
-    if not isinstance(existing, dict) or not isinstance(existing.get("value"), (int, float)) or not math.isfinite(existing["value"]) or existing["value"] <= 0:
-        prices[asset_id] = dict(recovery)
-        print("RESTORED PREVIOUS NAV", asset_id, recovery["date"])
-
 fx = old.get("fx")
 HEADERS = {"User-Agent": "Mozilla/5.0", "Accept": "text/html,application/json"}
 
@@ -141,60 +128,42 @@ except Exception as exc:
     print("FX unavailable", exc)
 
 
-# BitoPro BTC/TWD
-BITOPRO_TICKER_URL = "https://api.bitopro.com/v3/tickers/btc_twd"
-
-
-def fetch_bitopro_btc():
+# BitoPro spot quotes. Each pair is validated independently; a failed request
+# retains the last successfully recorded quote without inventing a live price.
+def fetch_bitopro_crypto(pair):
     requested_at = utc_now()
-    raw = json.loads(download(BITOPRO_TICKER_URL))
+    raw = json.loads(download("https://api.bitopro.com/v3/tickers/" + pair))
     data = raw.get("data")
     if isinstance(data, list):
-        matches = [
-            item for item in data
-            if isinstance(item, dict) and str(item.get("pair", "")).lower() == "btc_twd"
-        ]
+        matches = [item for item in data if isinstance(item, dict) and str(item.get("pair", "")).lower() == pair]
         if len(matches) != 1:
-            raise ValueError("BTC/TWD pair not uniquely found")
+            raise ValueError("Trading pair not uniquely found: " + pair)
         data = matches[0]
-    if not isinstance(data, dict):
-        raise ValueError("Invalid BitoPro ticker response")
-    if str(data.get("pair", "")).lower() != "btc_twd":
-        raise ValueError("Unexpected BitoPro trading pair")
-    try:
-        value = float(data["lastPrice"])
-    except (KeyError, TypeError, ValueError):
-        raise ValueError("Invalid BTC lastPrice")
+    if not isinstance(data, dict) or str(data.get("pair", "")).lower() != pair:
+        raise ValueError("Unexpected BitoPro pair: " + pair)
+    value = float(data["lastPrice"])
     if not math.isfinite(value) or value <= 0:
-        raise ValueError("BTC price must be positive")
+        raise ValueError("Invalid BitoPro lastPrice")
     return {
-        "value": value,
-        "date": requested_at.date().isoformat(),
-        "source": "BitoPro BTC/TWD last traded price",
-        "retrieved_at": iso_utc(requested_at),
-        "quote_type": "last_traded",
-        "currency": "TWD",
-        "pair": "btc_twd",
+        "value": value, "date": requested_at.date().isoformat(),
+        "source": "BitoPro " + pair.upper().replace("_", "/") + " last traded price",
+        "retrieved_at": iso_utc(requested_at), "quote_type": "last_traded",
+        "currency": "TWD", "pair": pair,
     }
 
-
-def update_btc_price(item):
-    previous = prices.get("BTC", {})
-    if not isinstance(previous, dict):
-        previous = {}
-    if previous.get("retrieved_at", "") and item.get("retrieved_at", "") < previous["retrieved_at"]:
-        return False
-    prices["BTC"] = item
-    return True
-
-try:
-    btc_item = fetch_bitopro_btc()
-    if update_btc_price(btc_item):
-        print("BTC UPDATED", btc_item)
-    else:
-        print("BTC older snapshot ignored")
-except Exception as exc:
-    print("BTC unavailable; previous quote retained:", exc)
+for asset_id, pair in (("BTC", "btc_twd"), ("ETH", "eth_twd")):
+    try:
+        item = fetch_bitopro_crypto(pair)
+        previous = prices.get(asset_id, {})
+        if not isinstance(previous, dict):
+            previous = {}
+        if item["retrieved_at"] >= previous.get("retrieved_at", ""):
+            prices[asset_id] = item
+            print(asset_id, "UPDATED", item)
+        else:
+            print(asset_id, "older quote ignored")
+    except Exception as exc:
+        print(asset_id, "unavailable; previous quote retained:", exc)
 
 
 # Confirmed NEXT BANK fund share classes
