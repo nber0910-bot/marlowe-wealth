@@ -210,8 +210,22 @@ summary{cursor:pointer;color:#c1d6f1}
   overflow-wrap:anywhere;
 }
 .calendar-grid{
-  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
   gap:5px;
+}
+.calendar-week-row{
+  grid-column:1/-1;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#26354a;
+  border:1px solid #435a76;
+  border-radius:9px;
+  padding:9px 12px;
+  margin:3px 0 9px;
+  font-size:12px;
+  color:#c8d8ed;
 }
 .calendar-head{
   text-align:center;color:#9cb0c9;
