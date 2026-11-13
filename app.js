@@ -2,7 +2,7 @@
 // MARLOWE WEALTH V26.1113.06 — archived daily provisional P/L extension.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
-// V26.1113.07: transparent archive coverage, preserved storage and snapshots.
+// V26.1113.08: historical contributions and snapshots visible in calendar; preserved storage.
 const initial=[['009816','009816','tw','TWD',1205,19015],['00646','元大 S&P500','tw','TWD',281,22016],['VOO','VOO','us','USD',0.06109,43.04],['FUBON_SP500','富邦標普500','fund','TWD',3307.47,36700],['FUBON_NASDAQ100','富邦 NASDAQ-100','fund','TWD',2705.29,31000],['YUANTA_NEW','元大新主流','fund','TWD',133.5,24800],['YUANTA_DIV','元大台灣高股息優質龍頭','fund','TWD',212.8,7539],['BTC','Bitcoin (BTC)','crypto','TWD',0,0]];
 const seed=()=>({version:2,assets:initial.map(([id,name,type,currency,qty,cost])=>({id,name,type,currency,qty,cost,verified:false})),trades:[],manual:{},fxOverride:null});
 let state;
@@ -229,10 +229,36 @@ function calendarArchiveIndex(){
 }
 function calendarArchiveName(x){return x.asset_name||x.asset_id||'投資紀錄';}
 function calendarScopeName(scope){return ({five_funds_only:'五檔基金',four_funds_only:'四檔基金',funds_only:'基金部位',website_reported_total:'網站總資產'})[scope]||scope||'資產';}
+// Documentary historical amounts are display-only. Never add to localStorage or P/L.
+function calendarHistoryDay(entry){
+  const events=entry?.events||[], snaps=entry?.snapshots||[];
+  const amounts=events.map(e=>historicalNumber(e.amount_twd)).filter(n=>n!==null);
+  const allContribution=events.length>0&&events.every(e=>e.kind==='reported_contribution'&&historicalNumber(e.amount_twd)!==null);
+  const contributed=allContribution?amounts.reduce((a,b)=>a+b,0):null;
+  const snapshot=snaps.find(x=>historicalNumber(x.market_value_twd)!==null)||null;
+  return {contributed,snapshot,events,snaps};
+}
+function calendarHistoricalSummary(prefix,archive){
+  const monthly=(historicalArchive?.monthly_overview||[]).find(m=>m.month===prefix);
+  const dates=Object.keys(archive).filter(d=>d.startsWith(prefix));
+  const contributionDates=dates.filter(d=>calendarHistoryDay(archive[d]).contributed!==null);
+  const knownContribution=contributionDates.reduce((sum,d)=>sum+calendarHistoryDay(archive[d]).contributed,0);
+  const snapshots=dates.flatMap(d=>(archive[d].snapshots||[]).map(x=>({...x,day:d})));
+  const monthlyAmount=historicalNumber(monthly?.reported_investment_twd);
+  const scope=monthly?.through_date?'（僅截至 '+safe(monthly.through_date)+'）':'';
+  const monthText=monthlyAmount===null?'月投入金額待核對':
+    '先前回報月投入：'+(monthly?.approximate?'約 ':'')+money(monthlyAmount)+scope;
+  const dailyText=contributionDates.length?'｜其中 '+contributionDates.length+' 天有逐日投入紀錄（合計 '+money(knownContribution)+'，不可與月額重複加總）':'';
+  const snapText=snapshots.length?'｜'+snapshots.length+' 筆歷史資產快照':'';
+  return '<div class="calendar-historical-summary"><b>📚 '+safe(prefix.replace('-',' 年 '))+' 月 · 歷史投資</b>'+
+    '<p style="margin:7px 0">'+monthText+dailyText+snapText+'</p>'+
+    '<small>歷史投入與資產快照只供參考，來源可能待核對；不是當日損益，也不會再計入目前本金。'+
+    (monthly?.detail?' '+safe(monthly.detail):'')+'</small></div>';
+}
 function installCalendarArchiveStyle(){
   if(byId('calendarArchiveStyle'))return;
   const el=document.createElement('style');el.id='calendarArchiveStyle';
-  el.textContent=`.calendar-cell{position:relative}.calendar-archive-dot{display:block;font-size:10px;line-height:1.15;margin-top:3px;color:#a9cfff;font-weight:700}.calendar-archive-legend{font-size:12px;line-height:1.6;opacity:.85;margin:10px 0}.calendar-archive-entry{padding:10px 0;border-bottom:1px solid rgba(160,190,220,.2)}.calendar-archive-entry small{display:block;opacity:.75;margin-top:4px}.calendar-archive-hint{font-size:12px;opacity:.8;margin:7px 0}.calendar-cell .calendar-amount{overflow-wrap:anywhere}`;
+  el.textContent=`.calendar-cell{position:relative}.calendar-archive-dot{display:block;font-size:10px;line-height:1.15;margin-top:3px;color:#a9cfff;font-weight:700}.calendar-archive-legend{font-size:12px;line-height:1.6;opacity:.85;margin:10px 0}.calendar-archive-entry{padding:10px 0;border-bottom:1px solid rgba(160,190,220,.2)}.calendar-archive-entry small{display:block;opacity:.75;margin-top:4px}.calendar-archive-hint{font-size:12px;opacity:.8;margin:7px 0}.calendar-cell .calendar-amount{overflow-wrap:anywhere}.calendar-historical-summary{margin:12px 0;padding:13px;border:1px solid #49617c;border-radius:14px;background:rgba(80,115,160,.09)}.calendar-history-figure{display:block;font-size:10px;line-height:1.3;margin-top:4px;color:#b8d7ff;overflow-wrap:anywhere}.calendar-history-figure.snapshot{color:#e6c9a6}.calendar-history-figure.pnl{color:#b5e6d0}.calendar-history-figure.uncertain{opacity:.85}.calendar-cell{min-height:100px!important;align-content:start}.calendar-cell .calendar-archive-dot{margin-top:4px}`;
   document.head.appendChild(el);
 }
 function renderCalendar(){
@@ -258,6 +284,13 @@ function renderCalendar(){
     coveragePanel.style.cssText='margin:12px 0;padding:15px;border:1px solid #49617c;border-radius:15px';
     grid.parentNode.insertBefore(coveragePanel,grid);
   }
+  // A separate history banner avoids misleading users that archived P/L coverage starts their investment history.
+  let historyBanner=byId('calendarHistoricalSummary');
+  if(!historyBanner){
+    historyBanner=document.createElement('div');historyBanner.id='calendarHistoricalSummary';
+    coveragePanel.parentNode.insertBefore(historyBanner,coveragePanel);
+  }
+  historyBanner.innerHTML=calendarHistoricalSummary(prefix,archive);
   const monthObserved=Object.keys(marketDays).filter(d=>d.startsWith(prefix)).sort();
   const localAnchors=(state.history.snapshots||[]).filter(x=>dateValid(x.date)&&x.positions);
   const newestAnchor=localAnchors.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
@@ -293,7 +326,17 @@ function renderCalendar(){
       const shown=x?(calendarMode==='daily'?x.amount:cumulative):null;
       const amountText=shown===null?'—':('≈'+(shown>0?'+':'')+Math.round(shown).toLocaleString('zh-TW'));
       const percentText=x&&calendarMode==='daily'&&x.pct!==null?(x.pct>0?'+':'')+x.pct.toFixed(2)+'%':'';
-      const archiveText=h?`<span class="calendar-archive-dot">${h.snapshots.length?'◆ 快照':'● 紀錄'}</span>`:(marketDays[d]?'<span class="calendar-archive-dot">▣ 行情</span>':'');
+      const hist=calendarHistoryDay(h);
+      const contributionLine=hist.contributed!==null?
+        `<span class="calendar-history-figure">投入 ${safe(Math.round(hist.contributed).toLocaleString('zh-TW'))}</span>`:'';
+      const snapLine=hist.snapshot?
+        `<span class="calendar-history-figure snapshot">◆ 市值 ${safe(Math.round(Number(hist.snapshot.market_value_twd)).toLocaleString('zh-TW'))}</span>`:'';
+      const snapPnl=hist.snapshot&&historicalNumber(hist.snapshot.cumulative_pnl_twd)!==null?
+        `<span class="calendar-history-figure pnl">累計 ${hist.snapshot.cumulative_pnl_twd>0?'+':''}${safe(Math.round(Number(hist.snapshot.cumulative_pnl_twd)).toLocaleString('zh-TW'))}</span>`:'';
+      const otherEventLine=hist.events.length&&hist.contributed===null?
+        `<span class="calendar-history-figure uncertain">● ${hist.events.length} 筆交易參考</span>`:'';
+      const archiveText=(contributionLine+snapLine+snapPnl+otherEventLine)||
+        (marketDays[d]?'<span class="calendar-archive-dot">▣ 行情</span>':'');
       html+=`<button type="button" class="calendar-cell ${d===twDate()?'today':''} ${d===calendarSelected?'selected':''}" data-calendar-day="${d}" style="color:inherit;cursor:pointer"><span class="calendar-day">${n}</span><span class="calendar-amount ${shown===null?'':calendarTone(shown)}">${amountText}</span><span class="calendar-percent">${percentText}</span>${archiveText}</button>`;
     }
     html+=`<div class="calendar-cell week-total" style="grid-column:1/-1;min-height:36px;display:flex;align-items:center;justify-content:space-between;padding:7px 12px"><span class="calendar-day">週損益（${weekCount?weekCount+' 天可比較':'尚無可比較資料'}）</span><span class="calendar-amount ${weekCount?calendarTone(weekAmount):''}">${weekCount?calendarSigned(weekAmount):'—'}</span></div>`;
@@ -337,7 +380,7 @@ function renderCalendar(){
   const note=byId('calendarNote');
   const marketCount=Object.keys(marketDays).filter(d=>d.startsWith(prefix)).length;
   note.textContent=`本月 ${archiveCount} 天有歷史事件／快照標記；${marketCount} 天有行情觀測；${monthEntries.length} 天有可比較的單日損益。`+
-    '◆ 為歷史資產快照，● 為交易或投入紀錄，點日期看詳情。≈ 為混合日期報價的暫估變動，非券商正式單日損益。缺乏連續行情或可信持倉時維持「—」。週／月只加總已有日期，不代表完整期間。';
+    '日曆內的「投入」是歷史回報本金、「◆ 市值」是當時資產快照、「累計」是當時累積損益，均非單日損益；點日期看來源。≈ 才是封存行情暫估的單日變動。週／月損益只加總有資料日期，不代表完整期間。';
 }
 
 function installCalendar(){byId('calendarPrev')?.addEventListener('click',()=>setCalendarMonth(-1));byId('calendarNext')?.addEventListener('click',()=>setCalendarMonth(1));byId('calendarDailyMode')?.addEventListener('click',()=>{calendarMode='daily';byId('calendarDailyMode').classList.add('active');byId('calendarCumulativeMode').classList.remove('active');renderCalendar();});byId('calendarCumulativeMode')?.addEventListener('click',()=>{calendarMode='cumulative';byId('calendarCumulativeMode').classList.add('active');byId('calendarDailyMode').classList.remove('active');renderCalendar();});}
