@@ -586,6 +586,33 @@ function budgetLedger(month){
   }
   return {amount,unknown};
 }
+function installOverviewRefresh(){
+  const overview=byId('overview');if(!overview||byId('overviewRefreshButton'))return;
+  const bar=document.createElement('div');bar.id='overviewRefreshBar';
+  bar.style.cssText='display:flex;justify-content:flex-end;align-items:center;margin:4px 0 8px';
+  const btn=document.createElement('button');btn.type='button';btn.id='overviewRefreshButton';
+  btn.textContent='↻ 刷新';btn.title='重新載入整個網頁（不清除本機投資資料）';
+  btn.style.cssText='width:auto;min-width:0;padding:7px 12px;border-radius:12px;font-size:13px;line-height:1.2;cursor:pointer';
+  btn.addEventListener('click',()=>{save();window.location.reload();});
+  bar.appendChild(btn);overview.insertBefore(bar,overview.firstChild);
+}
+function installEthSetup(){
+  const section=byId('trades');if(!section||byId('ethSetupPanel'))return;
+  const panel=document.createElement('div');panel.className='card';panel.id='ethSetupPanel';
+  panel.style.cssText='padding:15px;margin:12px 0';
+  panel.innerHTML='<h3>ETH · 11/14 買入資料</h3><p class="hint">BitoPro 截圖：目前 0.01129778 ETH；11/14 現貨交易增加 0.0112774 ETH；成交均價約 NT$63,665。剩餘 0.00002038 ETH 來源與成本尚待核對。NT$719 為使用者回報投入，需核對實際扣款與手續費。以下不會自動新增交易，避免重複。</p><button type="button" id="ethPrepareTrade">準備 ETH 買入表單（不會直接儲存）</button>';
+  const ledger=byId('tradeLedgerPanel');if(ledger)section.insertBefore(panel,ledger);else section.appendChild(panel);
+  byId('ethPrepareTrade').addEventListener('click',()=>{
+    let a=state.assets.find(x=>x.id==='ETH');
+    if(!a){state.assets.push({id:'ETH',name:'Ethereum (ETH)',type:'crypto',currency:'TWD',qty:0,cost:0,verified:false});save();render();}
+    if(state.trades.some(t=>t.asset==='ETH'&&t.date==='2026-11-14'&&t.side==='buy'))return alert('11/14 已有 ETH 買入交易，請在下方修改原交易，不要重複新增。');
+    byId('tradeasset').value='ETH';byId('tradeside').value='buy';byId('tradedate').value='2026-11-14';
+    byId('tradeqty').value='0.0112774';byId('tradeprice').value='63665';byId('tradefee').value='0';
+    tradeFxFields();
+    alert('已填入 11/14 ETH 交易草稿，尚未儲存。請先核對手續費與實際台幣扣款，再按「儲存交易」。剩餘 0.00002038 ETH 需另行核對，勿直接重複買入。');
+    byId('tradeqty').scrollIntoView({behavior:'smooth',block:'center'});
+  });
+}
 function renderMonthlyBudget(){
   const overview=byId('overview');if(!overview)return;
   let panel=byId('monthlyBudgetPanel');
@@ -663,7 +690,7 @@ function installTradeLedger(){
   }
   if(!byId('tradeLedgerPanel')){
     const panel=document.createElement('div');panel.className='card';panel.id='tradeLedgerPanel';
-    panel.innerHTML='<h2>交易明細 · 可修改</h2><p class="hint">直接修改原交易，不會重複增加持倉。期初持倉不在此表，請至「持倉」校正。</p><div id="tradeLedgerList"></div>';
+    panel.innerHTML='<h2>交易明細 · 可修改（V26.1114.02）</h2><p class="hint">直接修改原交易，不會重複增加持倉。期初持倉不在此表，請至「持倉」校正。</p><div id="tradeLedgerList"></div>';
     section.appendChild(panel);
   }
 }
@@ -744,4 +771,4 @@ function confirmEstimatedTrade(created){const t=state.trades.find(t=>t.created==
 function renderPendingSummary(){let el=byId('estimatedSummary');if(!el){const target=byId('total')?.closest('.card')||byId('total')?.parentElement;if(!target)return;el=document.createElement('div');el.id='estimatedSummary';el.className='item';target.appendChild(el);}const pending=state.trades.filter(t=>t.estimated);if(!pending.length){el.style.display='none';return;}el.style.display='';const total=pending.reduce((s,t)=>s+(num(t.twdTotal)||0),0);el.innerHTML=`<b>🟡 預估入庫 · ${pending.length} 筆</b><p>已記入持倉的預估投入：${money(total)}</p><small>此金額已反映於預估持倉，請勿與總資產再相加。實際成交股數、匯率及損益仍待券商確認。</small>`;}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==b.dataset.tab));document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));window.scrollTo(0,0);}));
 byId('tradedate').value=today();byId('manualdate').value=today();
-try{installReliableAddAsset();installTradeLedger();installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
+try{installReliableAddAsset();installTradeLedger();installEthSetup();installOverviewRefresh();installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
