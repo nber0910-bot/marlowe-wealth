@@ -55,6 +55,11 @@
       "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     }
+    "NVDA": {
+  "value": null,
+  "date": null,
+  "source": "Yahoo Finance daily close (delayed)"
+}
   },
   "notes": "ETF delayed closes; verified fund NAVs; BitoPro BTC/TWD last-traded snapshot. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
 }
