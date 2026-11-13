@@ -1,5 +1,5 @@
 'use strict';
-// MARLOWE WEALTH V26.1113 — history & P/L calendar extension.
+// MARLOWE WEALTH V26.1113.06 — archived daily provisional P/L extension.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 const initial=[['009816','009816','tw','TWD',1205,19015],['00646','元大 S&P500','tw','TWD',281,22016],['VOO','VOO','us','USD',0.06109,43.04],['FUBON_SP500','富邦標普500','fund','TWD',3307.47,36700],['FUBON_NASDAQ100','富邦 NASDAQ-100','fund','TWD',2705.29,31000],['YUANTA_NEW','元大新主流','fund','TWD',133.5,24800],['YUANTA_DIV','元大台灣高股息優質龍頭','fund','TWD',212.8,7539],['BTC','Bitcoin (BTC)','crypto','TWD',0,0]];
@@ -116,6 +116,97 @@ function dailyChanges(){
   }
   return map;
 }
+
+// Daily market history uses a local position anchor. The GitHub archive contains
+// quotes only: never mistake it for a brokerage trade ledger.
+function archivedDailyChanges(){
+  const result={};
+  const observations=(dailyMarketArchive.observations||[]).filter(x=>dateValid(x.date)&&x.prices&&typeof x.prices==='object');
+  const observationByDay=new Map(observations.map(x=>[x.date,x]));
+  const anchors=(state.history.snapshots||[]).filter(x=>dateValid(x.date)&&x.positions&&x.prices)
+    .sort((a,b)=>a.date.localeCompare(b.date));
+  if(!anchors.length)return result;
+  // For dates with a saved local snapshot, use its actual observed positions.
+  // For later dates, advance those positions only through explicitly recorded trades.
+  const allDates=[...new Set([...observationByDay.keys(),...anchors.map(a=>a.date)])].sort();
+  const tradeDays=new Map();
+  for(const t of state.trades){if(dateValid(t.date)){
+    if(!tradeDays.has(t.date))tradeDays.set(t.date,[]);
+    tradeDays.get(t.date).push(t);
+  }}
+  const quoteOf=(ob,id)=>{
+    const p=ob?.prices?.[id];
+    return validQuote(p)?{value:Number(p.value),date:p.date||'',source:p.source||''}:null;
+  };
+  function quotesFor(date){
+    const obs=observationByDay.get(date);
+    if(obs)return {prices:obs.prices,fx:obs.fx,date,kind:'archive',capturedAt:obs.captured_at};
+    const anchor=anchors.find(x=>x.date===date);
+    if(!anchor)return null;
+    const prices=Object.fromEntries(Object.entries(anchor.prices).map(([id,value])=>[id,{value,date,source:'本機估值快照（各標的實際報價日可能不同）'}]));
+    return {prices,fx:{value:anchor.fx,date},date,kind:'snapshot',capturedAt:anchor.observedAt};
+  }
+  const validRate=(x)=>x?.fx&&Number(x.fx.value)>0?Number(x.fx.value):null;
+  for(let i=1;i<allDates.length;i++){
+    const day=allDates[i],prior=allDates[i-1];
+    if(dateAfter(prior)!==day)continue;
+    const anchor=anchors.filter(x=>x.date<=prior).at(-1);
+    if(!anchor)continue;
+    // A newer local snapshot is authoritative for holdings, not archived quotes.
+    let positions=JSON.parse(JSON.stringify(anchor.positions));
+    let unsafe=false;
+    for(const [tradeDay, trades] of [...tradeDays.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){
+      if(tradeDay<=anchor.date||tradeDay>prior)continue;
+      for(const t of trades){
+        const pos=positions[t.asset];
+        if(!pos||t.estimated){unsafe=true;break;}
+        const qty=Number(t.qty);
+        if(!(qty>0)||!Number.isFinite(qty)){unsafe=true;break;}
+        if(t.side==='buy')pos.q+=qty;
+        else if(t.side==='sell'&&pos.q>=qty)pos.q-=qty;
+        else unsafe=true;
+      }
+      if(unsafe)break;
+    }
+    // For a trade on the result day, measure the movement of yesterday's holdings
+    // only. A sale or an estimated trade makes that date unverified.
+    if((tradeDays.get(day)||[]).some(t=>t.side!=='buy'||t.estimated))unsafe=true;
+    if(unsafe)continue;
+    const before=quotesFor(prior),after=quotesFor(day);
+    if(!before||!after)continue;
+    let amount=0,previousValue=0,covered=0;
+    const stale=[],missing=[];
+    for(const [id,pos] of Object.entries(positions)){
+      const qty=Number(pos.q);
+      if(!(qty>0))continue;
+      const p0=quoteOf(before,id),p1=quoteOf(after,id);
+      const r0=pos.currency==='USD'?validRate(before):1;
+      const r1=pos.currency==='USD'?validRate(after):1;
+      if(!p0||!p1||!r0||!r1){missing.push(id);continue;}
+      const old=qty*p0.value*r0,now=qty*p1.value*r1;
+      previousValue+=old;amount+=now-old;covered++;
+      // Different source dates and repeated NAVs are not synchronous daily closes.
+      if(!p0.date||!p1.date||p0.date!==prior||p1.date!==day)stale.push(id);
+    }
+    if(missing.length||!covered)continue;
+    const status=stale.length?'暫估（混合報價日期）':'行情估算（非券商結算）';
+    result[day]={amount,pct:previousValue>0?amount/previousValue*100:null,
+      previous:{date:prior,value:previousValue},current:{date:day,value:previousValue+amount},
+      method:`${status}；以前一日持倉按兩次封存報價比較，排除當日新買入本金。${stale.length?'非當日報價：'+stale.join('、')+'。':''}`,
+      provisional:true,source:'daily-history.json',staleCount:stale.length};
+  }
+  return result;
+}
+function calendarDailyChanges(){
+  const derived=archivedDailyChanges(),saved=dailyChanges();
+  // Local comparisons can use different mixed quote dates too: label as estimates.
+  for(const [date,x] of Object.entries(saved)){
+    if(!derived[date])derived[date]={...x,provisional:true,
+      method:'本機兩次估值觀測比較（不同標的可能使用不同日期報價；非正式單日結算）。'+x.method};
+  }
+  return derived;
+}
+
 let calendarDate=new Date(),calendarMode='daily',calendarSelected=null;
 function setCalendarMonth(offset){
   calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+offset,1);
@@ -148,7 +239,7 @@ function renderCalendar(){
   installCalendarArchiveStyle();
   const year=calendarDate.getFullYear(),month=calendarDate.getMonth();
   const prefix=`${year}-${String(month+1).padStart(2,'0')}`;
-  const changes=dailyChanges(),archive=calendarArchiveIndex();
+  const changes=calendarDailyChanges(),archive=calendarArchiveIndex();
   const marketDays=Object.fromEntries((dailyMarketArchive.observations||[]).filter(x=>dateValid(x.date)).map(x=>[x.date,x]));
   byId('calendarMonth').textContent=`${year} 年 ${month+1} 月`;
   const first=new Date(year,month,1),last=new Date(year,month+1,0).getDate();
@@ -161,7 +252,7 @@ function renderCalendar(){
   const monthAmount=monthEntries.reduce((sum,[,x])=>sum+x.amount,0);
   const pnl=byId('calendarMonthPnl');
   // Partial daily observations are not a verified full-month return.
-  pnl.textContent=monthEntries.length?calendarSigned(monthAmount):'—';
+  pnl.textContent=monthEntries.length?'暫估 '+calendarSigned(monthAmount):'—';
   pnl.className=monthEntries.length?calendarTone(monthAmount):'';
   byId('calendarMonthReturn').textContent='—';
   grid.style.gridTemplateColumns='repeat(7,minmax(0,1fr))';
@@ -176,7 +267,7 @@ function renderCalendar(){
       // Cumulative daily mode only sums known daily P/L; never substitutes a historical
       // snapshot's cumulative P/L, which may cover only a subset of holdings.
       const shown=x?(calendarMode==='daily'?x.amount:cumulative):null;
-      const amountText=shown===null?'—':(shown>0?'+':'')+Math.round(shown).toLocaleString('zh-TW');
+      const amountText=shown===null?'—':('≈'+(shown>0?'+':'')+Math.round(shown).toLocaleString('zh-TW'));
       const percentText=x&&calendarMode==='daily'&&x.pct!==null?(x.pct>0?'+':'')+x.pct.toFixed(2)+'%':'';
       const archiveText=h?`<span class="calendar-archive-dot">${h.snapshots.length?'◆ 快照':'● 紀錄'}</span>`:(marketDays[d]?'<span class="calendar-archive-dot">▣ 行情</span>':'');
       html+=`<button type="button" class="calendar-cell ${d===twDate()?'today':''} ${d===calendarSelected?'selected':''}" data-calendar-day="${d}" style="color:inherit;cursor:pointer"><span class="calendar-day">${n}</span><span class="calendar-amount ${shown===null?'':calendarTone(shown)}">${amountText}</span><span class="calendar-percent">${percentText}</span>${archiveText}</button>`;
@@ -190,7 +281,7 @@ function renderCalendar(){
     const x=calendarSelected?changes[calendarSelected]:null;
     const h=calendarSelected?archive[calendarSelected]:null;
     const marketDay=calendarSelected?marketDays[calendarSelected]:null;
-    let body=x?`<p class="${calendarTone(x.amount)}">${calendarSigned(x.amount)}${x.pct===null?'':`（${x.pct.toFixed(2)}%）`}</p><p class="hint">${safe(x.method)}<br>前次觀測：${money(x.previous.value)}<br>當次觀測：${money(x.current.value)}<br>觀測估算，非券商官方日結。</p>`:'<p class="hint">當日沒有可核實的單日損益，故顯示「—」。</p>';
+    let body=x?`<p class="${calendarTone(x.amount)}">暫估 ${calendarSigned(x.amount)}${x.pct===null?'':`（${x.pct.toFixed(2)}%）`}</p><p class="hint">${safe(x.method)}<br>前次觀測：${money(x.previous.value)}<br>當次觀測：${money(x.current.value)}<br>觀測估算，非券商官方日結。</p>`:'<p class="hint">當日沒有可核實的單日損益，故顯示「—」。</p>';
     if(h){
       body+='<h4>歷史投資紀錄（不計入每日損益）</h4>';
       for(const a of h.snapshots){
@@ -213,7 +304,7 @@ function renderCalendar(){
   const note=byId('calendarNote');
   const marketCount=Object.keys(marketDays).filter(d=>d.startsWith(prefix)).length;
   note.textContent=`本月 ${archiveCount} 天有歷史事件／快照標記；${marketCount} 天有行情觀測；${monthEntries.length} 天有可比較的單日損益。`+
-    '◆ 為歷史資產快照，● 為交易或投入紀錄，點日期看詳情。歷史累計損益不等於單日損益；缺乏完整連續行情時維持「—」。週／月損益只加總已有的每日資料，不代表整個期間。';
+    '◆ 為歷史資產快照，● 為交易或投入紀錄，點日期看詳情。≈ 為混合日期報價的暫估變動，非券商正式單日損益。缺乏連續行情或可信持倉時維持「—」。週／月只加總已有日期，不代表完整期間。';
 }
 
 function installCalendar(){byId('calendarPrev')?.addEventListener('click',()=>setCalendarMonth(-1));byId('calendarNext')?.addEventListener('click',()=>setCalendarMonth(1));byId('calendarDailyMode')?.addEventListener('click',()=>{calendarMode='daily';byId('calendarDailyMode').classList.add('active');byId('calendarCumulativeMode').classList.remove('active');renderCalendar();});byId('calendarCumulativeMode')?.addEventListener('click',()=>{calendarMode='cumulative';byId('calendarCumulativeMode').classList.add('active');byId('calendarDailyMode').classList.remove('active');renderCalendar();});}
@@ -405,7 +496,7 @@ function saveFx(){const raw=byId('fx').value,next=raw===''?null:num(raw);if(next
 function exportData(){const blob=new Blob([JSON.stringify({exported_at:new Date().toISOString(),...state},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='wealth-v2-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 async function importData(e){const file=e.target.files?.[0];if(!file)return;try{const x=JSON.parse(await file.text());if(x.version!==2||!Array.isArray(x.assets)||!Array.isArray(x.trades))throw Error('非 V2 備份');if(!confirm('確定覆蓋目前 V2 資料？請先備份。'))return;state=x;if(!state.manual||typeof state.manual!=='object')state.manual={};if(!state.history||typeof state.history!=='object')state.history={};if(!Array.isArray(state.history.snapshots))state.history.snapshots=[];save();render();}catch(err){alert('匯入失敗：'+err.message);}finally{e.target.value='';}}
 function resetDemo(){if(!confirm('這會清除目前 V2 的持倉與交易，確定嗎？'))return;state={version:2,assets:[],trades:[],manual:{},fxOverride:null,history:{snapshots:[]}};save();render();}
-async function loadDailyMarketArchive(){try{const r=await fetch('daily-history.json',{cache:'no-store'});if(!r.ok)return;const j=await r.json();if(j?.schema!=='marlowe-market-observations-v1'||!Array.isArray(j.observations))return;dailyMarketArchive=j;renderCalendar();}catch(e){console.warn('daily-history unavailable:',e.message);}}
+async function loadDailyMarketArchive(){try{const r=await fetch('daily-history.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json();if(j?.schema!=='marlowe-market-observations-v1'||!Array.isArray(j.observations))return;dailyMarketArchive=j;renderCalendar();}catch(e){console.warn('daily-history unavailable:',e.message);}}
 async function loadFeed(bust=false){try{const r=await fetch('market.json'+(bust?'?t='+Date.now():''),{cache:'no-store'});if(!r.ok)throw Error('行情檔尚未建立');const j=await r.json();if(!j||!j.prices||typeof j.prices!=='object'||Array.isArray(j.prices))throw Error('行情格式不正確');feed=j;feedError=null;recordSnapshot();render();window.dispatchEvent(new Event('wealth:feed-loaded'));}catch(e){feedError=e.message;render();byId('feedstatus').textContent='行情讀取失敗';byId('feeddate').textContent=e.message;}}
 function installEstimatedUI(){const select=byId('tradeasset');if(!select||byId('estimatePanel'))return;const section=select.closest('section')||select.parentElement.parentElement,panel=document.createElement('div');panel.id='estimatePanel';panel.className='item';panel.innerHTML=`<h3>🟡 預估入庫（台幣定期定額）</h3><p class="hint">已下單／扣款但尚未取得正式股數時使用。儲存後立即計入持倉與估值；股數為預估值。</p><label>總投入金額（TWD，含手續費）<input id="estimateTwd" type="number" min="0" step="0.01" value="24600" inputmode="decimal"></label><label>手續費率（%）<input id="estimateFeeRate" type="number" min="0" step="0.001" value="0.1" inputmode="decimal"></label><label>參考 USD/TWD 匯率<input id="estimateFx" type="number" min="0" step="any" placeholder="自動行情匯率，可自行修改" inputmode="decimal"></label><label>參考成交價（USD／股）<input id="estimatePrice" type="number" min="0" step="any" placeholder="自動帶入 VOO 行情，可自行修改" inputmode="decimal"></label><p id="estimatePreview" class="hint">等待參考價格與匯率…</p><button id="estimateSave" type="button">立即預估入庫</button><p class="hint">請勿再用上方「儲存交易」重複新增同一筆。</p>`;section.appendChild(panel);byId('estimateSave').addEventListener('click',addEstimatedTrade);for(const id of ['estimateTwd','estimateFeeRate','estimateFx','estimatePrice'])byId(id).addEventListener('input',updateEstimatePreview);select.addEventListener('change',updateEstimatePreview);byId('tradeside').addEventListener('change',updateEstimatePreview);}
 function estimateInputs(){const a=state.assets.find(x=>x.id===byId('tradeasset')?.value),total=num(byId('estimateTwd')?.value),feeRate=num(byId('estimateFeeRate')?.value),rate=num(byId('estimateFx')?.value)||fx(),p=num(byId('estimatePrice')?.value)||num(a&&price(a)?.value),feeTwd=Math.round(total*feeRate/100*100)/100,principal=total-feeTwd;return {a,total,feeRate,rate,p,feeTwd,principal,qty:principal/rate/p,feeUsd:feeTwd/rate};}
