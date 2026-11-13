@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-13T14:59:46+00:00",
+  "updated_at": "2026-11-13T15:59:03+00:00",
   "fx": {
-    "value": 32.876999,
+    "value": 32.903,
     "date": "2026-11-13",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -16,20 +16,29 @@
       "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
-    "VOO": {
-      "value": 693.41748,
+    "00713": {
+      "value": 63.700001,
       "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
-    "FUBON_SP500": {
-      "value": 11.8,
-      "date": "2026-11-11",
-      "source": "MoneyDJ published fund NAV"
+    "VOO": {
+      "value": 690.020081,
+      "date": "2026-11-13",
+      "source": "Yahoo Finance daily close (delayed)"
     },
-    "FUBON_NASDAQ100": {
-      "value": 11.58,
-      "date": "2026-11-11",
-      "source": "MoneyDJ published fund NAV"
+    "NVDA": {
+      "value": 159.940002,
+      "date": "2026-11-13",
+      "source": "Yahoo Finance daily close (delayed)"
+    },
+    "BTC": {
+      "value": 2271600.0,
+      "date": "2026-11-13",
+      "source": "BitoPro BTC/TWD last traded price",
+      "retrieved_at": "2026-11-13T15:58:57+00:00",
+      "quote_type": "last_traded",
+      "currency": "TWD",
+      "pair": "btc_twd"
     },
     "YUANTA_NEW": {
       "value": 141.18,
@@ -40,26 +49,7 @@
       "value": 42.95,
       "date": "2026-11-13",
       "source": "MoneyDJ published fund NAV"
-    },
-    "BTC": {
-      "value": 2277179.0,
-      "date": "2026-11-13",
-      "source": "BitoPro BTC/TWD last traded price",
-      "retrieved_at": "2026-11-13T14:59:43+00:00",
-      "quote_type": "last_traded",
-      "currency": "TWD",
-      "pair": "btc_twd"
-    },
-    "00713": {
-      "value": 63.700001,
-      "date": "2026-11-13",
-      "source": "Yahoo Finance daily close (delayed)"
     }
-    "NVDA": {
-  "value": null,
-  "date": null,
-  "source": "Yahoo Finance daily close (delayed)"
-}
   },
-  "notes": "ETF delayed closes; verified fund NAVs; BitoPro BTC/TWD last-traded snapshot. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
+  "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC: BitoPro BTC/TWD last-traded snapshot. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
 }
