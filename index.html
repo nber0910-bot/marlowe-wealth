@@ -7,12 +7,10 @@
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
 <title>MARLOWE WEALTH V26.1113</title>
-
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
-  color:#eaf0fa;
-  background:#10151f;
+  color:#eaf0fa;background:#10151f;
 }
 *{box-sizing:border-box}
 body{margin:0}
@@ -21,19 +19,14 @@ h1{font-size:20px;letter-spacing:2px}
 h2{font-size:17px}
 h3{font-size:15px}
 .card{
-  background:#1c2635;
-  border:1px solid #2b3a4f;
-  border-radius:17px;
-  padding:18px;
-  margin:14px 0;
+  background:#1c2635;border:1px solid #2b3a4f;
+  border-radius:17px;padding:18px;margin:14px 0;
 }
 .item{padding:13px 0;border-bottom:1px solid #354154}
 .item:last-child{border-bottom:0}
 .between{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+  display:flex;justify-content:space-between;
+  align-items:center;gap:10px;
 }
 .big{font-size:34px;font-weight:750;margin:10px 0}
 .muted,.hint,small{color:#a2b3c9}
@@ -42,252 +35,280 @@ small,.hint{font-size:12px;line-height:1.6}
 .negative{color:#ff9d9d}
 button,input,select{font:inherit}
 button{
-  background:#9fc8f5;
-  color:#10151f;
-  border:0;
-  border-radius:10px;
-  padding:10px 14px;
-  font-weight:650;
-  cursor:pointer;
+  background:#9fc8f5;color:#10151f;border:0;
+  border-radius:10px;padding:10px 14px;
+  font-weight:650;cursor:pointer;
 }
 button.secondary{background:#34465e;color:#e8f0fc}
 input,select{
-  width:100%;
-  background:#111a27;
-  color:white;
-  border:1px solid #43536b;
-  border-radius:10px;
-  padding:12px;
-  margin:5px 0 12px;
+  width:100%;background:#111a27;color:white;
+  border:1px solid #43536b;border-radius:10px;
+  padding:12px;margin:5px 0 12px;
 }
 label{
-  display:block;
-  font-size:13px;
-  color:#b7c5d7;
+  display:block;font-size:13px;color:#b7c5d7;
   margin-top:8px;
 }
 .bar{
-  height:10px;
-  background:#394456;
-  border-radius:10px;
-  overflow:hidden;
+  height:10px;background:#394456;
+  border-radius:10px;overflow:hidden;
 }
 .fill{height:100%;background:#9fc8f5}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid .card{margin:0}
 .hidden{display:none!important}
 .tabs{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  display:flex;
-  justify-content:center;
-  gap:4px;
-  background:#131c2a;
-  border-top:1px solid #334154;
+  position:fixed;bottom:0;left:0;right:0;
+  display:flex;justify-content:center;gap:4px;
+  background:#131c2a;border-top:1px solid #334154;
   padding:9px 7px calc(9px + env(safe-area-inset-bottom));
   z-index:20;
 }
 .tabs button{
-  background:transparent;
-  color:#a9b9cd;
-  flex:1;
-  max-width:130px;
-  font-size:12px;
-  padding:10px 3px;
+  background:transparent;color:#a9b9cd;flex:1;
+  max-width:130px;font-size:12px;padding:10px 3px;
 }
 .tabs button.active{background:#2d405a;color:#fff}
 details{margin:10px 0}
 summary{cursor:pointer;color:#c1d6f1}
 
-/* V26.1113：資產分類互動卡片 */
+/* Interactive asset cards */
 .asset-card{
-  position:relative;
-  min-height:132px;
-  padding:15px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:
-    border-color .3s ease,
-    background .3s ease,
-    transform .3s ease;
+  position:relative;min-height:132px;padding:15px;
+  overflow:hidden;cursor:pointer;
+  transition:border-color .3s,background .3s,transform .3s;
 }
 .asset-card:active{transform:scale(.985)}
 .asset-card:focus-visible{
-  outline:2px solid #9fc8f5;
-  outline-offset:3px;
+  outline:2px solid #9fc8f5;outline-offset:3px;
 }
 .asset-card.is-open{
-  background:#223148;
-  border-color:#54769f;
+  background:#223148;border-color:#54769f;
 }
-.asset-card .asset-heading{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:5px;
+.asset-heading{
+  display:flex;align-items:center;
+  justify-content:space-between;gap:5px;
 }
-.asset-card .asset-heading small{
-  font-size:12px;
-  font-weight:600;
-}
-.asset-card .asset-indicator{
-  color:#9fc8f5;
-  font-size:15px;
-  transition:transform .3s ease;
+.asset-heading small{font-size:12px;font-weight:600}
+.asset-indicator{
+  color:#9fc8f5;font-size:15px;
+  transition:transform .3s;
 }
 .asset-card.is-open .asset-indicator{
   transform:rotate(180deg);
 }
-.asset-card .asset-face{
-  display:grid;
-  grid-template-rows:1fr;
-  transition:
-    opacity .22s ease,
-    transform .3s ease;
+.asset-face{
+  display:grid;grid-template-rows:1fr;
+  transition:opacity .22s,transform .3s;
 }
-.asset-card .asset-face h2{
+.asset-face h2{
   font-size:clamp(15px,3.7vw,21px);
-  overflow-wrap:anywhere;
-  margin:24px 0 4px;
+  overflow-wrap:anywhere;margin:24px 0 4px;
 }
 .asset-card.is-open .asset-face{
-  opacity:0;
-  transform:translateY(-10px);
-  position:absolute;
-  pointer-events:none;
+  opacity:0;transform:translateY(-10px);
+  position:absolute;pointer-events:none;
 }
-.asset-card .asset-details{
-  display:none;
-  opacity:0;
-  transform:translateY(12px);
+.asset-details{
+  display:none;opacity:0;transform:translateY(12px);
   font-size:12px;
 }
 .asset-card.is-open .asset-details{
-  display:block;
-  animation:assetReveal .34s ease forwards;
+  display:block;animation:assetReveal .34s ease forwards;
 }
 .asset-detail-row{
-  border-top:1px solid #3a4b62;
-  padding:10px 0;
+  border-top:1px solid #3a4b62;padding:10px 0;
 }
-.asset-detail-row:first-child{
-  margin-top:12px;
-}
+.asset-detail-row:first-child{margin-top:12px}
 .asset-detail-name{
-  color:#c6d5e9;
-  font-size:11px;
-  line-height:1.5;
-  margin-bottom:4px;
+  color:#c6d5e9;font-size:11px;
+  line-height:1.5;margin-bottom:4px;
 }
 .asset-detail-value{
-  color:#f2f6ff;
-  font-weight:650;
-  font-size:14px;
+  color:#f2f6ff;font-weight:650;font-size:14px;
   overflow-wrap:anywhere;
 }
 .asset-detail-meta{
-  color:#a2b3c9;
-  font-size:11px;
-  margin-top:4px;
+  color:#a2b3c9;font-size:11px;margin-top:4px;
 }
 @keyframes assetReveal{
   from{opacity:0;transform:translateY(12px)}
   to{opacity:1;transform:translateY(0)}
 }
 
-/* V26.1113：資產配置圓餅圖 */
+/* Asset allocation */
 .allocation-layout{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:24px;
-  margin-top:20px;
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:24px;margin-top:20px;
 }
 .allocation-donut{
-  width:190px;
-  height:190px;
-  flex-shrink:0;
-  border-radius:50%;
-  background:#34465e;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:background .4s ease;
+  width:190px;height:190px;flex-shrink:0;
+  border-radius:50%;background:#34465e;
+  position:relative;display:flex;
+  align-items:center;justify-content:center;
+  transition:background .4s;
 }
 .allocation-donut::after{
-  content:"";
-  position:absolute;
-  inset:34px;
-  border-radius:50%;
-  background:#1c2635;
+  content:"";position:absolute;inset:34px;
+  border-radius:50%;background:#1c2635;
 }
 .allocation-center{
-  position:relative;
-  z-index:1;
-  text-align:center;
+  position:relative;z-index:1;text-align:center;
 }
-.allocation-center small{
-  display:block;
-  font-size:11px;
-}
+.allocation-center small{display:block;font-size:11px}
 .allocation-center b{
-  display:block;
-  font-size:18px;
-  margin-top:5px;
+  display:block;font-size:18px;margin-top:5px;
 }
 .allocation-legend{
-  flex:1;
-  min-width:175px;
-  max-width:280px;
+  flex:1;min-width:175px;max-width:280px;
 }
 .allocation-legend-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin:11px 0;
-  font-size:12px;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:12px;
+  margin:11px 0;font-size:12px;
 }
 .allocation-legend-name{
-  display:flex;
-  align-items:center;
-  gap:8px;
+  display:flex;align-items:center;gap:8px;
 }
 .allocation-dot{
-  width:9px;
-  height:9px;
-  border-radius:50%;
-  flex-shrink:0;
+  width:9px;height:9px;border-radius:50%;flex-shrink:0;
 }
 .allocation-legend-value{
-  color:#c5d6ea;
-  font-weight:650;
+  color:#c5d6ea;font-weight:650;
 }
 .allocation-note{
-  margin-top:18px;
-  color:#93a9c3;
-  font-size:11px;
-  line-height:1.6;
+  margin-top:18px;color:#93a9c3;
+  font-size:11px;line-height:1.6;
 }
+
+/* P&L calendar — V26.1113 */
+.calendar-toolbar{
+  display:flex;align-items:center;
+  justify-content:space-between;gap:8px;
+  margin:16px 0;
+}
+.calendar-month{
+  font-size:17px;font-weight:700;
+  text-align:center;flex:1;
+}
+.calendar-arrow{
+  background:#34465e;color:#eaf0fa;
+  min-width:40px;min-height:40px;
+}
+.calendar-summary{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin:12px 0 18px;
+}
+.calendar-stat{
+  background:#152030;border:1px solid #35465d;
+  border-radius:12px;padding:12px;
+}
+.calendar-stat small{display:block}
+.calendar-stat strong{
+  display:block;font-size:18px;margin-top:8px;
+  overflow-wrap:anywhere;
+}
+.calendar-grid{
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:5px;
+}
+.calendar-head{
+  text-align:center;color:#9cb0c9;
+  font-size:11px;padding:7px 0;
+}
+.calendar-cell{
+  min-height:65px;background:#152030;
+  border:1px solid #304056;border-radius:9px;
+  padding:6px 3px;text-align:center;
+  overflow:hidden;
+}
+.calendar-cell.week-total{
+  background:#26354a;border-color:#435a76;
+}
+.calendar-cell.empty{
+  background:transparent;border-color:transparent;
+}
+.calendar-cell.today{border-color:#9fc8f5}
+.calendar-cell.selected{background:#344b69}
+.calendar-day{
+  font-size:12px;font-weight:700;
+}
+.calendar-amount{
+  display:block;font-size:10px;margin-top:6px;
+  overflow-wrap:anywhere;
+}
+.calendar-percent{
+  display:block;font-size:9px;margin-top:3px;
+}
+.calendar-note{
+  color:#9aabc2;font-size:11px;
+  line-height:1.7;margin-top:14px;
+}
+.calendar-detail{
+  background:#152030;border:1px solid #35465d;
+  border-radius:12px;padding:12px;margin-top:12px;
+}
+.calendar-detail h3{margin:0 0 8px}
+.calendar-view{
+  display:flex;gap:8px;margin:12px 0;
+}
+.calendar-view button{
+  flex:1;background:#34465e;color:#eaf0fa;
+  font-size:12px;
+}
+.calendar-view button.active{
+  background:#9fc8f5;color:#10151f;
+}
+
+/* Investment history */
+.record-filters{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin:12px 0;
+}
+.record-filters label{margin:0}
+.history-stat-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin:14px 0;
+}
+.history-stat{
+  background:#152030;border:1px solid #35465d;
+  border-radius:12px;padding:12px;
+}
+.history-stat small{display:block}
+.history-stat strong{
+  display:block;font-size:17px;
+  margin-top:7px;overflow-wrap:anywhere;
+}
+.history-entry{
+  border-bottom:1px solid #354154;
+  padding:13px 0;
+}
+.history-entry:last-child{border-bottom:0}
+.history-entry .between{align-items:flex-start}
+.history-amount{font-weight:700}
+.history-unknown{color:#eac58a}
+.history-empty{
+  text-align:center;color:#9aabc2;
+  font-size:12px;padding:20px 5px;
+}
+
 @media(max-width:380px){
   .big{font-size:28px}
   .asset-card{padding:12px}
-  .asset-card .asset-heading small{font-size:11px}
+  .asset-heading small{font-size:11px}
   .allocation-donut{width:165px;height:165px}
   .allocation-donut::after{inset:30px}
+  .calendar-grid{gap:3px}
+  .calendar-cell{padding:5px 2px;min-height:59px}
+  .calendar-amount{font-size:9px}
+  .calendar-percent{font-size:8px}
 }
 @media(prefers-reduced-motion:reduce){
-  .asset-card,
-  .asset-card .asset-face,
-  .asset-card .asset-indicator,
-  .allocation-donut{
-    transition:none;
+  .asset-card,.asset-face,.asset-indicator,
+  .allocation-donut{transition:none}
+  .asset-card.is-open .asset-details{
+    animation:none;opacity:1;transform:none;
   }
-  .asset-card.is-open .asset-details{animation:none;opacity:1;transform:none}
 }
 </style>
 </head>
@@ -314,27 +335,35 @@ summary{cursor:pointer;color:#c1d6f1}
 
 <div class="grid" id="assetGrid">
 <div class="card asset-card" data-asset-type="tw" role="button" tabindex="0" aria-expanded="false">
-  <div class="asset-heading"><small>台股 ETF</small><span class="asset-indicator">⌄</span></div>
-  <div class="asset-face"><h2 id="twtotal">—</h2></div>
-  <div class="asset-details" id="twdetails"></div>
+<div class="asset-heading">
+<small>台股 ETF</small><span class="asset-indicator">⌄</span>
+</div>
+<div class="asset-face"><h2 id="twtotal">—</h2></div>
+<div class="asset-details" id="twdetails"></div>
 </div>
 
 <div class="card asset-card" data-asset-type="us" role="button" tabindex="0" aria-expanded="false">
-  <div class="asset-heading"><small>美股 ETF</small><span class="asset-indicator">⌄</span></div>
-  <div class="asset-face"><h2 id="ustotal">—</h2></div>
-  <div class="asset-details" id="usdetails"></div>
+<div class="asset-heading">
+<small>美股 ETF</small><span class="asset-indicator">⌄</span>
+</div>
+<div class="asset-face"><h2 id="ustotal">—</h2></div>
+<div class="asset-details" id="usdetails"></div>
 </div>
 
 <div class="card asset-card" data-asset-type="fund" role="button" tabindex="0" aria-expanded="false">
-  <div class="asset-heading"><small>基金</small><span class="asset-indicator">⌄</span></div>
-  <div class="asset-face"><h2 id="fundtotal">—</h2></div>
-  <div class="asset-details" id="funddetails"></div>
+<div class="asset-heading">
+<small>基金</small><span class="asset-indicator">⌄</span>
+</div>
+<div class="asset-face"><h2 id="fundtotal">—</h2></div>
+<div class="asset-details" id="funddetails"></div>
 </div>
 
 <div class="card asset-card" data-asset-type="crypto" role="button" tabindex="0" aria-expanded="false">
-  <div class="asset-heading"><small>₿ 加密貨幣</small><span class="asset-indicator">⌄</span></div>
-  <div class="asset-face"><h2 id="cryptototal">—</h2></div>
-  <div class="asset-details" id="cryptodetails"></div>
+<div class="asset-heading">
+<small>₿ 加密貨幣</small><span class="asset-indicator">⌄</span>
+</div>
+<div class="asset-face"><h2 id="cryptototal">—</h2></div>
+<div class="asset-details" id="cryptodetails"></div>
 </div>
 </div>
 
@@ -342,23 +371,84 @@ summary{cursor:pointer;color:#c1d6f1}
 <h2>資產配置</h2>
 <small>依目前可估值資產計算</small>
 <div class="allocation-layout">
-  <div class="allocation-donut" id="allocationDonut" role="img" aria-label="資產配置圓餅圖">
-    <div class="allocation-center">
-      <small>投資資產</small>
-      <b id="allocationCenter">—</b>
-    </div>
-  </div>
-  <div class="allocation-legend" id="allocationLegend">
-    <small>等待估值資料…</small>
-  </div>
+<div class="allocation-donut" id="allocationDonut"
+ role="img" aria-label="資產配置圓餅圖">
+<div class="allocation-center">
+<small>投資資產</small>
+<b id="allocationCenter">—</b>
 </div>
-<p class="allocation-note">預估入庫部位若已計入持倉，也會反映於資產配置。未估值資產不計入比例。</p>
+</div>
+<div class="allocation-legend" id="allocationLegend">
+<small>等待估值資料…</small>
+</div>
+</div>
+<p class="allocation-note">
+預估入庫部位若已計入持倉，也會反映於資產配置。
+未估值資產不計入比例。
+</p>
+</div>
+
+<!-- Restored P&L calendar -->
+<div class="card" id="pnlCalendarCard">
+<div class="between">
+<h2>損益日曆</h2>
+<small>投資績效</small>
+</div>
+<div class="calendar-toolbar">
+<button class="calendar-arrow" id="calendarPrev"
+ type="button" aria-label="上一個月">‹</button>
+<div class="calendar-month" id="calendarMonth">
+2026 年 11 月
+</div>
+<button class="calendar-arrow" id="calendarNext"
+ type="button" aria-label="下一個月">›</button>
+</div>
+
+<div class="calendar-summary">
+<div class="calendar-stat">
+<small>本月投資損益</small>
+<strong id="calendarMonthPnl">—</strong>
+</div>
+<div class="calendar-stat">
+<small>本月報酬率</small>
+<strong id="calendarMonthReturn">—</strong>
+</div>
+</div>
+
+<div class="calendar-view">
+<button type="button" class="active"
+ id="calendarDailyMode">每日損益</button>
+<button type="button"
+ id="calendarCumulativeMode">累積損益</button>
+</div>
+
+<div class="calendar-grid" id="calendarGrid"
+ aria-label="投資損益月曆">
+<div class="calendar-head">一</div>
+<div class="calendar-head">二</div>
+<div class="calendar-head">三</div>
+<div class="calendar-head">四</div>
+<div class="calendar-head">五</div>
+<div class="calendar-head">週損益</div>
+</div>
+
+<div class="calendar-detail" id="calendarDetail">
+<h3>每日損益明細</h3>
+<p class="hint">選擇日期後查看已確認的投資績效。</p>
+</div>
+<p class="calendar-note" id="calendarNote">
+尚未載入歷史損益資料。沒有可靠估值的日期不顯示金額。
+存入本金不計算為投資獲利。
+</p>
 </div>
 
 <div class="card">
 <h2>估值覆蓋</h2>
 <div id="count">—</div>
-<p class="hint" id="btcPriceNote">加密貨幣報價來源與更新時間請至「設定」查看。若使用手動參考價，並非即時行情。</p>
+<p class="hint" id="btcPriceNote">
+加密貨幣報價來源與更新時間請至「設定」查看。
+若使用手動參考價，並非即時行情。
+</p>
 </div>
 </section>
 
@@ -372,32 +462,45 @@ summary{cursor:pointer;color:#c1d6f1}
 <section id="trade" class="hidden">
 <div class="card">
 <h2>新增交易</h2>
-<label>投資標的<select id="tradeasset"></select></label>
-<label>方向<select id="tradeside">
+<label>投資標的
+<select id="tradeasset"></select></label>
+<label>方向
+<select id="tradeside">
 <option value="buy">買入</option>
 <option value="sell">賣出</option>
 </select></label>
-<label>成交日期<input id="tradedate" type="date"></label>
-<label>數量／單位數<input id="tradeqty" type="number" step="any" inputmode="decimal"></label>
-<label>成交單價（原幣）<input id="tradeprice" type="number" step="any" inputmode="decimal"></label>
-<label>手續費（原幣）<input id="tradefee" type="number" step="any" value="0" inputmode="decimal"></label>
+<label>成交日期
+<input id="tradedate" type="date"></label>
+<label>數量／單位數
+<input id="tradeqty" type="number" step="any" inputmode="decimal"></label>
+<label>成交單價（原幣）
+<input id="tradeprice" type="number" step="any" inputmode="decimal"></label>
+<label>手續費（原幣）
+<input id="tradefee" type="number" step="any" value="0" inputmode="decimal"></label>
 <button onclick="addTrade()">儲存交易</button>
-<p class="hint">2026/11/13 的 BTC 首筆交易已自動匯入，請勿再重複新增。</p>
+<p class="hint">
+2026/11/13 的 BTC 首筆交易已自動匯入，
+請勿再重複新增。
+</p>
 </div>
 
 <div class="card">
 <h2>新增投資標的</h2>
-<button class="secondary" onclick="showAddAsset()">＋新增標的</button>
+<button class="secondary" onclick="showAddAsset()">
+＋新增標的
+</button>
 <div id="assetform" class="hidden">
 <label>代碼<input id="asymbol"></label>
 <label>名稱<input id="aname"></label>
-<label>類別<select id="atype">
+<label>類別
+<select id="atype">
 <option value="tw">台股</option>
 <option value="us">美股</option>
 <option value="fund">基金</option>
 <option value="crypto">加密貨幣</option>
 </select></label>
-<label>計價幣別<select id="acurrency">
+<label>計價幣別
+<select id="acurrency">
 <option value="TWD">TWD</option>
 <option value="USD">USD</option>
 </select></label>
@@ -408,8 +511,79 @@ summary{cursor:pointer;color:#c1d6f1}
 
 <section id="records" class="hidden">
 <div class="card">
+<h2>投資歷程</h2>
+<p class="hint">
+從第一筆已確認的投入開始，追蹤累積本金。
+早期缺少日期的持倉會獨立列出，不會虛構成交日期。
+</p>
+
+<div class="history-stat-grid">
+<div class="history-stat">
+<small>已知累積投入成本</small>
+<strong id="historyTotalCost">—</strong>
+</div>
+<div class="history-stat">
+<small>已確認交易筆數</small>
+<strong id="historyTradeCount">—</strong>
+</div>
+</div>
+
+<div class="history-stat-grid">
+<div class="history-stat">
+<small>本月可確認投入</small>
+<strong id="historyMonthInput">—</strong>
+</div>
+<div class="history-stat">
+<small>日期待補的期初持倉</small>
+<strong id="historyUnknownCount">—</strong>
+</div>
+</div>
+</div>
+
+<div class="card">
 <h2>交易紀錄</h2>
+<div class="record-filters">
+<label>年份
+<select id="recordYearFilter">
+<option value="all">全部年份</option>
+</select></label>
+<label>月份
+<select id="recordMonthFilter">
+<option value="all">全部月份</option>
+<option value="01">1 月</option>
+<option value="02">2 月</option>
+<option value="03">3 月</option>
+<option value="04">4 月</option>
+<option value="05">5 月</option>
+<option value="06">6 月</option>
+<option value="07">7 月</option>
+<option value="08">8 月</option>
+<option value="09">9 月</option>
+<option value="10">10 月</option>
+<option value="11">11 月</option>
+<option value="12">12 月</option>
+</select></label>
+</div>
+<label>交易類型
+<select id="recordTypeFilter">
+<option value="all">全部紀錄</option>
+<option value="buy">買入</option>
+<option value="sell">賣出</option>
+<option value="estimated">預估入庫</option>
+<option value="opening">期初持倉</option>
+</select></label>
+
 <div id="recordlist"></div>
+</div>
+
+<div class="card">
+<h2>早期期初持倉</h2>
+<p class="hint">
+這些持倉已有數量與成本，但不一定有原始買入日期。
+</p>
+<div id="openingHistoryList">
+<p class="hint">等待資料整理…</p>
+</div>
 </div>
 </section>
 
@@ -419,24 +593,43 @@ summary{cursor:pointer;color:#c1d6f1}
 <small id="feedstatus">—</small>
 <p class="hint" id="feeddate"></p>
 <div id="marketinfo"></div>
-<button class="secondary" onclick="loadFeed(true)">重新讀取行情</button>
+<button class="secondary" onclick="loadFeed(true)">
+重新讀取行情
+</button>
 <h3>手動更新價格</h3>
 <label>標的<select id="manualasset"></select></label>
-<label>價格（原幣）<input id="manualprice" type="number" step="any"></label>
-<label>價格日期<input id="manualdate" type="date"></label>
+<label>價格（原幣）
+<input id="manualprice" type="number" step="any"></label>
+<label>價格日期
+<input id="manualdate" type="date"></label>
 <button onclick="saveManual()">儲存手動價格</button>
-<button class="secondary" onclick="clearManual()">清除手動價格</button>
-<p class="hint">手動價格優先於行情檔。BTC/TWD請輸入一枚BTC的台幣價格。</p>
-<label>USD/TWD 匯率（留空使用行情檔）<input id="fx" type="number" step="any"></label>
+<button class="secondary" onclick="clearManual()">
+清除手動價格
+</button>
+<p class="hint">
+手動價格優先於行情檔。
+BTC/TWD 請輸入一枚 BTC 的台幣價格。
+</p>
+<label>USD/TWD 匯率（留空使用行情檔）
+<input id="fx" type="number" step="any"></label>
 <button onclick="saveFx()">更新匯率</button>
 </div>
 
 <div class="card">
 <h2>資料備份</h2>
 <button onclick="exportData()">匯出 JSON</button>
-<button class="secondary" onclick="document.getElementById('importfile').click()">匯入 JSON</button>
-<input id="importfile" type="file" accept="application/json" style="display:none" onchange="importData(event)">
-<p class="hint">資料保存在目前瀏覽器 localStorage。更新程式不會主動清除既有資料，但仍請先匯出備份。</p>
+<button class="secondary"
+ onclick="document.getElementById('importfile').click()">
+匯入 JSON
+</button>
+<input id="importfile" type="file"
+ accept="application/json" style="display:none"
+ onchange="importData(event)">
+<p class="hint">
+資料保存在目前瀏覽器 localStorage。
+更新程式不會主動清除既有資料，
+但仍請先匯出備份。
+</p>
 </div>
 </section>
 </main>
