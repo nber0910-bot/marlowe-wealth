@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-13T15:59:03+00:00",
+  "updated_at": "2026-11-13T15:59:40+00:00",
   "fx": {
-    "value": 32.903,
+    "value": 32.900002,
     "date": "2026-11-13",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -22,12 +22,12 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 690.020081,
+      "value": 690.044983,
       "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 159.940002,
+      "value": 159.945007,
       "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
@@ -35,7 +35,7 @@
       "value": 2271600.0,
       "date": "2026-11-13",
       "source": "BitoPro BTC/TWD last traded price",
-      "retrieved_at": "2026-11-13T15:58:57+00:00",
+      "retrieved_at": "2026-11-13T15:59:37+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "btc_twd"
