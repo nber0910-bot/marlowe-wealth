@@ -1,5 +1,5 @@
 'use strict';
-// MARLOWE WEALTH V26.1114.05 — inline trade editing, guarded deletion and USD budget repair.
+// MARLOWE WEALTH V26.1114.07 — trades only in Transactions; Records is historical only.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -422,6 +422,10 @@ function renderHistory(){
   const y=byId('recordYearFilter'),m=byId('recordMonthFilter'),type=byId('recordTypeFilter');
   if(!y||!m||!type)return;
   const opening=openingAssets();
+  // The old trade-type filter no longer applies to this read-only history view.
+  const typeLabel=type.closest('label');
+  if(typeLabel)typeLabel.style.display='none';else type.style.display='none';
+  type.value='all';
   const years=[...new Set([
     ...state.trades.map(t=>String(t.date||'').slice(0,4)),
     ...opening.map(a=>String(a.openingDate||'').slice(0,4))
@@ -433,26 +437,8 @@ function renderHistory(){
   const matchesDate=d=>(y.value==='all'||String(d).startsWith(y.value+'-'))&&
     (m.value==='all'||String(d).slice(5,7)===m.value);
   const entries=[];
-  if(type.value!=='opening'){
-    for(const t of state.trades){
-      if(!matchesDate(t.date))continue;
-      if(type.value==='estimated'&&!t.estimated)continue;
-      if(['buy','sell'].includes(type.value)&&t.side!==type.value)continue;
-      const a=state.assets.find(x=>x.id===t.asset);
-      entries.push({date:t.date||'',order:t.created||0,html:`<div class="item">
-        <div class="between"><b>${safe(t.asset)} · ${t.side==='buy'?'買入':'賣出'}
-        ${t.estimated?' · 🟡 預估入庫':''}</b>
-        <button class="secondary" onclick="editTradeFromHistory(${Number(t.created)})">編輯</button><button class="secondary" onclick="deleteTradeFromHistory(${Number(t.created)})">刪除</button></div>
-        <small>${safe(t.date||'日期待補')} · ${fmtQty(t.qty)} ×
-        ${money(Number(t.price),a?.currency||'TWD')} · 費用
-        ${money(Number(t.fee)||0,a?.currency||'TWD')}</small>
-        ${t.estimated?`<p class="hint">總扣款 ${money(Number(t.twdTotal))} · 預估匯率
-          ${Number(t.fxAtEntry).toFixed(4)} · 股數待券商確認</p>
-          <button class="secondary" onclick="confirmEstimatedTrade(${Number(t.created)})">修正／確認入庫</button>`:''}
-        </div>`});
-    }
-  }
-  if(type.value==='all'||type.value==='opening'){
+  // Trades are managed exclusively on the 交易 tab; records show opening positions only.
+  {
     for(const a of opening){
       const d=a.openingDate||'';
       if(!d&&(y.value!=='all'||m.value!=='all'))continue;
@@ -722,11 +708,16 @@ function tradeFxFields(){
   const a=state.assets.find(x=>x.id===byId('tradeasset')?.value);
   const el=byId('tradeFxFields');if(!el)return;
   el.style.display=a?.currency==='USD'?'':'none';
-  if(a?.currency==='USD'&&!byId('tradeFxAtEntry').value&&fx())byId('tradeFxAtEntry').value=fx();
+  // Do not prefill a historical transaction with today's FX rate.
 }
 function installTradeLedger(){
   const section=byId('trades');if(!section)return;
   const submit=section.querySelector('button[onclick="addTrade()"]');
+  if(submit&&!submit.dataset.boundSubmit){
+    submit.removeAttribute('onclick');
+    submit.addEventListener('click',addTrade);
+    submit.dataset.boundSubmit='1';
+  }
   if(submit&&!byId('tradeFxFields')){
     const fields=document.createElement('div');fields.id='tradeFxFields';
     fields.innerHTML='<label>成交當時 USD/TWD 匯率（選填）<input type="number" step="any" min="0" id="tradeFxAtEntry" placeholder="例如 32.84"></label><label>實際台幣扣款／入帳（選填，優先採用）<input type="number" step="any" min="0" id="tradeTwdTotal" placeholder="例如 24600"></label><p class="hint">若不知道實際扣款，可先填成交匯率；不填則月投入暫列待核對。勿把同一筆交易再記入其他投入調整。</p>';
@@ -743,20 +734,33 @@ function installTradeLedger(){
 }
 function renderTradeLedger(){
   const el=byId('tradeLedgerList');if(!el)return;
-  const rows=state.trades.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))||(Number(b.created)||0)-(Number(a.created)||0));
-  el.innerHTML=rows.length?rows.map((t,i)=>{
+  const rows=state.trades.map((trade,originalIndex)=>({trade,originalIndex})).sort((a,b)=>
+    String(b.trade.date).localeCompare(String(a.trade.date))||(Number(b.trade.created)||0)-(Number(a.trade.created)||0));
+  el.innerHTML=rows.length?rows.map(({trade:t,originalIndex:i})=>{
     const a=state.assets.find(x=>x.id===t.asset),curr=a?.currency||'TWD';
-    const twd=Number(t.twdTotal)>0?money(Number(t.twdTotal)):(curr==='USD'&&Number(t.fxAtEntry)>0?money((Number(t.qty)*Number(t.price)+(Number(t.fee)||0))*Number(t.fxAtEntry)):'待核對');
+    const total=Number(t.qty)*Number(t.price)+(Number(t.fee)||0);
+    const twd=Number(t.twdTotal)>0?money(Number(t.twdTotal)):(curr==='USD'&&Number(t.fxAtEntry)>0?money(total*Number(t.fxAtEntry)):'待核對');
     const missing=curr==='USD'&&t.side==='buy'&&!(Number(t.twdTotal)>0)&&!(Number(t.fxAtEntry)>0);
     return `<div class="item"><div class="between"><b>${safe(t.asset)} · ${t.side==='sell'?'賣出':'買入'}${t.estimated?' · 🟡 預估':''}</b><small>${safe(t.date||'日期未知')}</small></div>
       <p class="muted">${fmtQty(t.qty)} 單位 × ${money(Number(t.price),curr)} · 手續費 ${money(Number(t.fee)||0,curr)}</p>
+      <small>交易總金額：${money(total,curr)}${t.costProvisional?'（暫估）':''}</small>
       ${curr==='USD'?`<small>台幣金額：${twd} · 成交匯率：${Number(t.fxAtEntry)>0?Number(t.fxAtEntry).toFixed(4):'待核對'}</small>`:''}
-      ${missing?'<p class="hint" style="color:#ffd36a">⚠ 尚未計入月投入預算；請按「編輯」補成交匯率或實際台幣扣款。</p>':''}
+      ${missing?'<p class="hint" style="color:#ffd36a">⚠ 尚未計入月投入預算；請補成交當時匯率或實際台幣扣款。</p>':''}
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="secondary" data-edit-trade="${i}">編輯</button><button type="button" class="secondary" data-delete-trade="${i}">刪除</button></div>
       <div id="trade-editor-${i}"></div></div>`;
   }).join(''):'<p class="hint">目前沒有交易明細；期初持倉仍會顯示在「持倉」。</p>';
-  el.querySelectorAll('[data-edit-trade]').forEach(b=>b.addEventListener('click',()=>editTrade(rows[Number(b.dataset.editTrade)],Number(b.dataset.editTrade))));
-  el.querySelectorAll('[data-delete-trade]').forEach(b=>b.addEventListener('click',()=>deleteTradeRecord(rows[Number(b.dataset.deleteTrade)])));
+  // Delegation works after every re-render, including iOS Safari / installed PWA.
+  if(!el.dataset.actionsInstalled){
+    el.addEventListener('click',event=>{
+      const button=event.target.closest('button[data-edit-trade],button[data-delete-trade]');
+      if(!button||!el.contains(button))return;
+      const index=Number(button.dataset.editTrade??button.dataset.deleteTrade);
+      if(!Number.isInteger(index)||index<0||index>=state.trades.length)return alert('找不到交易，請重新整理。');
+      if(button.hasAttribute('data-edit-trade'))editTrade(state.trades[index],index);
+      else deleteTradeRecord(state.trades[index]);
+    });
+    el.dataset.actionsInstalled='1';
+  }
 }
 function deleteTradeRecord(t){
   if(!t)return;
@@ -799,8 +803,18 @@ function editTrade(t,index){
     save();render();alert('已更新原交易及月投入計算。');
   });
 }
-function editTradeFromHistory(created){const t=state.trades.find(x=>Number(x.created)===Number(created));if(!t)return alert('找不到交易');document.querySelector('[data-tab="trades"]')?.click();renderTradeLedger();const rows=state.trades.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))||(Number(b.created)||0)-(Number(a.created)||0));const i=rows.indexOf(t);if(i>=0){editTrade(t,i);byId('trade-editor-'+i)?.scrollIntoView({behavior:'smooth',block:'center'});}}
-function deleteTradeFromHistory(created){const t=state.trades.find(x=>Number(x.created)===Number(created));deleteTradeRecord(t);}
+// Legacy links: navigate to the single trade-management interface.
+function editTradeFromHistory(created){
+  const i=state.trades.findIndex(x=>Number(x.created)===Number(created));
+  if(i<0)return alert('找不到交易');
+  document.querySelector('[data-tab="trades"]')?.click();
+  renderTradeLedger();editTrade(state.trades[i],i);
+  byId('trade-editor-'+i)?.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function deleteTradeFromHistory(created){
+  const t=state.trades.find(x=>Number(x.created)===Number(created));
+  if(t)deleteTradeRecord(t);
+}
 function addTrade(){
   const asset=byId('tradeasset').value,side=byId('tradeside').value,date=byId('tradedate').value;
   const qty=Number(byId('tradeqty').value),p=Number(byId('tradeprice').value),fee=Number(byId('tradefee').value||0);
