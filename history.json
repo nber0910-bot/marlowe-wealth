@@ -1,0 +1,375 @@
+{
+  "schema": "marlowe-wealth-history-v1",
+  "generated_on": "2026-11-13",
+  "coverage": {
+    "start": "2026-03-01",
+    "end": "2026-11-13",
+    "earliest_reported_investment": "2026-03-09",
+    "scope": "user_personal_investments_only"
+  },
+  "integration": {
+    "mode": "read_only_historical_reference",
+    "does_not_modify_local_storage": true,
+    "does_not_modify_assets": true,
+    "does_not_modify_trades": true,
+    "must_not_count_as_new_contributions": true,
+    "must_not_merge_into_existing_transactions_automatically": true,
+    "daily_pnl_from_snapshots": false,
+    "notes": "Historical records are documentary references. Only explicit verified trades should be manually reconciled against existing trades before any ledger import."
+  },
+  "status_definitions": {
+    "confirmed_in_backup": "Present in previously uploaded MARLOWE WEALTH JSON backup; this confirms recorded data, not broker settlement.",
+    "reported_confirmed": "Described as confirmed in prior conversation summary; original execution statement not re-inspected.",
+    "reported_unverified": "Previously reported in conversation; original source not re-inspected.",
+    "historical_snapshot": "A dated observed balance/valuation, not a trade or daily profit.",
+    "estimated": "Estimated transaction pending final broker data.",
+    "needs_review": "Date, amounts, units, source, or classification remain incomplete."
+  },
+  "sources": [
+    {
+      "id": "backup_20261113",
+      "type": "user_uploaded_json",
+      "name": "marlowe-wealth-00713-updated-2026-11-13.json",
+      "status": "inspected_search_excerpts",
+      "description": "Asset baselines and 2026-11-12 VOO estimate, 2026-11-13 BTC transaction."
+    },
+    {
+      "id": "conversation_history",
+      "type": "prior_conversation_summary",
+      "status": "summary_only",
+      "description": "Older 2026 March–November reported trades and asset snapshots; source screenshots or broker statements not independently rechecked."
+    },
+    {
+      "id": "previous_compilation",
+      "type": "prior_assistant_compilation",
+      "status": "needs_review",
+      "description": "Figures from earlier history summary; retain as tentative if primary evidence is not available."
+    }
+  ],
+  "monthly_overview": [
+    {
+      "month": "2026-03",
+      "reported_investment_twd": 13000,
+      "amount_status": "reported_unverified",
+      "detail": "Four reported fund purchases on March 9 and 11; verify source statements."
+    },
+    {
+      "month": "2026-04",
+      "reported_investment_twd": 19500,
+      "approximate": true,
+      "amount_status": "reported_unverified",
+      "detail": "Reported fund contributions across 野村、安聯、元大、富邦; individual entries incomplete."
+    },
+    {
+      "month": "2026-05",
+      "reported_investment_twd": 9300,
+      "approximate": true,
+      "through_date": "2026-05-19",
+      "amount_status": "reported_unverified",
+      "detail": "Partial-month fund contribution estimate, not full-month total."
+    },
+    {
+      "month": "2026-06",
+      "reported_investment_twd": null,
+      "amount_status": "needs_review",
+      "detail": "No complete transaction records available."
+    },
+    {
+      "month": "2026-07",
+      "reported_investment_twd": null,
+      "amount_status": "needs_review",
+      "detail": "A July 14 asset-value snapshot exists; do not mistake it for contributions."
+    },
+    {
+      "month": "2026-08",
+      "reported_investment_twd": null,
+      "amount_status": "needs_review",
+      "detail": "An August 17 asset-value and cumulative-P&L snapshot exists."
+    },
+    {
+      "month": "2026-09",
+      "reported_investment_twd": null,
+      "amount_status": "needs_review",
+      "detail": "Research and planning exist; personal completed purchases not comprehensively verified."
+    },
+    {
+      "month": "2026-10",
+      "reported_investment_twd": null,
+      "amount_status": "needs_review",
+      "detail": "Some 009816 purchases reported; full ledger incomplete."
+    },
+    {
+      "month": "2026-11",
+      "reported_investment_twd": null,
+      "amount_status": "needs_review",
+      "detail": "Some trades and latest holdings backed up; no complete monthly total."
+    }
+  ],
+  "historical_events": [
+    {
+      "id": "hist-20260309-yuanta-div",
+      "date": "2026-03-09",
+      "kind": "reported_contribution",
+      "asset_name": "元大台灣高股息優質龍頭",
+      "amount_twd": 3000,
+      "status": "reported_unverified",
+      "source_id": "previous_compilation",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "hist-20260311-fubon-nasdaq",
+      "date": "2026-03-11",
+      "kind": "reported_contribution",
+      "asset_name": "富邦 NASDAQ-100",
+      "amount_twd": 3000,
+      "status": "reported_unverified",
+      "source_id": "previous_compilation",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "hist-20260311-fubon-sp",
+      "date": "2026-03-11",
+      "kind": "reported_contribution",
+      "asset_name": "富邦標普500",
+      "amount_twd": 5000,
+      "status": "reported_unverified",
+      "source_id": "previous_compilation",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "hist-20260311-fubon-select",
+      "date": "2026-03-11",
+      "kind": "reported_contribution",
+      "asset_name": "富邦上選",
+      "amount_twd": 2000,
+      "status": "reported_unverified",
+      "source_id": "previous_compilation",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false,
+      "notes": "May no longer be held; do not add as a current asset."
+    },
+    {
+      "id": "hist-20261015-009816",
+      "date": "2026-10-15",
+      "kind": "reported_trade",
+      "asset_id": "009816",
+      "side": "buy",
+      "quantity": 553,
+      "status": "reported_confirmed",
+      "source_id": "conversation_history",
+      "price_twd": null,
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "hist-20261102-009816",
+      "date": "2026-11-02",
+      "kind": "reported_trade",
+      "asset_id": "009816",
+      "side": "buy",
+      "quantity": 193,
+      "status": "needs_review",
+      "source_id": "conversation_history",
+      "price_twd": null,
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "hist-20261111-009816",
+      "date": "2026-11-11",
+      "kind": "reported_trade",
+      "asset_id": "009816",
+      "side": "buy",
+      "quantity": 459,
+      "price_twd": 15.25,
+      "status": "reported_confirmed",
+      "source_id": "conversation_history",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "hist-20261111-00646",
+      "date": "2026-11-11",
+      "kind": "reported_trade",
+      "asset_id": "00646",
+      "side": "buy",
+      "quantity": 13,
+      "price_twd": 78.4,
+      "status": "reported_confirmed",
+      "source_id": "conversation_history",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "hist-20261112-voo",
+      "date": "2026-11-12",
+      "kind": "estimated_trade_reference",
+      "asset_id": "VOO",
+      "side": "buy",
+      "quantity": 1.0853003723590617,
+      "price_usd": 689.5,
+      "fee_usd": 0.7490636704119851,
+      "twd_total": 24600,
+      "fx_at_entry": 32.841,
+      "status": "estimated",
+      "source_id": "backup_20261113",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false,
+      "notes": "Already represented as an estimated trade in backup. Do not import again."
+    },
+    {
+      "id": "hist-20261113-btc",
+      "date": "2026-11-13",
+      "kind": "trade_reference",
+      "asset_id": "BTC",
+      "side": "buy",
+      "quantity": 0.0012974,
+      "price_twd": 2368360,
+      "fee_twd": null,
+      "status": "confirmed_in_backup",
+      "source_id": "backup_20261113",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false,
+      "notes": "Fee not verified; already represented in backup."
+    }
+  ],
+  "asset_snapshots": [
+    {
+      "id": "snap-20260714-funds",
+      "date": "2026-07-14",
+      "scope": "five_funds_only",
+      "market_value_twd": 60725,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "previous_compilation",
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null
+    },
+    {
+      "id": "snap-20260817-funds",
+      "date": "2026-08-17",
+      "scope": "four_funds_only",
+      "market_value_twd": 76508,
+      "cumulative_pnl_twd": 6669,
+      "daily_pnl_twd": null,
+      "status": "historical_snapshot",
+      "source_id": "previous_compilation"
+    },
+    {
+      "id": "snap-20261106-funds",
+      "date": "2026-11-06",
+      "scope": "funds_only",
+      "cost_twd": 100039,
+      "market_value_twd": 91298,
+      "approximate": true,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "status": "historical_snapshot",
+      "source_id": "previous_compilation",
+      "notes": "Source date/value not reverified; previous conversation also referenced November 9 for similar figures. Verify date before charting."
+    },
+    {
+      "id": "snap-20261113-website",
+      "date": "2026-11-13",
+      "scope": "website_reported_total",
+      "market_value_twd": 172478.93,
+      "cumulative_pnl_twd": -2634.09,
+      "daily_pnl_twd": null,
+      "status": "needs_review",
+      "source_id": "previous_compilation",
+      "notes": "Previously reported website snapshot, not found in inspected JSON backup. Exclude from verified historical chart until screenshot/source rechecked."
+    }
+  ],
+  "baseline_holdings_reference": {
+    "as_of": "2026-11-13",
+    "source_id": "backup_20261113",
+    "status": "confirmed_in_backup",
+    "purpose": "Reference only; never replace or add to current assets.",
+    "assets": [
+      {
+        "id": "009816",
+        "quantity": 1205,
+        "cost": 19015,
+        "currency": "TWD"
+      },
+      {
+        "id": "00646",
+        "quantity": 281,
+        "cost": 22016,
+        "currency": "TWD"
+      },
+      {
+        "id": "VOO",
+        "quantity": 0.06109,
+        "cost": 43.04,
+        "currency": "USD"
+      },
+      {
+        "id": "FUBON_SP500",
+        "quantity": 3307.47,
+        "cost": 36700,
+        "currency": "TWD"
+      },
+      {
+        "id": "FUBON_NASDAQ100",
+        "quantity": 2705.29,
+        "cost": 31000,
+        "currency": "TWD"
+      },
+      {
+        "id": "YUANTA_NEW",
+        "quantity": 133.5,
+        "cost": 24800,
+        "currency": "TWD"
+      },
+      {
+        "id": "YUANTA_DIV",
+        "quantity": 212.8,
+        "cost": 7539,
+        "currency": "TWD"
+      },
+      {
+        "id": "00713",
+        "quantity": 78,
+        "cost": 4960,
+        "currency": "TWD"
+      },
+      {
+        "id": "BTC",
+        "quantity": 0,
+        "cost": 0,
+        "currency": "TWD",
+        "notes": "Baseline only; BTC bought through separately stored trade."
+      }
+    ]
+  },
+  "review_queue": [
+    {
+      "priority": "high",
+      "issue": "Verify earliest March 9 and March 11 investment details against source statements."
+    },
+    {
+      "priority": "high",
+      "issue": "Obtain complete March–October purchase/redemption/transfer ledger; historical purchases may already be included in current baseline holdings."
+    },
+    {
+      "priority": "high",
+      "issue": "Confirm whether November 6 or November 9 is correct for funds market-value snapshot."
+    },
+    {
+      "priority": "high",
+      "issue": "Confirm VOO actual November 12 execution and BTC November 13 fees."
+    },
+    {
+      "priority": "medium",
+      "issue": "Verify 00713 acquisition date and 009816/00646 historical lots."
+    },
+    {
+      "priority": "medium",
+      "issue": "Daily P&L requires dated positions, daily prices, fund NAV and FX; leave missing dates null."
+    }
+  ]
+}
