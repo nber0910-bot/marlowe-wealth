@@ -1,5 +1,5 @@
 'use strict';
-// MONO WEALTH V26.1114.ESTIMATE_DETAIL — ETH cost reconciliation, valuation-first layout, precise build time.
+// MONO WEALTH V26.1114.131030 — full valuation coverage and header build version.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -92,7 +92,37 @@ function price(a){if(a.id==='BTC')return btcQuote();if(a.id==='ETH'){const live=
 function validCryptoFeedQuote(p,pair){return validQuote(p)&&p.currency==='TWD'&&p.pair===pair&&Number.isFinite(Date.parse(p.retrieved_at||''))&&Date.parse(p.retrieved_at)<=Date.now()+300000;}
 function btcQuoteStatus(){const p=btcQuote();if(!p)return {label:'無可用報價',detail:'尚未取得 BTC/TWD 價格',stale:true};if(!p.automatic)return {label:'手動參考價',detail:'目前使用手動價格，並非即時行情',stale:true};const stale=Date.now()-Date.parse(p.retrieved_at)>BTC_STALE_HOURS*3600000;return {label:stale?'行情已過期':'自動行情正常',detail:stale?'超過 2 小時未取得新報價，仍顯示最後有效價格':'BitoPro 最近一次成功取得的行情快照',stale};}
 function taiwanTime(value){const t=Date.parse(value||'');return Number.isFinite(t)?new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(t)):'時間未知';}
-function renderBtcStatus(){const el=byId('btcPriceNote');if(!el)return;const p=btcQuote(),s=btcQuoteStatus();if(!p){el.textContent='BTC/TWD 尚無可用價格，等待 BitoPro 自動行情。';return;}el.innerHTML=`<b class="${s.stale?'negative':'positive'}">BTC · ${safe(s.label)}</b><br>${p.automatic?'BitoPro BTC/TWD':'參考價格'}：${money(Number(p.value))}<br>${p.automatic?'擷取時間：'+safe(taiwanTime(p.retrieved_at)):'參考日期：'+safe(p.date||'未知')}<br>${safe(s.detail)}`;}
+function renderBtcStatus(){
+  const el=byId('btcPriceNote');if(!el)return;
+  const held=state.assets.map(a=>({a,z:valuation(a)})).filter(x=>x.z.q>0);
+  const covered=held.filter(x=>x.z.value!==null).length;
+  const rows=held.map(({a,z})=>{
+    const p=z.p,has=validQuote(p),auto=!!p?.automatic||(a.id!=='BTC'&&a.id!=='ETH'&&!state.manual[a.id]&&!!feed.prices?.[a.id]);
+    const time=p?.retrieved_at?taiwanTime(p.retrieved_at):p?.date||'未知';
+    const stale=auto&&p?.retrieved_at&&Date.now()-Date.parse(p.retrieved_at)>BTC_STALE_HOURS*3600000;
+    const label=z.value===null?'待估值':stale?'行情逾時':auto?'自動行情':'手動／參考';
+    const unit=a.type==='crypto'?'幣':'單位';
+    const source=p?.source||(auto?'自動行情':'手動參考價');
+    return `<div style="padding:13px 0;border-top:1px solid rgba(155,185,220,.18)">
+      <div class="between"><b>${safe(a.id)} · ${safe(a.name)}</b><small class="${z.value===null||stale?'negative':'positive'}">${safe(label)}</small></div>
+      <small>數量：${fmtQty(z.q)} ${unit}</small><br>
+      <small>單價：${has?money(Number(p.value),a.currency):'缺少有效行情'}</small><br>
+      <small>台幣估值：${z.value===null?'待估值':money(z.value)}</small><br>
+      <small>來源：${has?safe(source):'未取得'} · 報價／擷取時間：${safe(time)}</small>
+      ${a.currency==='USD'?`<br><small>換算匯率 USD/TWD：${fx()?fx().toFixed(4):'待補'}</small>`:''}
+      ${a.id==='ETH'&&!has?'<br><small>ETH/TWD 尚未取得有效報價；請檢查 market.json 或手動行情。</small>':''}
+    </div>`;
+  }).join('');
+  el.innerHTML=`<b>逐檔估值明細 · ${covered} / ${held.length} 檔</b><p class="hint">只計算實際持有標的，價格可能來自不同日期；非券商正式結算。</p>${rows||'<p class="hint">目前沒有持倉</p>'}`;
+}
+function updateBuildVersion(){
+  const heading=document.querySelector('h1');if(!heading||!heading.textContent.includes('WEALTH'))return;
+  const small=heading.querySelector('small');
+  if(small)small.textContent='V26.1114.131030';
+  else heading.insertAdjacentHTML('beforeend',' <small>V26.1114.131030</small>');
+  document.title='MONO WEALTH V26.1114.131030';
+}
+
 function position(a){let q=num(a.qty)||0,c=num(a.cost)||0;const trades=state.trades.filter(t=>t.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));for(const t of trades){const tq=num(t.qty)||0,tp=num(t.price)||0,tf=num(t.fee)||0;if(t.side==='buy'){q+=tq;c+=tq*tp+tf;}else if(t.side==='sell'&&tq<=q+1e-8){const avg=q>0?c/q:0;c-=avg*tq;q-=tq;if(Math.abs(q)<1e-8){q=0;c=0;}}}return {q,c};}
 function valuation(a){const {q,c}=position(a),p=price(a),rate=a.currency==='USD'?fx():1,valid=q>0&&validQuote(p)&&rate>0;return {q,c,p,value:valid?q*num(p.value)*rate:null,costTwd:a.currency==='USD'&&rate?c*rate:a.currency==='TWD'?c:null};}
 function estimatedTrades(id){return state.trades.filter(t=>t.asset===id&&t.estimated===true);}
@@ -903,4 +933,4 @@ function confirmEstimatedTrade(created){const t=state.trades.find(t=>t.created==
 function renderPendingSummary(){let el=byId('estimatedSummary');if(!el){const target=byId('total')?.closest('.card')||byId('total')?.parentElement;if(!target)return;el=document.createElement('div');el.id='estimatedSummary';el.className='item';target.appendChild(el);}const pending=state.trades.filter(t=>t.estimated);if(!pending.length){el.style.display='none';return;}el.style.display='';const total=pending.reduce((s,t)=>s+(num(t.twdTotal)||0),0);el.innerHTML=`<b>🟡 預估入庫 · ${pending.length} 筆</b><p>已記入持倉的預估投入：${money(total)}</p><small>此金額已反映於預估持倉，請勿與總資產再相加。實際成交股數、匯率及損益仍待券商確認。</small>`;}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==b.dataset.tab));document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));window.scrollTo(0,0);}));
 byId('tradedate').value=today();byId('manualdate').value=today();
-try{installReliableAddAsset();installTradeLedger();installEthSetup();installEthCostRepair();installOverviewRefresh();installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
+try{updateBuildVersion();installReliableAddAsset();installTradeLedger();installEthSetup();installEthCostRepair();installOverviewRefresh();installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
