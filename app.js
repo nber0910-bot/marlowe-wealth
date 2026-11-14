@@ -1,5 +1,5 @@
 'use strict';
-// MARLOWE WEALTH V26.1114.09 — trades only in Transactions; Records is historical only.
+// MONO WEALTH V26.1114.124620 — ETH cost reconciliation, valuation-first layout, precise build time.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -39,6 +39,38 @@ function repairKnownEthDuplicate(){
   return true;
 }
 repairKnownEthDuplicate();
+// Repair the specific legacy ETH cost error visible in the 2026-11-14 screenshots.
+// A stored NT$8.12 was incorrectly treated as the TOTAL TWD cost for 0.01129778 ETH.
+// The reported NT$719 is a PROVISIONAL total outlay, not a price per ETH.
+// Never change quantities, add trades, or alter a different ETH position.
+function repairLegacyEthCost812(){
+  const a=state.assets.find(x=>x.id==='ETH');
+  if(!a||a.currency!=='TWD'||state.ethCost812Repair)return false;
+  const trades=state.trades.filter(t=>t.asset==='ETH');
+  const near=(x,y,tol=1e-6)=>Number.isFinite(Number(x))&&Math.abs(Number(x)-y)<tol;
+  const expectedQty=0.01129778;
+  if(trades.length===0 && near(a.qty,expectedQty,1e-8) && near(a.cost,8.12,0.015)){
+    a.cost=719;
+    a.verified=false;
+    a.costProvisional=true;
+    state.ethCost812Repair='2026-11-14-opening-cost-719-provisional';
+    return true;
+  }
+  if(trades.length===1){
+    const t=trades[0];
+    const q=Number(a.qty||0)+Number(t.qty||0);
+    const total=Number(a.cost||0)+Number(t.qty||0)*Number(t.price||0)+Number(t.fee||0);
+    if(t.side==='buy'&&t.date==='2026-11-14'&&near(q,expectedQty,1e-8)&&near(total,8.12,0.015)&&near(a.qty,0,1e-8)&&Number(t.qty)>0){
+      t.price=719/Number(t.qty);
+      t.costProvisional=true;
+      t.note='ETH 原成本 NT$8.12 為錯誤總成本；依回報總投入 NT$719 暫估，實際扣款與手續費待核對。';
+      state.ethCost812Repair='2026-11-14-trade-cost-719-provisional';
+      return true;
+    }
+  }
+  return false;
+}
+repairLegacyEthCost812();
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 save();
 let feed={prices:{},fx:null,updated_at:null},feedError=null;
@@ -603,7 +635,9 @@ function installOverviewRefresh(){
   btn.textContent='↻ 刷新';btn.title='重新載入整個網頁（不清除本機投資資料）';
   btn.style.cssText='width:auto;min-width:0;padding:7px 12px;border-radius:12px;font-size:13px;line-height:1.2;cursor:pointer';
   btn.addEventListener('click',()=>{save();window.location.reload();});
-  bar.appendChild(btn);overview.insertBefore(bar,overview.firstChild);
+  bar.appendChild(btn);
+  const hero=byId('valuationHero');
+  if(hero)hero.appendChild(bar);else overview.appendChild(bar);
 }
 function installEthSetup(){
   const section=byId('trade');if(!section||byId('ethSetupPanel'))return;
@@ -651,7 +685,7 @@ function renderMonthlyBudget(){
   if(!panel){
     panel=document.createElement('div');panel.id='monthlyBudgetPanel';panel.className='card';
     panel.style.cssText='margin:14px 0;padding:18px;border-radius:18px';
-    const hero=overview.querySelector('.hero')||overview.firstElementChild;
+    const hero=byId('valuationHero')||overview.querySelector('.hero')||overview.firstElementChild;
     if(hero)hero.insertAdjacentElement('afterend',panel);else overview.prepend(panel);
   }
   const month=budgetMonth(),ledger=budgetLedger(month);
