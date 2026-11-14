@@ -1,5 +1,5 @@
 'use strict';
-// MARLOWE WEALTH V26.1114.07 — trades only in Transactions; Records is historical only.
+// MARLOWE WEALTH V26.1114.09 — trades only in Transactions; Records is historical only.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -606,7 +606,7 @@ function installOverviewRefresh(){
   bar.appendChild(btn);overview.insertBefore(bar,overview.firstChild);
 }
 function installEthSetup(){
-  const section=byId('trades');if(!section||byId('ethSetupPanel'))return;
+  const section=byId('trade');if(!section||byId('ethSetupPanel'))return;
   const panel=document.createElement('div');panel.className='card';panel.id='ethSetupPanel';
   panel.style.cssText='padding:15px;margin:12px 0';
   panel.innerHTML='<h3>ETH · 11/14 買入資料</h3><p class="hint">BitoPro 截圖：目前 0.01129778 ETH；11/14 現貨交易增加 0.0112774 ETH；成交均價約 NT$63,665。剩餘 0.00002038 ETH 來源與成本尚待核對。NT$719 為使用者回報投入，需核對實際扣款與手續費。以下不會自動新增交易，避免重複。</p><button type="button" id="ethPrepareTrade">準備 ETH 買入表單（不會直接儲存）</button>';
@@ -711,7 +711,7 @@ function tradeFxFields(){
   // Do not prefill a historical transaction with today's FX rate.
 }
 function installTradeLedger(){
-  const section=byId('trades');if(!section)return;
+  const section=byId('trade');if(!section)return;
   const submit=section.querySelector('button[onclick="addTrade()"]');
   if(submit&&!submit.dataset.boundSubmit){
     submit.removeAttribute('onclick');
@@ -807,7 +807,7 @@ function editTrade(t,index){
 function editTradeFromHistory(created){
   const i=state.trades.findIndex(x=>Number(x.created)===Number(created));
   if(i<0)return alert('找不到交易');
-  document.querySelector('[data-tab="trades"]')?.click();
+  document.querySelector('[data-tab="trade"]')?.click();
   renderTradeLedger();editTrade(state.trades[i],i);
   byId('trade-editor-'+i)?.scrollIntoView({behavior:'smooth',block:'center'});
 }
