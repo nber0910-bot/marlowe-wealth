@@ -1,11 +1,10 @@
 {
   "schema": "marlowe-wealth-history-v1",
-  "generated_on": "2026-11-13",
+  "generated_on": "2026-11-15",
   "coverage": {
     "start": "2026-03-01",
-    "end": "2026-11-13",
-    "earliest_reported_investment": "2026-03-09",
-    "scope": "user_personal_investments_only"
+    "end": "2026-11-15",
+    "complete_ledger": false
   },
   "integration": {
     "mode": "read_only_historical_reference",
@@ -15,7 +14,8 @@
     "must_not_count_as_new_contributions": true,
     "must_not_merge_into_existing_transactions_automatically": true,
     "daily_pnl_from_snapshots": false,
-    "notes": "Historical records are documentary references. Only explicit verified trades should be manually reconciled against existing trades before any ledger import."
+    "notes": "Historical records are documentary references. Only explicit verified trades should be manually reconciled against existing trades before any ledger import.",
+    "personal_only": true
   },
   "status_definitions": {
     "confirmed_in_backup": "Present in previously uploaded MARLOWE WEALTH JSON backup; this confirms recorded data, not broker settlement.",
@@ -25,351 +25,1041 @@
     "estimated": "Estimated transaction pending final broker data.",
     "needs_review": "Date, amounts, units, source, or classification remain incomplete."
   },
-  "sources": [
-    {
-      "id": "backup_20261113",
-      "type": "user_uploaded_json",
-      "name": "marlowe-wealth-00713-updated-2026-11-13.json",
-      "status": "inspected_search_excerpts",
-      "description": "Asset baselines and 2026-11-12 VOO estimate, 2026-11-13 BTC transaction."
-    },
-    {
-      "id": "conversation_history",
-      "type": "prior_conversation_summary",
-      "status": "summary_only",
-      "description": "Older 2026 March–November reported trades and asset snapshots; source screenshots or broker statements not independently rechecked."
-    },
-    {
-      "id": "previous_compilation",
-      "type": "prior_assistant_compilation",
-      "status": "needs_review",
-      "description": "Figures from earlier history summary; retain as tentative if primary evidence is not available."
-    }
-  ],
+  "sources": {
+    "personal_handoff_20261115": "2026/11/15 個人投資歷史交接 JSON",
+    "personal_app_backup_20261115": "2026/11/15 MONO WEALTH APP JSON 備份"
+  },
   "monthly_overview": [
     {
       "month": "2026-03",
       "reported_investment_twd": 13000,
+      "approximate": true,
       "amount_status": "reported_unverified",
-      "detail": "Four reported fund purchases on March 9 and 11; verify source statements."
+      "detail": "Four reported fund purchases on March 9 and 11; verify source statements.",
+      "through_date": null
     },
     {
       "month": "2026-04",
       "reported_investment_twd": 19500,
       "approximate": true,
       "amount_status": "reported_unverified",
-      "detail": "Reported fund contributions across 野村、安聯、元大、富邦; individual entries incomplete."
+      "detail": "Reported fund contributions across 野村、安聯、元大、富邦; individual entries incomplete.",
+      "through_date": null
     },
     {
       "month": "2026-05",
       "reported_investment_twd": 9300,
       "approximate": true,
-      "through_date": "2026-05-19",
       "amount_status": "reported_unverified",
-      "detail": "Partial-month fund contribution estimate, not full-month total."
+      "detail": "Partial-month fund contribution estimate, not full-month total.",
+      "through_date": "2026-05-19"
     },
     {
       "month": "2026-06",
       "reported_investment_twd": null,
-      "amount_status": "needs_review",
-      "detail": "No complete transaction records available."
+      "approximate": true,
+      "amount_status": "reported_unverified",
+      "detail": "No complete transaction records available.",
+      "through_date": null
     },
     {
       "month": "2026-07",
       "reported_investment_twd": null,
-      "amount_status": "needs_review",
-      "detail": "A July 14 asset-value snapshot exists; do not mistake it for contributions."
+      "approximate": true,
+      "amount_status": "reported_unverified",
+      "detail": "A July 14 asset-value snapshot exists; do not mistake it for contributions.",
+      "through_date": null
     },
     {
       "month": "2026-08",
       "reported_investment_twd": null,
-      "amount_status": "needs_review",
-      "detail": "An August 17 asset-value and cumulative-P&L snapshot exists."
+      "approximate": true,
+      "amount_status": "reported_unverified",
+      "detail": "An August 17 asset-value and cumulative-P&L snapshot exists.",
+      "through_date": null
     },
     {
       "month": "2026-09",
       "reported_investment_twd": null,
-      "amount_status": "needs_review",
-      "detail": "Research and planning exist; personal completed purchases not comprehensively verified."
+      "approximate": true,
+      "amount_status": "reported_unverified",
+      "detail": "Research and planning exist; personal completed purchases not comprehensively verified.",
+      "through_date": null
     },
     {
       "month": "2026-10",
       "reported_investment_twd": null,
-      "amount_status": "needs_review",
-      "detail": "Some 009816 purchases reported; full ledger incomplete."
+      "approximate": true,
+      "amount_status": "reported_unverified",
+      "detail": "Some 009816 purchases reported; full ledger incomplete.",
+      "through_date": null
     },
     {
       "month": "2026-11",
       "reported_investment_twd": null,
-      "amount_status": "needs_review",
-      "detail": "Some trades and latest holdings backed up; no complete monthly total."
+      "approximate": true,
+      "amount_status": "reported_unverified",
+      "detail": "Some trades and latest holdings backed up; no complete monthly total.",
+      "through_date": null
     }
   ],
   "historical_events": [
     {
-      "id": "hist-20260309-yuanta-div",
-      "date": "2026-03-09",
-      "kind": "reported_contribution",
-      "asset_name": "元大台灣高股息優質龍頭",
+      "id": "handoff-fund-AFB0022-01",
+      "date": "2026-03-11",
+      "kind": "subscription",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
       "amount_twd": 3000,
-      "status": "reported_unverified",
-      "source_id": "previous_compilation",
+      "quantity": 304.88,
+      "price_twd": null,
+      "price_usd": null,
+      "status": "reported_confirmed",
+      "source_id": "personal_handoff_20261115",
+      "notes": " · 歷史參考，不增加持倉或本金",
       "include_in_current_holdings": false,
       "include_in_cash_flow_totals": false
     },
     {
-      "id": "hist-20260311-fubon-nasdaq",
-      "date": "2026-03-11",
-      "kind": "reported_contribution",
-      "asset_name": "富邦 NASDAQ-100",
-      "amount_twd": 3000,
-      "status": "reported_unverified",
-      "source_id": "previous_compilation",
-      "include_in_current_holdings": false,
-      "include_in_cash_flow_totals": false
-    },
-    {
-      "id": "hist-20260311-fubon-sp",
-      "date": "2026-03-11",
-      "kind": "reported_contribution",
-      "asset_name": "富邦標普500",
-      "amount_twd": 5000,
-      "status": "reported_unverified",
-      "source_id": "previous_compilation",
-      "include_in_current_holdings": false,
-      "include_in_cash_flow_totals": false
-    },
-    {
-      "id": "hist-20260311-fubon-select",
-      "date": "2026-03-11",
-      "kind": "reported_contribution",
-      "asset_name": "富邦上選",
-      "amount_twd": 2000,
-      "status": "reported_unverified",
-      "source_id": "previous_compilation",
-      "include_in_current_holdings": false,
-      "include_in_cash_flow_totals": false,
-      "notes": "May no longer be held; do not add as a current asset."
-    },
-    {
-      "id": "hist-20261015-009816",
+      "id": "handoff-tw-1015-646",
       "date": "2026-10-15",
-      "kind": "reported_trade",
-      "asset_id": "009816",
-      "side": "buy",
-      "quantity": 553,
-      "status": "reported_confirmed",
-      "source_id": "conversation_history",
-      "price_twd": null,
-      "include_in_current_holdings": false,
-      "include_in_cash_flow_totals": false
-    },
-    {
-      "id": "hist-20261102-009816",
-      "date": "2026-11-02",
-      "kind": "reported_trade",
-      "asset_id": "009816",
-      "side": "buy",
-      "quantity": 193,
-      "status": "needs_review",
-      "source_id": "conversation_history",
-      "price_twd": null,
-      "include_in_current_holdings": false,
-      "include_in_cash_flow_totals": false
-    },
-    {
-      "id": "hist-20261111-009816",
-      "date": "2026-11-11",
-      "kind": "reported_trade",
-      "asset_id": "009816",
-      "side": "buy",
-      "quantity": 459,
-      "price_twd": 15.25,
-      "status": "reported_confirmed",
-      "source_id": "conversation_history",
-      "include_in_current_holdings": false,
-      "include_in_cash_flow_totals": false
-    },
-    {
-      "id": "hist-20261111-00646",
-      "date": "2026-11-11",
-      "kind": "reported_trade",
+      "kind": "buy",
       "asset_id": "00646",
-      "side": "buy",
+      "asset_name": "元大S&P500",
+      "amount_twd": 20984.4,
+      "quantity": 268,
+      "price_twd": 78.3,
+      "price_usd": null,
+      "status": "reported_confirmed",
+      "source_id": "personal_handoff_20261115",
+      "notes": " · 歷史參考，不增加持倉或本金",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "handoff-tw-1015-9816",
+      "date": "2026-10-15",
+      "kind": "buy",
+      "asset_id": "009816",
+      "asset_name": "凱基台灣TOP50",
+      "amount_twd": 8997.31,
+      "quantity": 553,
+      "price_twd": 16.27,
+      "price_usd": null,
+      "status": "reported_confirmed",
+      "source_id": "personal_handoff_20261115",
+      "notes": " · 歷史參考，不增加持倉或本金",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "handoff-fund-AFB0018-08",
+      "date": "2026-10-19",
+      "kind": "subscription",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "amount_twd": 5200,
+      "quantity": 444.06,
+      "price_twd": null,
+      "price_usd": null,
+      "status": "reported_confirmed",
+      "source_id": "personal_handoff_20261115",
+      "notes": " · 歷史參考，不增加持倉或本金",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "handoff-tw-1111-646",
+      "date": "2026-11-11",
+      "kind": "buy",
+      "asset_id": "00646",
+      "asset_name": "元大S&P500",
+      "amount_twd": 1019.2,
       "quantity": 13,
       "price_twd": 78.4,
+      "price_usd": null,
       "status": "reported_confirmed",
-      "source_id": "conversation_history",
+      "source_id": "personal_handoff_20261115",
+      "notes": " · 歷史參考，不增加持倉或本金",
       "include_in_current_holdings": false,
       "include_in_cash_flow_totals": false
     },
     {
-      "id": "hist-20261112-voo",
-      "date": "2026-11-12",
-      "kind": "estimated_trade_reference",
-      "asset_id": "VOO",
-      "side": "buy",
-      "quantity": 1.0853003723590617,
-      "price_usd": 689.5,
-      "fee_usd": 0.7490636704119851,
-      "twd_total": 24600,
-      "fx_at_entry": 32.841,
-      "status": "estimated",
-      "source_id": "backup_20261113",
+      "id": "handoff-tw-1111-9816",
+      "date": "2026-11-11",
+      "kind": "buy",
+      "asset_id": "009816",
+      "asset_name": "凱基台灣TOP50",
+      "amount_twd": 6999.75,
+      "quantity": 459,
+      "price_twd": 15.25,
+      "price_usd": null,
+      "status": "reported_confirmed",
+      "source_id": "personal_handoff_20261115",
+      "notes": " · 歷史參考，不增加持倉或本金",
       "include_in_current_holdings": false,
-      "include_in_cash_flow_totals": false,
-      "notes": "Already represented as an estimated trade in backup. Do not import again."
+      "include_in_cash_flow_totals": false
     },
     {
-      "id": "hist-20261113-btc",
+      "id": "handoff-us-1112-voo",
+      "date": "2026-11-12",
+      "kind": "buy",
+      "asset_id": "VOO",
+      "asset_name": "Vanguard S&P 500 ETF",
+      "amount_twd": null,
+      "quantity": 1,
+      "price_twd": null,
+      "price_usd": 697.67,
+      "status": "confirmed_in_backup",
+      "source_id": "personal_handoff_20261115",
+      "notes": " · 歷史參考，不增加持倉或本金",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "handoff-crypto-1113-btc",
       "date": "2026-11-13",
-      "kind": "trade_reference",
+      "kind": "buy",
       "asset_id": "BTC",
-      "side": "buy",
+      "asset_name": "Bitcoin",
+      "amount_twd": 3072.71,
       "quantity": 0.0012974,
       "price_twd": 2368360,
-      "fee_twd": null,
+      "price_usd": null,
       "status": "confirmed_in_backup",
-      "source_id": "backup_20261113",
+      "source_id": "personal_handoff_20261115",
+      "notes": "費用未知；不採備份中的預設 0。 · 歷史參考，不增加持倉或本金",
       "include_in_current_holdings": false,
-      "include_in_cash_flow_totals": false,
-      "notes": "Fee not verified; already represented in backup."
+      "include_in_cash_flow_totals": false
+    },
+    {
+      "id": "handoff-crypto-1114-eth",
+      "date": "2026-11-14",
+      "kind": "buy",
+      "asset_id": "ETH",
+      "asset_name": "Ethereum",
+      "amount_twd": 717.98,
+      "quantity": 0.0112774,
+      "price_twd": 63665,
+      "price_usd": null,
+      "status": "confirmed_in_backup",
+      "source_id": "personal_handoff_20261115",
+      "notes": "此筆增加量不同於總持有量。 · 歷史參考，不增加持倉或本金",
+      "include_in_current_holdings": false,
+      "include_in_cash_flow_totals": false
     }
   ],
   "asset_snapshots": [
     {
-      "id": "snap-20260714-funds",
+      "id": "handoff-snap-20260714-funds",
       "date": "2026-07-14",
       "scope": "five_funds_only",
       "market_value_twd": 60725,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
       "approximate": true,
       "status": "historical_snapshot",
-      "source_id": "previous_compilation",
-      "cumulative_pnl_twd": null,
-      "daily_pnl_twd": null
+      "source_id": "personal_handoff_20261115",
+      "notes": "僅有舊彙編；未重查原始截圖，不列為已驗證全體資產。",
+      "series_eligible": false
     },
     {
-      "id": "snap-20260817-funds",
+      "id": "handoff-snap-20260817-funds",
       "date": "2026-08-17",
       "scope": "four_funds_only",
       "market_value_twd": 76508,
+      "cost_twd": null,
       "cumulative_pnl_twd": 6669,
       "daily_pnl_twd": null,
+      "approximate": true,
       "status": "historical_snapshot",
-      "source_id": "previous_compilation"
+      "source_id": "personal_handoff_20261115",
+      "notes": "僅有舊彙編；未重查原始截圖，不列為已驗證全體資產。",
+      "series_eligible": false
     },
     {
-      "id": "snap-20261106-funds",
-      "date": "2026-11-06",
-      "scope": "funds_only",
-      "cost_twd": 100039,
-      "market_value_twd": 91298,
+      "id": "handoff-fund-1007",
+      "date": "2026-10-07",
+      "scope": "four_personal_funds",
+      "market_value_twd": 104249,
+      "cost_twd": 94839.98,
+      "cumulative_pnl_twd": 9409.02,
+      "daily_pnl_twd": null,
       "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "截圖市值；成本與損益估算",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-tw-1015",
+      "date": "2026-10-15",
+      "scope": "personal_tw_etfs",
+      "market_value_twd": 29944,
+      "cost_twd": null,
+      "cumulative_pnl_twd": -138,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-fund-1016",
+      "date": "2026-10-16",
+      "scope": "four_personal_funds",
+      "market_value_twd": 99374,
+      "cost_twd": 94839,
+      "cumulative_pnl_twd": 4535,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-tw-1016",
+      "date": "2026-10-16",
+      "scope": "personal_tw_etfs",
+      "market_value_twd": 30224,
+      "cost_twd": 30005,
+      "cumulative_pnl_twd": 140,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-tw-1019",
+      "date": "2026-10-19",
+      "scope": "personal_tw_etfs",
+      "market_value_twd": 30059,
+      "cost_twd": 30005,
+      "cumulative_pnl_twd": -25,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-tw-1020",
+      "date": "2026-10-20",
+      "scope": "personal_tw_etfs",
+      "market_value_twd": 29981,
+      "cost_twd": 30005,
+      "cumulative_pnl_twd": -103,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-fund-1022",
+      "date": "2026-10-22",
+      "scope": "four_personal_funds",
+      "market_value_twd": 104711,
+      "cost_twd": 100039,
+      "cumulative_pnl_twd": 4672,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-10-27",
+      "date": "2026-10-27",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 132252.139,
+      "cost_twd": null,
       "cumulative_pnl_twd": null,
       "daily_pnl_twd": null,
+      "approximate": true,
       "status": "historical_snapshot",
-      "source_id": "previous_compilation",
-      "notes": "Source date/value not reverified; previous conversation also referenced November 9 for similar figures. Verify date before charting."
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（近似或多報價日）",
+      "series_eligible": false
     },
     {
-      "id": "snap-20261113-website",
+      "id": "handoff-tw-1103",
+      "date": "2026-11-03",
+      "scope": "personal_tw_etfs",
+      "market_value_twd": 32017,
+      "cost_twd": 33012,
+      "cumulative_pnl_twd": -1075,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-03",
+      "date": "2026-11-03",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 129033.93,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（近似或多報價日）",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-04",
+      "date": "2026-11-04",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 129702,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（近似或多報價日）",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-05",
+      "date": "2026-11-05",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 128674,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（近似或多報價日）",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-06",
+      "date": "2026-11-06",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 122101,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "保留原報日報；缺完整後續修正版，不自動覆寫。",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-snap-20261106-funds",
+      "date": "2026-11-06",
+      "scope": "funds_only",
+      "market_value_twd": 91298,
+      "cost_twd": 100039,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "Source date/value not reverified; previous conversation also referenced November 9 for similar figures. Verify date before charting.",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-tw-1109",
+      "date": "2026-11-09",
+      "scope": "personal_tw_etfs",
+      "market_value_twd": 31429,
+      "cost_twd": 33012,
+      "cumulative_pnl_twd": -1662,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-voo-1109",
+      "date": "2026-11-09",
+      "scope": "VOO_only",
+      "market_value_twd": 1353,
+      "cost_twd": null,
+      "cumulative_pnl_twd": -57,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-broker-all-1109",
+      "date": "2026-11-09",
+      "scope": "broker_securities_and_CMA_only",
+      "market_value_twd": 32952,
+      "cost_twd": null,
+      "cumulative_pnl_twd": -1719,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "歷史快照",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-09",
+      "date": "2026-11-09",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 125912.1083,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（近似或多報價日）",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-10",
+      "date": "2026-11-10",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 130184.4672,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（近似或多報價日）",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-fund-11-10",
+      "date": "2026-11-10",
+      "scope": "four_personal_funds",
+      "market_value_twd": 96767.144,
+      "cost_twd": 100039,
+      "cumulative_pnl_twd": -3271.856,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-tw-1111-intraday",
+      "date": "2026-11-11",
+      "scope": "tw_etfs_before_00646_second_trade",
+      "market_value_twd": 39383.4,
+      "cost_twd": 40011.75,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "盤中估值",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-11",
+      "date": "2026-11-11",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 139630.5284973,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "成交價金是投入，並非當日收益。",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-fund-11-11",
+      "date": "2026-11-11",
+      "scope": "four_personal_funds",
+      "market_value_twd": 97747.3642,
+      "cost_twd": 100039,
+      "cumulative_pnl_twd": -2291.6358,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-12",
+      "date": "2026-11-12",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 139280.3623451335,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（近似或多報價日）",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-fund-11-12",
+      "date": "2026-11-12",
+      "scope": "four_personal_funds",
+      "market_value_twd": 97665.4452,
+      "cost_twd": 100039,
+      "cumulative_pnl_twd": -2373.5548,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-evening-11-13",
+      "date": "2026-11-13",
+      "scope": "reported_evening_valuation_nonconstant_coverage",
+      "market_value_twd": 140012.29140031998,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "當時僅計舊 VOO 部位；無 00713、NVDA 或加密貨幣。",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-fund-11-13",
+      "date": "2026-11-13",
+      "scope": "four_personal_funds",
+      "market_value_twd": 98189.3643,
+      "cost_twd": 100039,
+      "cumulative_pnl_twd": -1849.6357,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-snap-20261113-website",
       "date": "2026-11-13",
       "scope": "website_reported_total",
       "market_value_twd": 172478.93,
+      "cost_twd": null,
       "cumulative_pnl_twd": -2634.09,
       "daily_pnl_twd": null,
-      "status": "needs_review",
-      "source_id": "previous_compilation",
-      "notes": "Previously reported website snapshot, not found in inspected JSON backup. Exclude from verified historical chart until screenshot/source rechecked."
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "Previously reported website snapshot, not found in inspected JSON backup. Exclude from verified historical chart until screenshot/source rechecked.",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-app-1113-old",
+      "date": "2026-11-13",
+      "scope": "app_recorded_partial_coverage",
+      "market_value_twd": 172428.06149367703,
+      "cost_twd": 175115.39480032958,
+      "cumulative_pnl_twd": -2687.333306652552,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "VOO 1.1463903723590618 股含已取代估算。",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-app-1113-later",
+      "date": "2026-11-13",
+      "scope": "app_recorded_partial_coverage",
+      "market_value_twd": 170882.58995445332,
+      "cost_twd": 173478.04609259,
+      "cumulative_pnl_twd": -2595.4561381366802,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "快照列九項；未納入 NVDA 或 ETH，不是最新完整總值。",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-crypto-1114-screen",
+      "date": "2026-11-14",
+      "scope": "crypto_only",
+      "market_value_twd": 3658,
+      "cost_twd": null,
+      "cumulative_pnl_twd": -133,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "BitoPro 截圖參考",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-all-11-14",
+      "date": "2026-11-14",
+      "scope": "all_confirmed_personal_investments",
+      "market_value_twd": 176667.209094835,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（多報價日）",
+      "series_eligible": true
+    },
+    {
+      "id": "handoff-crypto-11-14",
+      "date": "2026-11-14",
+      "scope": "crypto_only",
+      "market_value_twd": 3574.6928668749997,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "ETH 既有少額部位成本不明，不給完整合計損益。11/14 報表曾以全數 ETH 對比本次投入；此處按本次增加量單獨比較。",
+      "series_eligible": false
+    },
+    {
+      "id": "handoff-all-11-15",
+      "date": "2026-11-15",
+      "scope": "all_confirmed_personal_investments",
+      "market_value_twd": 176569.28669344,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "已報估值（多報價日）",
+      "series_eligible": true
+    },
+    {
+      "id": "handoff-crypto-11-15",
+      "date": "2026-11-15",
+      "scope": "crypto_only",
+      "market_value_twd": 3476.77046548,
+      "cost_twd": null,
+      "cumulative_pnl_twd": null,
+      "daily_pnl_twd": null,
+      "approximate": true,
+      "status": "historical_snapshot",
+      "source_id": "personal_handoff_20261115",
+      "notes": "ETH 既有少額部位成本不明，不給完整合計損益。11/14 報表曾以全數 ETH 對比本次投入；此處按本次增加量單獨比較。",
+      "series_eligible": false
+    },
+    {
+      "id": "backup-2026-11-13",
+      "date": "2026-11-13",
+      "scope": "app_recorded_portfolio",
+      "market_value_twd": 170882.58995445332,
+      "cost_twd": 173478.04609259,
+      "cumulative_pnl_twd": -2595.4561381366802,
+      "daily_pnl_twd": null,
+      "approximate": false,
+      "status": "historical_snapshot",
+      "source_id": "personal_app_backup_20261115",
+      "notes": "APP 備份原始估值快照；當日資產覆蓋數 9；累計未實現損益非單日盈虧",
+      "series_eligible": false
+    },
+    {
+      "id": "backup-2026-11-14",
+      "date": "2026-11-14",
+      "scope": "app_recorded_portfolio",
+      "market_value_twd": 176926.45284696543,
+      "cost_twd": 179518.52359243,
+      "cumulative_pnl_twd": -2592.07074546456,
+      "daily_pnl_twd": null,
+      "approximate": false,
+      "status": "historical_snapshot",
+      "source_id": "personal_app_backup_20261115",
+      "notes": "APP 備份原始估值快照；當日資產覆蓋數 11；累計未實現損益非單日盈虧",
+      "series_eligible": true
+    },
+    {
+      "id": "backup-2026-11-15",
+      "date": "2026-11-15",
+      "scope": "app_recorded_portfolio",
+      "market_value_twd": 176825.08575698544,
+      "cost_twd": 179518.52359243,
+      "cumulative_pnl_twd": -2693.4378354445507,
+      "daily_pnl_twd": null,
+      "approximate": false,
+      "status": "historical_snapshot",
+      "source_id": "personal_app_backup_20261115",
+      "notes": "APP 備份原始估值快照；當日資產覆蓋數 11；累計未實現損益非單日盈虧",
+      "series_eligible": true
     }
   ],
   "baseline_holdings_reference": {
-    "as_of": "2026-11-13",
-    "source_id": "backup_20261113",
-    "status": "confirmed_in_backup",
-    "purpose": "Reference only; never replace or add to current assets.",
-    "assets": [
+    "purpose": "reconciliation_only_no_write",
+    "holdings": [
       {
-        "id": "009816",
-        "quantity": 1205,
-        "cost": 19015,
-        "currency": "TWD"
-      },
-      {
-        "id": "00646",
-        "quantity": 281,
-        "cost": 22016,
-        "currency": "TWD"
-      },
-      {
-        "id": "VOO",
-        "quantity": 0.06109,
-        "cost": 43.04,
-        "currency": "USD"
-      },
-      {
-        "id": "FUBON_SP500",
-        "quantity": 3307.47,
-        "cost": 36700,
-        "currency": "TWD"
-      },
-      {
-        "id": "FUBON_NASDAQ100",
-        "quantity": 2705.29,
-        "cost": 31000,
-        "currency": "TWD"
-      },
-      {
-        "id": "YUANTA_NEW",
-        "quantity": 133.5,
-        "cost": 24800,
-        "currency": "TWD"
-      },
-      {
-        "id": "YUANTA_DIV",
+        "account": "personal",
+        "asset_id": "AYT0029",
+        "asset_name": "元大台灣高股息優質龍頭基金 台幣A不配息",
+        "category": "fund",
         "quantity": 212.8,
-        "cost": 7539,
-        "currency": "TWD"
-      },
-      {
-        "id": "00713",
-        "quantity": 78,
-        "cost": 4960,
-        "currency": "TWD"
-      },
-      {
-        "id": "BTC",
-        "quantity": 0,
-        "cost": 0,
+        "cost_basis": 7539,
         "currency": "TWD",
-        "notes": "Baseline only; BTC bought through separately stored trade."
+        "cost_status": "已核對平台本金；非全費用交割成本",
+        "status": "已確認持倉",
+        "source_ids": [
+          "fund-1016",
+          "handoff"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "AFB0018",
+        "asset_name": "富邦標普500指數基金 台幣A不配息",
+        "category": "fund",
+        "quantity": 3307.47,
+        "cost_basis": 36700,
+        "currency": "TWD",
+        "cost_status": "已核對平台本金；非全費用交割成本",
+        "status": "已確認持倉",
+        "source_ids": [
+          "fund-1016",
+          "img4100",
+          "handoff"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "AFB0022",
+        "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+        "category": "fund",
+        "quantity": 2705.29,
+        "cost_basis": 31000,
+        "currency": "TWD",
+        "cost_status": "已核對平台本金；非全費用交割成本",
+        "status": "已確認持倉",
+        "source_ids": [
+          "fund-1016",
+          "handoff"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "AYT0008",
+        "asset_name": "元大新主流基金 台幣A不配息",
+        "category": "fund",
+        "quantity": 133.5,
+        "cost_basis": 24800,
+        "currency": "TWD",
+        "cost_status": "已核對平台本金；非全費用交割成本",
+        "status": "已確認持倉",
+        "source_ids": [
+          "fund-1016",
+          "handoff"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "009816",
+        "asset_name": "凱基台灣TOP50",
+        "category": "tw_etf",
+        "quantity": 1205,
+        "cost_basis": 19015,
+        "currency": "TWD",
+        "status": "已確認持倉",
+        "source_ids": [
+          "tw-1103",
+          "tw-1111",
+          "handoff"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "00646",
+        "asset_name": "元大S&P500",
+        "category": "tw_etf",
+        "quantity": 281,
+        "cost_basis": 22016,
+        "currency": "TWD",
+        "status": "已確認持倉",
+        "source_ids": [
+          "tw-1111",
+          "handoff"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "00713",
+        "asset_name": "元大台灣高息低波",
+        "category": "tw_etf",
+        "quantity": 78,
+        "cost_basis": 4960,
+        "currency": "TWD",
+        "status": "已確認持倉",
+        "source_ids": [
+          "handoff"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "VOO",
+        "asset_name": "Vanguard S&P 500 ETF",
+        "category": "us_etf",
+        "quantity": 1.06109,
+        "cost_basis": 741.41,
+        "currency": "USD",
+        "status": "已確認持倉",
+        "source_ids": [
+          "broker-1109",
+          "handoff",
+          "backup-new"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "NVDA",
+        "asset_name": "NVIDIA 輝達",
+        "category": "us_stock",
+        "quantity": 1,
+        "cost_basis": 160.16,
+        "currency": "USD",
+        "status": "已確認持倉",
+        "source_ids": [
+          "handoff",
+          "backup-new"
+        ]
+      },
+      {
+        "account": "personal",
+        "asset_id": "BTC",
+        "asset_name": "Bitcoin",
+        "category": "crypto",
+        "quantity": 0.0012974,
+        "cost_basis": null,
+        "currency": "TWD",
+        "status": "已確認持倉",
+        "source_ids": [
+          "handoff",
+          "backup-new"
+        ],
+        "cost_estimate": 3072.71
+      },
+      {
+        "account": "personal",
+        "asset_id": "ETH",
+        "asset_name": "Ethereum",
+        "category": "crypto",
+        "quantity": 0.01129778,
+        "cost_basis": null,
+        "currency": "TWD",
+        "status": "已確認持倉",
+        "source_ids": [
+          "handoff"
+        ],
+        "reported_latest_lot_cost_approx": 719,
+        "prior_quantity": 2.038e-05,
+        "prior_cost": null
       }
     ]
   },
   "review_queue": [
     {
-      "priority": "high",
-      "issue": "Verify earliest March 9 and March 11 investment details against source statements."
+      "topic": "fund-certificate-dates",
+      "details": {
+        "id": "fund-certificate-dates",
+        "range": "2026-03 至 2026-10",
+        "detail": "25 筆在庫申購中，23 筆原始申購日期未確認；已保留 7 筆可辨識憑證號。其他原始憑證號、申購淨值、實扣與費用待補；不從憑證號或截圖現值推斷。",
+        "status": "待確認資料"
+      }
     },
     {
-      "priority": "high",
-      "issue": "Obtain complete March–October purchase/redemption/transfer ledger; historical purchases may already be included in current baseline holdings."
+      "topic": "other-funds",
+      "details": {
+        "id": "other-funds",
+        "range": "2026-03 至 2026-10",
+        "detail": "富邦上選、舊彙編提到的野村／安聯等基金缺原始券商紀錄，無法還原證實的申購、贖回、轉換與是否已清倉。",
+        "status": "待確認資料"
+      }
     },
     {
-      "priority": "high",
-      "issue": "Confirm whether November 6 or November 9 is correct for funds market-value snapshot."
+      "topic": "tw-fills",
+      "details": {
+        "id": "tw-fills",
+        "range": "2026-10 至 2026-11",
+        "detail": "009816 多出的 193 股是持倉差異，成交筆數、日期、價格、費用待核；00713 成交細項及台股買賣實扣未完整取得。",
+        "status": "待確認資料"
+      }
     },
     {
-      "priority": "high",
-      "issue": "Confirm VOO actual November 12 execution and BTC November 13 fees."
+      "topic": "us-settlements",
+      "details": {
+        "id": "us-settlements",
+        "range": "2026-11",
+        "detail": "VOO 原有零股的交易日、價格及費用；NVDA 正式成交日期、價格及費用；兩檔實際台幣扣款、成交匯率均待核。",
+        "status": "待確認資料"
+      }
     },
     {
-      "priority": "medium",
-      "issue": "Verify 00713 acquisition date and 009816/00646 historical lots."
+      "topic": "crypto-settlements",
+      "details": {
+        "id": "crypto-settlements",
+        "range": "2026-11",
+        "detail": "BTC 實扣與手續費（原估與乘算差 0.50 元）；ETH 費用、實扣、舊餘額成本待取得。",
+        "status": "待確認資料"
+      }
     },
     {
-      "priority": "medium",
-      "issue": "Daily P&L requires dated positions, daily prices, fund NAV and FX; leave missing dates null."
+      "topic": "mother-ledger",
+      "details": {
+        "id": "mother-ledger",
+        "range": "2026-03 至 2026-11",
+        "detail": "母親帳戶缺完整券商流水及目前股數，初始分配與入金不能替代成交。0050 的 10/31、11/05 資料不確認帳戶或是否重疊。",
+        "status": "待確認資料"
+      }
+    },
+    {
+      "topic": "period-returns",
+      "details": {
+        "id": "period-returns",
+        "range": "2026-03 至 2026-11",
+        "detail": "缺逐日持倉、同步估值和完整現金流，未能核實每日／每週／每月績效、完整期間高低點或已實現損益。",
+        "status": "待確認資料"
+      }
+    },
+    {
+      "topic": "revenue-fees",
+      "details": {
+        "id": "revenue-fees",
+        "range": "2026-03 至 2026-11",
+        "detail": "沒有足夠原始憑證核實賣出、贖回、除息實領、退費、稅費等紀錄；未記錄代表未知而非零。",
+        "status": "待確認資料"
+      }
+    },
+    {
+      "topic": "past-attachments",
+      "details": {
+        "id": "past-attachments",
+        "range": "2026-03 至 2026-11",
+        "detail": "已對照可讀對話、可定位備份、歷史 JSON 與部分原始基金截圖；部分舊截圖僅有對話轉述。",
+        "status": "待確認資料"
+      }
     }
   ]
 }

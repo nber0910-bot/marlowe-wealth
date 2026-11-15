@@ -1,5 +1,5 @@
 'use strict';
-// MONO WEALTH V26.1115.224500 — full valuation coverage and header build version.
+// MONO WEALTH V26.1115.231500 — full valuation coverage and header build version.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -118,9 +118,9 @@ function renderBtcStatus(){
 function updateBuildVersion(){
   const heading=document.querySelector('h1');if(!heading||!heading.textContent.includes('WEALTH'))return;
   const small=heading.querySelector('small');
-  if(small)small.textContent='V26.1115.224500';
-  else heading.insertAdjacentHTML('beforeend',' <small>V26.1115.224500</small>');
-  document.title='MONO WEALTH V26.1115.224500';
+  if(small)small.textContent='V26.1115.231500';
+  else heading.insertAdjacentHTML('beforeend',' <small>V26.1115.231500</small>');
+  document.title='MONO WEALTH V26.1115.231500';
 }
 
 function position(a){let q=num(a.qty)||0,c=num(a.cost)||0;const trades=state.trades.filter(t=>t.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));for(const t of trades){const tq=num(t.qty)||0,tp=num(t.price)||0,tf=num(t.fee)||0;if(t.side==='buy'){q+=tq;c+=tq*tp+tf;}else if(t.side==='sell'&&tq<=q+1e-8){const avg=q>0?c/q:0;c-=avg*tq;q-=tq;if(Math.abs(q)<1e-8){q=0;c=0;}}}return {q,c};}
@@ -569,7 +569,7 @@ function renderHistory(){
 let historicalArchive=null;
 let historicalArchiveError='讀取中…';
 const historicalStatusLabels={reported_confirmed:'先前對話已確認',confirmed_in_backup:'備份有紀錄',reported_unverified:'待核對原始紀錄',needs_review:'待核對',estimated:'預估交易',historical_snapshot:'歷史快照'};
-const historicalSourceLabels={backup_20261113:'2026/11/13 JSON 備份',conversation_history:'先前對話紀錄',previous_compilation:'先前對話彙整（未重驗原圖）'};
+const historicalSourceLabels={personal_handoff_20261115:'個人歷史交接檔（2026/11/15）',personal_app_backup_20261115:'MONO WEALTH APP 備份（2026/11/15）',backup_20261113:'2026/11/13 JSON 備份',conversation_history:'先前對話紀錄',previous_compilation:'先前對話彙整（未重驗原圖）'};
 function historicalNumber(v){return v===null||v===undefined||v===''?null:Number.isFinite(Number(v))?Number(v):null;}
 function historicalMoney(v){const n=historicalNumber(v);return n===null?'—':money(n);}
 function ensureHistoricalArchivePanel(){
@@ -642,7 +642,7 @@ function renderHistoricalArchive(){
 async function loadHistoricalArchive(){
   ensureHistoricalArchivePanel();
   try{
-    const response=await fetch('./history.json?v=26111303',{cache:'no-store'});
+    const response=await fetch('./history.json?v=261115231500',{cache:'no-store'});
     if(!response.ok)throw Error('找不到 history.json（HTTP '+response.status+'）');
     const data=await response.json();
     if(data.schema!=='marlowe-wealth-history-v1'||!Array.isArray(data.historical_events)||!Array.isArray(data.asset_snapshots)||!Array.isArray(data.monthly_overview))throw Error('history.json 格式不符合預期');

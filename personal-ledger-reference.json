@@ -1,0 +1,1787 @@
+{
+  "schema": "mono-wealth-personal-ledger-reference-v1",
+  "as_of": "2026-11-15",
+  "read_only": true,
+  "transactions": [
+    {
+      "id": "fund-AFB0022-01",
+      "account": "personal",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": "2026-03-11",
+      "trade_time_local": null,
+      "quantity": 304.88,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016",
+        "img3937"
+      ],
+      "certificate_id": "11503110022",
+      "platform_principal": 3000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 3753,
+        "platform_return_pct": 25.1
+      },
+      "reference_later": {
+        "received_on": "2026-10-16",
+        "market_value_twd": 3656,
+        "unrealized_pnl_twd": 656
+      },
+      "note": null
+    },
+    {
+      "id": "tw-1015-646",
+      "account": "personal",
+      "asset_id": "00646",
+      "asset_name": "元大S&P500",
+      "kind": "buy",
+      "trade_date": "2026-10-15",
+      "trade_time_local": null,
+      "quantity": 268,
+      "unit_price": 78.3,
+      "gross_amount": 20984.4,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "tw-1015"
+      ]
+    },
+    {
+      "id": "tw-1015-9816",
+      "account": "personal",
+      "asset_id": "009816",
+      "asset_name": "凱基台灣TOP50",
+      "kind": "buy",
+      "trade_date": "2026-10-15",
+      "trade_time_local": null,
+      "quantity": 553,
+      "unit_price": 16.27,
+      "gross_amount": 8997.31,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "tw-1015"
+      ]
+    },
+    {
+      "id": "fund-AFB0018-08",
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": "2026-10-19",
+      "trade_time_local": null,
+      "quantity": 444.06,
+      "unit_price": null,
+      "gross_amount": 5200,
+      "currency": "TWD",
+      "fee": 0,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-order",
+        "img4100"
+      ],
+      "certificate_id": "11510190001",
+      "platform_principal": 5200,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": "2026-10-22",
+      "reference_at_received_2026_10_07": null,
+      "reference_later": {
+        "received_on": "2026-10-22",
+        "market_value_twd": 5253,
+        "unrealized_pnl_twd": 53,
+        "platform_return_pct": 1.02
+      },
+      "note": null
+    },
+    {
+      "id": "tw-1111-646",
+      "account": "personal",
+      "asset_id": "00646",
+      "asset_name": "元大S&P500",
+      "kind": "buy",
+      "trade_date": "2026-11-11",
+      "trade_time_local": "13:28:01.169",
+      "quantity": 13,
+      "unit_price": 78.4,
+      "gross_amount": 1019.2,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "tw-1111"
+      ]
+    },
+    {
+      "id": "tw-1111-9816",
+      "account": "personal",
+      "asset_id": "009816",
+      "asset_name": "凱基台灣TOP50",
+      "kind": "buy",
+      "trade_date": "2026-11-11",
+      "trade_time_local": "11:52:30.112",
+      "quantity": 459,
+      "unit_price": 15.25,
+      "gross_amount": 6999.75,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "tw-1111"
+      ]
+    },
+    {
+      "id": "us-1112-voo",
+      "account": "personal",
+      "asset_id": "VOO",
+      "asset_name": "Vanguard S&P 500 ETF",
+      "kind": "buy",
+      "trade_date": "2026-11-12",
+      "trade_time_local": null,
+      "quantity": 1,
+      "unit_price": 697.67,
+      "gross_amount": 697.67,
+      "currency": "USD",
+      "fee": 0.7,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "backup-new",
+        "backup-nvda",
+        "handoff"
+      ],
+      "total_cost_in_currency": 698.37,
+      "actual_twd_debit": null,
+      "actual_fx": null,
+      "legacy_app_created_ms": 1794478370676
+    },
+    {
+      "id": "crypto-1113-btc",
+      "account": "personal",
+      "asset_id": "BTC",
+      "asset_name": "Bitcoin",
+      "kind": "buy",
+      "trade_date": "2026-11-13",
+      "trade_time_local": null,
+      "quantity": 0.0012974,
+      "unit_price": 2368360,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "backup-new",
+        "handoff"
+      ],
+      "gross_amount_estimate": 3072.71,
+      "reported_prior_estimate": 3072.21,
+      "legacy_app_created_ms": 1794500000001,
+      "note": "費用未知；不採備份中的預設 0。"
+    },
+    {
+      "id": "crypto-1114-eth",
+      "account": "personal",
+      "asset_id": "ETH",
+      "asset_name": "Ethereum",
+      "kind": "buy",
+      "trade_date": "2026-11-14",
+      "trade_time_local": null,
+      "quantity": 0.0112774,
+      "unit_price": 63665,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "handoff"
+      ],
+      "approximate_trade_time_local": "00:57",
+      "gross_amount_estimate": 717.98,
+      "reported_spend_approx": 719,
+      "note": "此筆增加量不同於總持有量。"
+    },
+    {
+      "id": "fund-AFB0018-01",
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 501,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 5000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 5797,
+        "platform_return_pct": 15.94
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AFB0018-02",
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 191.57,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 2000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 2216,
+        "platform_return_pct": 10.8
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AFB0018-03",
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 91.32,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 1000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 1057,
+        "platform_return_pct": 5.7
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AFB0018-04",
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 276.5,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 3000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 3199,
+        "platform_return_pct": 6.63
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AFB0018-05",
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 536.19,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 6000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 6204,
+        "platform_return_pct": 3.4
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AFB0018-06",
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 511.95,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 6000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 5923,
+        "platform_return_pct": -1.28
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AFB0018-07",
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 754.88,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 8500,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 8734,
+        "platform_return_pct": 2.75
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AFB0022-02",
+      "account": "personal",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 86.43,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": "11505220071",
+      "platform_principal": 1000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 1064,
+        "platform_return_pct": 6.4
+      },
+      "reference_later": {
+        "received_on": "2026-10-16",
+        "market_value_twd": 1036,
+        "unrealized_pnl_twd": 36
+      },
+      "note": null
+    },
+    {
+      "id": "fund-AFB0022-03",
+      "account": "personal",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 433.28,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": "11506050269",
+      "platform_principal": 5000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 5334,
+        "platform_return_pct": 6.68
+      },
+      "reference_later": {
+        "received_on": "2026-10-16",
+        "market_value_twd": 5195,
+        "unrealized_pnl_twd": 195
+      },
+      "note": null
+    },
+    {
+      "id": "fund-AFB0022-04",
+      "account": "personal",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 259.29,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": "11506100258",
+      "platform_principal": 3000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 3192,
+        "platform_return_pct": 6.4
+      },
+      "reference_later": {
+        "received_on": "2026-10-16",
+        "market_value_twd": 3109,
+        "unrealized_pnl_twd": 109
+      },
+      "note": null
+    },
+    {
+      "id": "fund-AFB0022-05",
+      "account": "personal",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 428.82,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": "11507080152",
+      "platform_principal": 5000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 5279,
+        "platform_return_pct": 5.58
+      },
+      "reference_later": {
+        "received_on": "2026-10-16",
+        "market_value_twd": 5142,
+        "unrealized_pnl_twd": 142
+      },
+      "note": null
+    },
+    {
+      "id": "fund-AFB0022-06",
+      "account": "personal",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 498.75,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": "11508120102",
+      "platform_principal": 6000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 6140,
+        "platform_return_pct": 2.33
+      },
+      "reference_later": {
+        "received_on": "2026-10-16",
+        "market_value_twd": 5980,
+        "unrealized_pnl_twd": -20
+      },
+      "note": null
+    },
+    {
+      "id": "fund-AFB0022-07",
+      "account": "personal",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 693.84,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": "11509110151",
+      "platform_principal": 8000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 8541,
+        "platform_return_pct": 6.76
+      },
+      "reference_later": {
+        "received_on": "2026-10-16",
+        "market_value_twd": 8319,
+        "unrealized_pnl_twd": 319
+      },
+      "note": null
+    },
+    {
+      "id": "fund-AYT0008-01",
+      "account": "personal",
+      "asset_id": "AYT0008",
+      "asset_name": "元大新主流基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 5.8,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 1072,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 1102,
+        "platform_return_pct": 2.8
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AYT0008-02",
+      "account": "personal",
+      "asset_id": "AYT0008",
+      "asset_name": "元大新主流基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 10.9,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 2000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 2071,
+        "platform_return_pct": 3.55
+      },
+      "reference_later": null,
+      "note": "兩筆相同數量和現值在已核對的七筆本金及持倉合計中各占一筆；不要與重複截圖列混淆。"
+    },
+    {
+      "id": "fund-AYT0008-03",
+      "account": "personal",
+      "asset_id": "AYT0008",
+      "asset_name": "元大新主流基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 6.7,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 1228,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 1273,
+        "platform_return_pct": 3.66
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AYT0008-04",
+      "account": "personal",
+      "asset_id": "AYT0008",
+      "asset_name": "元大新主流基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 10.9,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 2000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 2071,
+        "platform_return_pct": 3.55
+      },
+      "reference_later": null,
+      "note": "兩筆相同數量和現值在已核對的七筆本金及持倉合計中各占一筆；不要與重複截圖列混淆。"
+    },
+    {
+      "id": "fund-AYT0008-05",
+      "account": "personal",
+      "asset_id": "AYT0008",
+      "asset_name": "元大新主流基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 10.1,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 2000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 1919,
+        "platform_return_pct": -4.05
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AYT0008-06",
+      "account": "personal",
+      "asset_id": "AYT0008",
+      "asset_name": "元大新主流基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 42.3,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 8000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 8037,
+        "platform_return_pct": 0.46
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AYT0008-07",
+      "account": "personal",
+      "asset_id": "AYT0008",
+      "asset_name": "元大新主流基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 46.8,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 8500,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 8892,
+        "platform_return_pct": 4.61
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AYT0029-01",
+      "account": "personal",
+      "asset_id": "AYT0029",
+      "asset_name": "元大台灣高股息優質龍頭基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 105.8,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 3000,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 6190,
+        "platform_return_pct": 106.33
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AYT0029-02",
+      "account": "personal",
+      "asset_id": "AYT0029",
+      "asset_name": "元大台灣高股息優質龍頭基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 65.4,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 2500,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 3827,
+        "platform_return_pct": 53.08
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "fund-AYT0029-03",
+      "account": "personal",
+      "asset_id": "AYT0029",
+      "asset_name": "元大台灣高股息優質龍頭基金 台幣A不配息",
+      "kind": "subscription",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 41.6,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "TWD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "已確認交易",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "fund-1007",
+        "fund-1016"
+      ],
+      "certificate_id": null,
+      "platform_principal": 2039,
+      "principal_basis": "平台憑證的參考現值減損益（新申購另有委託資料）",
+      "credited_by": null,
+      "reference_at_received_2026_10_07": {
+        "market_value_twd": 2434,
+        "platform_return_pct": 19.37
+      },
+      "reference_later": null,
+      "note": null
+    },
+    {
+      "id": "us-nvda",
+      "account": "personal",
+      "asset_id": "NVDA",
+      "asset_name": "NVIDIA 輝達",
+      "kind": "buy",
+      "trade_date": null,
+      "trade_time_local": null,
+      "quantity": 1,
+      "unit_price": null,
+      "gross_amount": null,
+      "currency": "USD",
+      "fee": null,
+      "settlement_amount": null,
+      "status": "持有及成本已確認；成交日與價格待券商驗證",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false,
+      "source_ids": [
+        "backup-new",
+        "backup-nvda",
+        "handoff"
+      ],
+      "total_cost_in_currency": 160.16,
+      "app_recorded_trade_date": "2026-11-13",
+      "app_recorded_price": 160.16,
+      "app_recorded_fee": 0,
+      "actual_twd_debit": null,
+      "actual_fx": null,
+      "legacy_app_created_ms": 1794584426596,
+      "note": "備份同時在資產基準與交易列記 1 股；二者為同一部位，僅保留一筆交易參考。"
+    }
+  ],
+  "holdings_for_reconciliation_only": [
+    {
+      "account": "personal",
+      "asset_id": "AYT0029",
+      "asset_name": "元大台灣高股息優質龍頭基金 台幣A不配息",
+      "category": "fund",
+      "quantity": 212.8,
+      "cost_basis": 7539,
+      "currency": "TWD",
+      "cost_status": "已核對平台本金；非全費用交割成本",
+      "status": "已確認持倉",
+      "source_ids": [
+        "fund-1016",
+        "handoff"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "AFB0018",
+      "asset_name": "富邦標普500指數基金 台幣A不配息",
+      "category": "fund",
+      "quantity": 3307.47,
+      "cost_basis": 36700,
+      "currency": "TWD",
+      "cost_status": "已核對平台本金；非全費用交割成本",
+      "status": "已確認持倉",
+      "source_ids": [
+        "fund-1016",
+        "img4100",
+        "handoff"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "AFB0022",
+      "asset_name": "富邦NASDAQ-100指數基金 台幣A不配息",
+      "category": "fund",
+      "quantity": 2705.29,
+      "cost_basis": 31000,
+      "currency": "TWD",
+      "cost_status": "已核對平台本金；非全費用交割成本",
+      "status": "已確認持倉",
+      "source_ids": [
+        "fund-1016",
+        "handoff"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "AYT0008",
+      "asset_name": "元大新主流基金 台幣A不配息",
+      "category": "fund",
+      "quantity": 133.5,
+      "cost_basis": 24800,
+      "currency": "TWD",
+      "cost_status": "已核對平台本金；非全費用交割成本",
+      "status": "已確認持倉",
+      "source_ids": [
+        "fund-1016",
+        "handoff"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "009816",
+      "asset_name": "凱基台灣TOP50",
+      "category": "tw_etf",
+      "quantity": 1205,
+      "cost_basis": 19015,
+      "currency": "TWD",
+      "status": "已確認持倉",
+      "source_ids": [
+        "tw-1103",
+        "tw-1111",
+        "handoff"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "00646",
+      "asset_name": "元大S&P500",
+      "category": "tw_etf",
+      "quantity": 281,
+      "cost_basis": 22016,
+      "currency": "TWD",
+      "status": "已確認持倉",
+      "source_ids": [
+        "tw-1111",
+        "handoff"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "00713",
+      "asset_name": "元大台灣高息低波",
+      "category": "tw_etf",
+      "quantity": 78,
+      "cost_basis": 4960,
+      "currency": "TWD",
+      "status": "已確認持倉",
+      "source_ids": [
+        "handoff"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "VOO",
+      "asset_name": "Vanguard S&P 500 ETF",
+      "category": "us_etf",
+      "quantity": 1.06109,
+      "cost_basis": 741.41,
+      "currency": "USD",
+      "status": "已確認持倉",
+      "source_ids": [
+        "broker-1109",
+        "handoff",
+        "backup-new"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "NVDA",
+      "asset_name": "NVIDIA 輝達",
+      "category": "us_stock",
+      "quantity": 1,
+      "cost_basis": 160.16,
+      "currency": "USD",
+      "status": "已確認持倉",
+      "source_ids": [
+        "handoff",
+        "backup-new"
+      ]
+    },
+    {
+      "account": "personal",
+      "asset_id": "BTC",
+      "asset_name": "Bitcoin",
+      "category": "crypto",
+      "quantity": 0.0012974,
+      "cost_basis": null,
+      "currency": "TWD",
+      "status": "已確認持倉",
+      "source_ids": [
+        "handoff",
+        "backup-new"
+      ],
+      "cost_estimate": 3072.71
+    },
+    {
+      "account": "personal",
+      "asset_id": "ETH",
+      "asset_name": "Ethereum",
+      "category": "crypto",
+      "quantity": 0.01129778,
+      "cost_basis": null,
+      "currency": "TWD",
+      "status": "已確認持倉",
+      "source_ids": [
+        "handoff"
+      ],
+      "reported_latest_lot_cost_approx": 719,
+      "prior_quantity": 2.038e-05,
+      "prior_cost": null
+    }
+  ],
+  "missing_data": [
+    {
+      "id": "fund-certificate-dates",
+      "range": "2026-03 至 2026-10",
+      "detail": "25 筆在庫申購中，23 筆原始申購日期未確認；已保留 7 筆可辨識憑證號。其他原始憑證號、申購淨值、實扣與費用待補；不從憑證號或截圖現值推斷。",
+      "status": "待確認資料"
+    },
+    {
+      "id": "other-funds",
+      "range": "2026-03 至 2026-10",
+      "detail": "富邦上選、舊彙編提到的野村／安聯等基金缺原始券商紀錄，無法還原證實的申購、贖回、轉換與是否已清倉。",
+      "status": "待確認資料"
+    },
+    {
+      "id": "tw-fills",
+      "range": "2026-10 至 2026-11",
+      "detail": "009816 多出的 193 股是持倉差異，成交筆數、日期、價格、費用待核；00713 成交細項及台股買賣實扣未完整取得。",
+      "status": "待確認資料"
+    },
+    {
+      "id": "us-settlements",
+      "range": "2026-11",
+      "detail": "VOO 原有零股的交易日、價格及費用；NVDA 正式成交日期、價格及費用；兩檔實際台幣扣款、成交匯率均待核。",
+      "status": "待確認資料"
+    },
+    {
+      "id": "crypto-settlements",
+      "range": "2026-11",
+      "detail": "BTC 實扣與手續費（原估與乘算差 0.50 元）；ETH 費用、實扣、舊餘額成本待取得。",
+      "status": "待確認資料"
+    },
+    {
+      "id": "mother-ledger",
+      "range": "2026-03 至 2026-11",
+      "detail": "母親帳戶缺完整券商流水及目前股數，初始分配與入金不能替代成交。0050 的 10/31、11/05 資料不確認帳戶或是否重疊。",
+      "status": "待確認資料"
+    },
+    {
+      "id": "period-returns",
+      "range": "2026-03 至 2026-11",
+      "detail": "缺逐日持倉、同步估值和完整現金流，未能核實每日／每週／每月績效、完整期間高低點或已實現損益。",
+      "status": "待確認資料"
+    },
+    {
+      "id": "revenue-fees",
+      "range": "2026-03 至 2026-11",
+      "detail": "沒有足夠原始憑證核實賣出、贖回、除息實領、退費、稅費等紀錄；未記錄代表未知而非零。",
+      "status": "待確認資料"
+    },
+    {
+      "id": "past-attachments",
+      "range": "2026-03 至 2026-11",
+      "detail": "已對照可讀對話、可定位備份、歷史 JSON 與部分原始基金截圖；部分舊截圖僅有對話轉述。",
+      "status": "待確認資料"
+    }
+  ],
+  "unresolved_events": [
+    {
+      "id": "march-ayt0029-date",
+      "account": "personal",
+      "date_reported": "2026-03-09",
+      "asset_id": "AYT0029",
+      "platform_principal_reported": 3000,
+      "possible_transaction_id": "fund-AYT0029-01",
+      "status": "待確認資料",
+      "source_ids": [
+        "old-history"
+      ],
+      "note": "可能是已列基金憑證，不另列交易。",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    },
+    {
+      "id": "march-afb0018-date",
+      "account": "personal",
+      "date_reported": "2026-03-11",
+      "asset_id": "AFB0018",
+      "platform_principal_reported": 5000,
+      "possible_transaction_id": "fund-AFB0018-01",
+      "status": "待確認資料",
+      "source_ids": [
+        "old-history"
+      ],
+      "note": "可能是已列基金憑證，不另列交易。",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    },
+    {
+      "id": "march-fubon-select",
+      "account": "personal",
+      "date_reported": "2026-03-11",
+      "asset_name": "富邦上選",
+      "amount_twd_reported": 2000,
+      "quantity": null,
+      "side_reported": "subscription",
+      "status": "待確認資料",
+      "source_ids": [
+        "old-history"
+      ],
+      "note": "只見舊彙編；未驗證是否成交、是否已贖回。",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    },
+    {
+      "id": "9816-position-increase",
+      "account": "personal",
+      "reported_possible_trade_date": "2026-11-02",
+      "verified_position_observation_date": "2026-11-03",
+      "asset_id": "009816",
+      "verified_quantity_change": 193,
+      "verified_cost_basis_change": 3007,
+      "trade_date": null,
+      "trade_price": null,
+      "fee": null,
+      "status": "持倉變化已確認；實際成交細項未知",
+      "source_ids": [
+        "tw-1103",
+        "old-history"
+      ],
+      "note": "可能由多筆成交構成，不自動新增一筆交易。",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    },
+    {
+      "id": "00713-existing-lot",
+      "account": "personal",
+      "asset_id": "00713",
+      "quantity_observed": 78,
+      "cost_basis_observed": 4960,
+      "trade_date": null,
+      "status": "持倉已確認；成交筆數與細項未知",
+      "source_ids": [
+        "handoff",
+        "backup-new"
+      ],
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    },
+    {
+      "id": "voo-opening",
+      "account": "personal",
+      "asset_id": "VOO",
+      "quantity_observed": 0.06109,
+      "cost_basis_observed": 43.04,
+      "currency": "USD",
+      "trade_date": null,
+      "observed_on": "2026-11-09",
+      "status": "持倉已確認；原始成交細項未知",
+      "source_ids": [
+        "broker-1109",
+        "handoff"
+      ],
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    },
+    {
+      "id": "eth-opening",
+      "account": "personal",
+      "asset_id": "ETH",
+      "quantity_observed": 2.038e-05,
+      "cost_basis_observed": null,
+      "trade_date": null,
+      "status": "既有餘額；來源及成本未知",
+      "source_ids": [
+        "handoff"
+      ],
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    },
+    {
+      "id": "mother-0050-inconclusive",
+      "account": "unassigned",
+      "asset_id": "0050",
+      "status": "待確認資料",
+      "reported_events": [
+        {
+          "date": "2026-10-31",
+          "amount_twd": 15000
+        },
+        {
+          "date": "2026-11-05",
+          "limit_price": 90,
+          "amount_twd": 5000
+        }
+      ],
+      "source_ids": [
+        "mother-notes"
+      ],
+      "note": "各筆帳戶歸屬、是否與其他紀錄重疊及成交狀態未確認。",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    },
+    {
+      "id": "broker-cma",
+      "account": "personal",
+      "date": "2026-11-09",
+      "amount_twd": 170,
+      "status": "歷史券商現金餘額",
+      "source_ids": [
+        "broker-1109"
+      ],
+      "note": "不納入投資持倉、損益或 30 萬元進度。",
+      "apply_to_holdings": false,
+      "apply_as_new_contribution": false
+    }
+  ],
+  "app_backup_reference": {
+    "assets": [
+      {
+        "id": "009816",
+        "name": "009816",
+        "type": "tw",
+        "currency": "TWD",
+        "qty": 1205,
+        "cost": 19015,
+        "verified": false
+      },
+      {
+        "id": "00646",
+        "name": "元大 S&P500",
+        "type": "tw",
+        "currency": "TWD",
+        "qty": 281,
+        "cost": 22016,
+        "verified": false
+      },
+      {
+        "id": "VOO",
+        "name": "VOO",
+        "type": "us",
+        "currency": "USD",
+        "qty": 0.06109,
+        "cost": 43.04,
+        "verified": false
+      },
+      {
+        "id": "FUBON_SP500",
+        "name": "富邦標普500",
+        "type": "fund",
+        "currency": "TWD",
+        "qty": 3307.47,
+        "cost": 36700,
+        "verified": false
+      },
+      {
+        "id": "FUBON_NASDAQ100",
+        "name": "富邦 NASDAQ-100",
+        "type": "fund",
+        "currency": "TWD",
+        "qty": 2705.29,
+        "cost": 31000,
+        "verified": false
+      },
+      {
+        "id": "YUANTA_NEW",
+        "name": "元大新主流",
+        "type": "fund",
+        "currency": "TWD",
+        "qty": 133.5,
+        "cost": 24800,
+        "verified": false
+      },
+      {
+        "id": "YUANTA_DIV",
+        "name": "元大台灣高股息優質龍頭",
+        "type": "fund",
+        "currency": "TWD",
+        "qty": 212.8,
+        "cost": 7539,
+        "verified": false
+      },
+      {
+        "id": "BTC",
+        "name": "Bitcoin (BTC)",
+        "type": "crypto",
+        "currency": "TWD",
+        "qty": 0,
+        "cost": 0,
+        "verified": true
+      },
+      {
+        "id": "00713",
+        "name": "元大台灣高息低波",
+        "type": "tw",
+        "currency": "TWD",
+        "qty": 78,
+        "cost": 4960,
+        "verified": true
+      },
+      {
+        "id": "NVDA",
+        "name": "NVIDIA",
+        "type": "us",
+        "currency": "USD",
+        "qty": 0,
+        "cost": 0,
+        "verified": true
+      },
+      {
+        "id": "ETH",
+        "name": "Ethereum",
+        "type": "crypto",
+        "currency": "TWD",
+        "qty": 0,
+        "cost": 0,
+        "verified": true
+      }
+    ],
+    "trades": [
+      {
+        "asset": "VOO",
+        "side": "buy",
+        "date": "2026-11-12",
+        "qty": 1,
+        "price": 697.67,
+        "fee": 0.7,
+        "created": 1794478370676,
+        "estimated": false,
+        "twdTotal": 24600,
+        "twdFee": 24.6,
+        "fxAtEntry": 32.841,
+        "confirmedAt": "2026-11-13T14:44:35.912Z"
+      },
+      {
+        "asset": "BTC",
+        "side": "buy",
+        "date": "2026-11-13",
+        "qty": 0.0012974,
+        "price": 2368360,
+        "fee": 0,
+        "created": 1794500000001,
+        "feeUnverified": true,
+        "note": "BitoPro BTC/TWD spot; fee pending verification"
+      },
+      {
+        "asset": "NVDA",
+        "side": "buy",
+        "date": "2026-11-13",
+        "qty": 1,
+        "price": 160.16,
+        "fee": 0,
+        "created": 1794584426596,
+        "fxAtEntry": 32.838,
+        "twdTotal": null
+      },
+      {
+        "asset": "ETH",
+        "side": "buy",
+        "date": "2026-11-14",
+        "qty": 0.01129778,
+        "price": 63640.82147112087,
+        "fee": 0,
+        "created": 1794590006544,
+        "costProvisional": true,
+        "note": "ETH 原成本 NT$8.12 為錯誤總成本；依回報總投入 NT$719 暫估，實際扣款與手續費待核對。"
+      }
+    ],
+    "snapshots": [
+      {
+        "date": "2026-11-13",
+        "observedAt": "2026-11-13T15:38:56.928Z",
+        "value": 170882.58995445332,
+        "cost": 173478.04609259,
+        "unrealized": -2595.4561381366802,
+        "positions": {
+          "009816": {
+            "q": 1205,
+            "c": 19015,
+            "currency": "TWD"
+          },
+          "00646": {
+            "q": 281,
+            "c": 22016,
+            "currency": "TWD"
+          },
+          "VOO": {
+            "q": 1.06109,
+            "c": 741.41,
+            "currency": "USD"
+          },
+          "FUBON_SP500": {
+            "q": 3307.47,
+            "c": 36700,
+            "currency": "TWD"
+          },
+          "FUBON_NASDAQ100": {
+            "q": 2705.29,
+            "c": 31000,
+            "currency": "TWD"
+          },
+          "YUANTA_NEW": {
+            "q": 133.5,
+            "c": 24800,
+            "currency": "TWD"
+          },
+          "YUANTA_DIV": {
+            "q": 212.8,
+            "c": 7539,
+            "currency": "TWD"
+          },
+          "BTC": {
+            "q": 0.0012974,
+            "c": 3072.710264,
+            "currency": "TWD"
+          },
+          "00713": {
+            "q": 78,
+            "c": 4960,
+            "currency": "TWD"
+          }
+        },
+        "prices": {
+          "009816": 15.22,
+          "00646": 78.599998,
+          "VOO": 693.41748,
+          "FUBON_SP500": 11.8,
+          "FUBON_NASDAQ100": 11.58,
+          "YUANTA_NEW": 141.18,
+          "YUANTA_DIV": 42.95,
+          "BTC": 2277179,
+          "00713": 63.700001
+        },
+        "fx": 32.876999,
+        "coverage": 9
+      },
+      {
+        "date": "2026-11-14",
+        "observedAt": "2026-11-14T12:15:49.859Z",
+        "value": 176926.45284696543,
+        "cost": 179518.52359243,
+        "unrealized": -2592.07074546456,
+        "positions": {
+          "009816": {
+            "q": 1205,
+            "c": 19015,
+            "currency": "TWD"
+          },
+          "00646": {
+            "q": 281,
+            "c": 22016,
+            "currency": "TWD"
+          },
+          "VOO": {
+            "q": 1.06109,
+            "c": 741.41,
+            "currency": "USD"
+          },
+          "FUBON_SP500": {
+            "q": 3307.47,
+            "c": 36700,
+            "currency": "TWD"
+          },
+          "FUBON_NASDAQ100": {
+            "q": 2705.29,
+            "c": 31000,
+            "currency": "TWD"
+          },
+          "YUANTA_NEW": {
+            "q": 133.5,
+            "c": 24800,
+            "currency": "TWD"
+          },
+          "YUANTA_DIV": {
+            "q": 212.8,
+            "c": 7539,
+            "currency": "TWD"
+          },
+          "BTC": {
+            "q": 0.0012974,
+            "c": 3072.710264,
+            "currency": "TWD"
+          },
+          "00713": {
+            "q": 78,
+            "c": 4960,
+            "currency": "TWD"
+          },
+          "NVDA": {
+            "q": 1,
+            "c": 160.16,
+            "currency": "USD"
+          },
+          "ETH": {
+            "q": 0.01129778,
+            "c": 719,
+            "currency": "TWD"
+          }
+        },
+        "prices": {
+          "009816": 15.22,
+          "00646": 78.599998,
+          "VOO": 693.380005,
+          "FUBON_SP500": 11.8,
+          "FUBON_NASDAQ100": 11.58,
+          "YUANTA_NEW": 141.18,
+          "YUANTA_DIV": 42.95,
+          "BTC": 2219223,
+          "00713": 63.700001,
+          "NVDA": 162.850006,
+          "ETH": 62900
+        },
+        "fx": 32.938999,
+        "coverage": 11
+      },
+      {
+        "date": "2026-11-15",
+        "observedAt": "2026-11-15T14:29:56.797Z",
+        "value": 176825.08575698544,
+        "cost": 179518.52359243,
+        "unrealized": -2693.4378354445507,
+        "positions": {
+          "009816": {
+            "q": 1205,
+            "c": 19015,
+            "currency": "TWD"
+          },
+          "00646": {
+            "q": 281,
+            "c": 22016,
+            "currency": "TWD"
+          },
+          "VOO": {
+            "q": 1.06109,
+            "c": 741.41,
+            "currency": "USD"
+          },
+          "FUBON_SP500": {
+            "q": 3307.47,
+            "c": 36700,
+            "currency": "TWD"
+          },
+          "FUBON_NASDAQ100": {
+            "q": 2705.29,
+            "c": 31000,
+            "currency": "TWD"
+          },
+          "YUANTA_NEW": {
+            "q": 133.5,
+            "c": 24800,
+            "currency": "TWD"
+          },
+          "YUANTA_DIV": {
+            "q": 212.8,
+            "c": 7539,
+            "currency": "TWD"
+          },
+          "BTC": {
+            "q": 0.0012974,
+            "c": 3072.710264,
+            "currency": "TWD"
+          },
+          "00713": {
+            "q": 78,
+            "c": 4960,
+            "currency": "TWD"
+          },
+          "NVDA": {
+            "q": 1,
+            "c": 160.16,
+            "currency": "USD"
+          },
+          "ETH": {
+            "q": 0.01129778,
+            "c": 719,
+            "currency": "TWD"
+          }
+        },
+        "prices": {
+          "009816": 15.22,
+          "00646": 78.599998,
+          "VOO": 693.380005,
+          "FUBON_SP500": 11.8,
+          "FUBON_NASDAQ100": 11.58,
+          "YUANTA_NEW": 141.18,
+          "YUANTA_DIV": 42.95,
+          "BTC": 2162000,
+          "00713": 63.700001,
+          "NVDA": 162.850006,
+          "ETH": 60499
+        },
+        "fx": 32.938999,
+        "coverage": 11
+      }
+    ]
+  },
+  "notes": [
+    "母親資料完全排除",
+    "不可將此檔直接當成交易匯入",
+    "交易日期為 null 不得推定日期",
+    "11/13 APP 備份的 assets 是期初基準，不能直接視為最新持倉"
+  ]
+}
