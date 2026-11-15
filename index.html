@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1115.232500</title>
+<title>MONO WEALTH V26.1115.233000</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -361,7 +361,13 @@ body{background:#0d0e12}
 #pnlCalendarCard .calendar-amount.positive{color:#ff737d}
 .period-metric strong.negative{color:#68d7a0}
 .period-metric strong.positive{color:#ff737d}
-#pnlCalendarCard .calendar-history-figure,#pnlCalendarCard .calendar-archive-dot{display:none!important}
+/* Archive markers must remain visible on mobile. */
+#pnlCalendarCard .calendar-history-figure,#pnlCalendarCard .calendar-archive-dot{display:block!important;font-size:9px;line-height:1.25;margin:1px 0;max-width:100%;overflow-wrap:anywhere;text-align:center;color:#a9cfff}
+#pnlCalendarCard .calendar-history-figure.snapshot{color:#e6c9a6}
+#pnlCalendarCard .calendar-history-figure.pnl{color:#a6dfc5}
+#pnlCalendarCard .calendar-cell{height:auto;min-height:88px!important;justify-content:flex-start;padding:9px 2px}
+#pnlCalendarCard .calendar-cell:has(.calendar-history-figure){border-color:#52657c}
+#pnlCalendarCard .calendar-cell .calendar-day{margin-bottom:3px}
 #pnlCalendarCard .calendar-view{gap:6px}
 #pnlCalendarCard .calendar-view button{background:#25262c;color:#b6b7bf;border-radius:10px}
 #pnlCalendarCard .calendar-view button.active{background:#373941;color:white}
@@ -375,7 +381,7 @@ body{background:#0d0e12}
 <body>
 <main>
 <header>
-<h1>✦ MONO <span style="color:#b6d5ff">WEALTH</span> <small>V26.1115.232500</small></h1>
+<h1>✦ MONO <span style="color:#b6d5ff">WEALTH</span> <small>V26.1115.233000</small></h1>
 <small>PERSONAL INVESTMENT DASHBOARD</small>
 </header>
 
