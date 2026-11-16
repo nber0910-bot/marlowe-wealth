@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T20:59:24+00:00",
+  "updated_at": "2026-11-16T21:58:30+00:00",
   "fx": {
     "value": 32.943001,
     "date": "2026-11-16",
@@ -22,20 +22,20 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 679.60498,
+      "value": 680.26001,
       "date": "2026-11-16",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 156.089996,
+      "value": 156.139999,
       "date": "2026-11-16",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 2142919.0,
+      "value": 2154274.0,
       "date": "2026-11-16",
       "source": "BitoPro BTC/TWD last traded price",
-      "retrieved_at": "2026-11-16T20:59:21+00:00",
+      "retrieved_at": "2026-11-16T21:58:27+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "btc_twd"
@@ -63,10 +63,10 @@
       "note": "Restored from prior user-provided market.json; not a new quote"
     },
     "ETH": {
-      "value": 60034.0,
+      "value": 60364.0,
       "date": "2026-11-16",
       "source": "BitoPro ETH/TWD last traded price",
-      "retrieved_at": "2026-11-16T20:59:21+00:00",
+      "retrieved_at": "2026-11-16T21:58:27+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "eth_twd"
