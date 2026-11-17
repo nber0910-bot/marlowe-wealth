@@ -106,6 +106,7 @@ MARKET_SECURITIES = [
     ("00713", "00713.TW"),
     ("VOO", "VOO"),
     ("NVDA", "NVDA"),
+    ("KO", "KO"),
 ]
 
 for asset_id, symbol in MARKET_SECURITIES:
