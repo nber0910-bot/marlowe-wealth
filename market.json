@@ -1,53 +1,53 @@
 {
-  "updated_at": "2026-11-17T09:15:25+00:00",
+  "updated_at": "2026-11-15T14:01:15+00:00",
   "fx": {
-    "value": 32.893002,
-    "date": "2026-11-17",
+    "value": 32.938999,
+    "date": "2026-11-13",
     "source": "Yahoo Finance daily close (delayed)"
   },
   "prices": {
     "009816": {
-      "value": 14.07,
-      "date": "2026-11-17",
+      "value": 15.22,
+      "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00646": {
-      "value": 77.150002,
-      "date": "2026-11-17",
+      "value": 78.599998,
+      "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00713": {
-      "value": 62.799999,
-      "date": "2026-11-17",
+      "value": 63.700001,
+      "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 680.26001,
-      "date": "2026-11-16",
+      "value": 693.380005,
+      "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 156.139999,
-      "date": "2026-11-16",
+      "value": 162.850006,
+      "date": "2026-11-13",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 2119000.0,
-      "date": "2026-11-17",
+      "value": 2162000.0,
+      "date": "2026-11-15",
       "source": "BitoPro BTC/TWD last traded price",
-      "retrieved_at": "2026-11-17T09:15:21+00:00",
+      "retrieved_at": "2026-11-15T14:01:11+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "btc_twd"
     },
     "YUANTA_NEW": {
-      "value": 119.47,
-      "date": "2026-11-17",
+      "value": 141.18,
+      "date": "2026-11-13",
       "source": "MoneyDJ published fund NAV"
     },
     "YUANTA_DIV": {
-      "value": 38.13,
-      "date": "2026-11-17",
+      "value": 42.95,
+      "date": "2026-11-13",
       "source": "MoneyDJ published fund NAV"
     },
     "FUBON_SP500": {
@@ -63,10 +63,10 @@
       "note": "Restored from prior user-provided market.json; not a new quote"
     },
     "ETH": {
-      "value": 59800.0,
-      "date": "2026-11-17",
+      "value": 60499.0,
+      "date": "2026-11-15",
       "source": "BitoPro ETH/TWD last traded price",
-      "retrieved_at": "2026-11-17T09:15:22+00:00",
+      "retrieved_at": "2026-11-15T14:01:12+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "eth_twd"

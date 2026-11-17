@@ -1,5 +1,5 @@
 'use strict';
-// MONO WEALTH V26.1115.233000 — full valuation coverage and header build version.
+// MONO WEALTH V26.1117.181200 — full valuation coverage and header build version.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -88,7 +88,7 @@ function fx(){const v=num(state.fxOverride??feed.fx?.value);return v>0?v:null;}
 function validQuote(p){return !!p&&typeof p==='object'&&p.value!==null&&p.value!==undefined&&p.value!==''&&Number.isFinite(Number(p.value))&&Number(p.value)>0;}
 function validBtcFeedQuote(p){if(!validQuote(p)||p.currency!=='TWD'||p.pair!=='btc_twd')return false;const t=Date.parse(p.retrieved_at||'');return Number.isFinite(t)&&t<=Date.now()+300000;}
 function btcQuote(){const p=feed.prices?.BTC;if(validBtcFeedQuote(p))return {...p,automatic:true};const m=state.manual?.BTC;return validQuote(m)?{...m,automatic:false}:null;}
-function price(a){if(a.id==='BTC')return btcQuote();if(a.id==='ETH'){const live=feed.prices?.ETH;if(validCryptoFeedQuote(live,'eth_twd'))return {...live,automatic:true};const m=state.manual?.ETH;return validQuote(m)?{...m,automatic:false}:null;}return state.manual[a.id]||feed.prices?.[a.id]||null;}
+function price(a){if(a.id==='BTC')return btcQuote();if(a.id==='ETH'){const live=feed.prices?.ETH;if(validCryptoFeedQuote(live,'eth_twd'))return {...live,automatic:true};const m=state.manual?.ETH;return validQuote(m)?{...m,automatic:false}:null;}const manual=state.manual[a.id],live=feed.prices?.[a.id];if(validQuote(live)&&(!validQuote(manual)||(live.date||'')>=(manual.date||'')))return {...live,automatic:true};return validQuote(manual)?{...manual,automatic:false}:validQuote(live)?{...live,automatic:true}:null;}
 function validCryptoFeedQuote(p,pair){return validQuote(p)&&p.currency==='TWD'&&p.pair===pair&&Number.isFinite(Date.parse(p.retrieved_at||''))&&Date.parse(p.retrieved_at)<=Date.now()+300000;}
 function btcQuoteStatus(){const p=btcQuote();if(!p)return {label:'無可用報價',detail:'尚未取得 BTC/TWD 價格',stale:true};if(!p.automatic)return {label:'手動參考價',detail:'目前使用手動價格，並非即時行情',stale:true};const stale=Date.now()-Date.parse(p.retrieved_at)>BTC_STALE_HOURS*3600000;return {label:stale?'行情已過期':'自動行情正常',detail:stale?'超過 2 小時未取得新報價，仍顯示最後有效價格':'BitoPro 最近一次成功取得的行情快照',stale};}
 function taiwanTime(value){const t=Date.parse(value||'');return Number.isFinite(t)?new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(t)):'時間未知';}
@@ -118,9 +118,9 @@ function renderBtcStatus(){
 function updateBuildVersion(){
   const heading=document.querySelector('h1');if(!heading||!heading.textContent.includes('WEALTH'))return;
   const small=heading.querySelector('small');
-  if(small)small.textContent='V26.1115.233000';
-  else heading.insertAdjacentHTML('beforeend',' <small>V26.1115.233000</small>');
-  document.title='MONO WEALTH V26.1115.233000';
+  if(small)small.textContent='V26.1117.181200';
+  else heading.insertAdjacentHTML('beforeend',' <small>V26.1117.181200</small>');
+  document.title='MONO WEALTH V26.1117.181200';
 }
 
 function position(a){let q=num(a.qty)||0,c=num(a.cost)||0;const trades=state.trades.filter(t=>t.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));for(const t of trades){const tq=num(t.qty)||0,tp=num(t.price)||0,tf=num(t.fee)||0;if(t.side==='buy'){q+=tq;c+=tq*tp+tf;}else if(t.side==='sell'&&tq<=q+1e-8){const avg=q>0?c/q:0;c-=avg*tq;q-=tq;if(Math.abs(q)<1e-8){q=0;c=0;}}}return {q,c};}
@@ -642,7 +642,7 @@ function renderHistoricalArchive(){
 async function loadHistoricalArchive(){
   ensureHistoricalArchivePanel();
   try{
-    const response=await fetch('./history.json?v=261115233000',{cache:'no-store'});
+    const response=await fetch('./history.json?v=261117181200',{cache:'no-store'});
     if(!response.ok)throw Error('找不到 history.json（HTTP '+response.status+'）');
     const data=await response.json();
     if(data.schema!=='marlowe-wealth-history-v1'||!Array.isArray(data.historical_events)||!Array.isArray(data.asset_snapshots)||!Array.isArray(data.monthly_overview))throw Error('history.json 格式不符合預期');
@@ -695,16 +695,52 @@ function budgetLedger(month){
   return {amount,unknown};
 }
 function installOverviewRefresh(){
-  const overview=byId('overview');if(!overview||byId('overviewRefreshButton'))return;
-  const bar=document.createElement('div');bar.id='overviewRefreshBar';
-  bar.style.cssText='display:flex;justify-content:flex-end;align-items:center;margin:4px 0 8px';
-  const btn=document.createElement('button');btn.type='button';btn.id='overviewRefreshButton';
-  btn.textContent='↻ 刷新';btn.title='重新載入整個網頁（不清除本機投資資料）';
-  btn.style.cssText='width:auto;min-width:0;padding:7px 12px;border-radius:12px;font-size:13px;line-height:1.2;cursor:pointer';
-  btn.addEventListener('click',()=>{save();window.location.reload();});
-  bar.appendChild(btn);
-  const hero=byId('valuationHero');
-  if(hero)hero.appendChild(bar);else overview.appendChild(bar);
+ const hero=byId('valuationHero');if(!hero||byId('overviewRefreshButton'))return;
+ const bar=document.createElement('div');bar.id='overviewRefreshBar';bar.style.cssText='margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center';
+ bar.innerHTML='<button type="button" id="overviewRefreshButton" style="flex:1;min-width:160px">↻ 取得最新行情檔</button><small id="overviewRefreshNote" style="flex-basis:100%;color:#a6b7cd">重新讀取 GitHub 已發布的行情檔，不會觸發即時抓價或改動交易。</small>';
+ hero.appendChild(bar);
+ byId('overviewRefreshButton').addEventListener('click',async()=>{
+  const btn=byId('overviewRefreshButton');btn.disabled=true;btn.textContent='正在檢查行情檔…';
+  const before=feed.updated_at||'';
+  try{await loadFeed(true);await loadDailyMarketArchive();const after=feed.updated_at||'';
+   byId('overviewRefreshNote').textContent=feedError?'讀取失敗：'+feedError:after===before?'已重新檢查：伺服器行情檔尚未更新；可稍後再試。':'已取得更新行情檔：'+taiwanTime(after)+'（個別標的可能為較早收盤價）';
+  }catch(e){byId('overviewRefreshNote').textContent='更新失敗：'+e.message;}
+  finally{btn.disabled=false;btn.textContent='↻ 取得最新行情檔';}
+ });
+}
+
+// Settlement planner is a separate cash-flow ledger. It never changes assets or trades.
+function settlementItems(){if(!Array.isArray(state.settlementItems))state.settlementItems=[];return state.settlementItems;}
+function installSettlementPlanner(){
+ const overview=byId('overview');if(!overview||byId('settlementPlanner'))return;
+ const card=document.createElement('div');card.className='card';card.id='settlementPlanner';
+ card.innerHTML=`<h2>🏦 交割資金管理</h2><p class="hint">重要：台股一般為 T+2 交割；實際扣款日與金額請以券商為準。此處是資金提醒，不會重複計入投資成本。</p>
+ <div class="settle-summary"><div><small>未結清交割款</small><strong id="settleUnpaid">—</strong></div><div><small>預計可用現金</small><strong id="settleCashValue">—</strong></div><div><small>預估資金缺口</small><strong id="settleShortfall">—</strong></div></div>
+ <label>交割專用可用現金（TWD）<input id="settleCash" type="number" min="0" step="0.01" inputmode="decimal" placeholder="輸入已可用的交割帳戶餘額"></label>
+ <button type="button" id="settleSaveCash">更新可用現金</button>
+ <details><summary>＋ 新增交割款提醒（不新增股票交易）</summary>
+ <label>標的／備註<input id="settleName" placeholder="例如 00713 或 KO"></label>
+ <label>預計扣款日期<input id="settleDate" type="date"></label>
+ <label>應付金額（新台幣）<input id="settleAmount" type="number" min="0.01" step="0.01" inputmode="decimal"></label>
+ <button type="button" id="settleAdd">新增交割提醒</button></details>
+ <div id="settleEntries"></div>
+ <p class="hint">交割紀錄需要自行確認「已繳款」。現金欄位不會自動扣款，也不會影響總資產；請以銀行與券商餘額為準。</p>`;
+ const hero=byId('valuationHero');hero?.after(card);
+ byId('settleCash').value=state.settlementCash??'';
+ byId('settleDate').value=twDate();
+ byId('settleSaveCash').addEventListener('click',()=>{const v=byId('settleCash').value.trim();if(v!==''&&(!Number.isFinite(Number(v))||Number(v)<0))return alert('請輸入正確現金金額');state.settlementCash=v===''?null:Number(v);save();renderSettlementPlanner();});
+ byId('settleAdd').addEventListener('click',()=>{const name=byId('settleName').value.trim(),date=byId('settleDate').value,amount=Number(byId('settleAmount').value);if(!name||!dateValid(date)||!Number.isFinite(amount)||amount<=0)return alert('請填標的、扣款日期與正確金額');settlementItems().push({id:'s'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name,date,amount,paid:false});save();byId('settleName').value='';byId('settleAmount').value='';renderSettlementPlanner();});
+ renderSettlementPlanner();
+}
+function renderSettlementPlanner(){if(!byId('settlementPlanner'))return;const items=settlementItems(),open=items.filter(x=>!x.paid),sum=open.reduce((v,x)=>v+Number(x.amount||0),0),cash=state.settlementCash;
+ byId('settleUnpaid').textContent=money(sum);
+ byId('settleCashValue').textContent=cash===null||cash===undefined?'待輸入':money(Number(cash));
+ const short= cash===null||cash===undefined?null:Math.max(0,sum-Number(cash));
+ byId('settleShortfall').textContent=short===null?'待計算':money(short);
+ byId('settleShortfall').style.color=short>0?'#ff7d8d':'#8bd9b9';
+ byId('settleEntries').innerHTML=items.length?items.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>`<div class="settle-entry"><div><b>${safe(x.name)}</b><small>${safe(x.date)} · ${x.paid?'已繳款':'待交割'}</small></div><b>${money(Number(x.amount))}</b><button type="button" data-settle-paid="${safe(x.id)}">${x.paid?'改回待繳':'標記已繳'}</button><button type="button" data-settle-remove="${safe(x.id)}">刪除</button></div>`).join(''):'<p class="hint">尚無交割提醒。請依券商已成交訂單新增待付款項。</p>';
+ byId('settleEntries').querySelectorAll('[data-settle-paid]').forEach(b=>b.addEventListener('click',()=>{const x=items.find(x=>x.id===b.dataset.settlePaid);if(!x)return;x.paid=!x.paid;save();renderSettlementPlanner();}));
+ byId('settleEntries').querySelectorAll('[data-settle-remove]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('確定刪除這筆交割提醒？不會刪除股票交易。'))return;state.settlementItems=items.filter(x=>x.id!==b.dataset.settleRemove);save();renderSettlementPlanner();}));
 }
 function installEthSetup(){
   const section=byId('trade');if(!section||byId('ethSetupPanel'))return;
@@ -951,4 +987,4 @@ function confirmEstimatedTrade(created){const t=state.trades.find(t=>t.created==
 function renderPendingSummary(){let el=byId('estimatedSummary');if(!el){const target=byId('total')?.closest('.card')||byId('total')?.parentElement;if(!target)return;el=document.createElement('div');el.id='estimatedSummary';el.className='item';target.appendChild(el);}const pending=state.trades.filter(t=>t.estimated);if(!pending.length){el.style.display='none';return;}el.style.display='';const total=pending.reduce((s,t)=>s+(num(t.twdTotal)||0),0);el.innerHTML=`<b>🟡 預估入庫 · ${pending.length} 筆</b><p>已記入持倉的預估投入：${money(total)}</p><small>此金額已反映於預估持倉，請勿與總資產再相加。實際成交股數、匯率及損益仍待券商確認。</small>`;}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==b.dataset.tab));document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));window.scrollTo(0,0);}));
 byId('tradedate').value=today();byId('manualdate').value=today();
-try{updateBuildVersion();installReliableAddAsset();installTradeLedger();installEthSetup();installEthCostRepair();installOverviewRefresh();installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
+try{updateBuildVersion();installReliableAddAsset();installTradeLedger();installEthSetup();installEthCostRepair();installOverviewRefresh();installSettlementPlanner();installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
