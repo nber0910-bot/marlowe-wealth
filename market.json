@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-17T07:33:47+00:00",
+  "updated_at": "2026-11-17T09:15:25+00:00",
   "fx": {
-    "value": 32.925999,
+    "value": 32.893002,
     "date": "2026-11-17",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -32,22 +32,22 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 2133165.0,
+      "value": 2119000.0,
       "date": "2026-11-17",
       "source": "BitoPro BTC/TWD last traded price",
-      "retrieved_at": "2026-11-17T07:33:43+00:00",
+      "retrieved_at": "2026-11-17T09:15:21+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "btc_twd"
     },
     "YUANTA_NEW": {
-      "value": 128.25,
-      "date": "2026-11-16",
+      "value": 119.47,
+      "date": "2026-11-17",
       "source": "MoneyDJ published fund NAV"
     },
     "YUANTA_DIV": {
-      "value": 39.67,
-      "date": "2026-11-16",
+      "value": 38.13,
+      "date": "2026-11-17",
       "source": "MoneyDJ published fund NAV"
     },
     "FUBON_SP500": {
@@ -63,10 +63,10 @@
       "note": "Restored from prior user-provided market.json; not a new quote"
     },
     "ETH": {
-      "value": 60397.0,
+      "value": 59800.0,
       "date": "2026-11-17",
       "source": "BitoPro ETH/TWD last traded price",
-      "retrieved_at": "2026-11-17T07:33:43+00:00",
+      "retrieved_at": "2026-11-17T09:15:22+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "eth_twd"
