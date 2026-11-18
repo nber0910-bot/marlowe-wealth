@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-18T17:19:06+00:00",
+  "updated_at": "2026-11-18T19:09:56+00:00",
   "fx": {
-    "value": 32.953999,
+    "value": 32.952999,
     "date": "2026-11-18",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -22,12 +22,12 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 671.734985,
+      "value": 671.525024,
       "date": "2026-11-18",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 152.149994,
+      "value": 151.509995,
       "date": "2026-11-18",
       "source": "Yahoo Finance daily close (delayed)"
     },
@@ -72,7 +72,7 @@
       "pair": "eth_twd"
     },
     "KO": {
-      "value": 98.239998,
+      "value": 97.949997,
       "date": "2026-11-18",
       "source": "Yahoo Finance daily close (delayed)"
     }
