@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-19T08:14:01+00:00",
+  "updated_at": "2026-11-19T08:17:24+00:00",
   "fx": {
-    "value": 32.91,
+    "value": 32.909,
     "date": "2026-11-19",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -32,10 +32,10 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 2103019.0,
+      "value": 2105200.0,
       "date": "2026-11-19",
       "source": "BitoPro BTC/TWD last traded price",
-      "retrieved_at": "2026-11-19T08:13:57+00:00",
+      "retrieved_at": "2026-11-19T08:17:21+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "btc_twd"
@@ -66,7 +66,7 @@
       "value": 59566.0,
       "date": "2026-11-19",
       "source": "BitoPro ETH/TWD last traded price",
-      "retrieved_at": "2026-11-19T08:13:58+00:00",
+      "retrieved_at": "2026-11-19T08:17:22+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "eth_twd"
