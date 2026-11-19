@@ -685,7 +685,7 @@ async function loadHistoricalArchive(){
 }
 function installHistoryFilters(){for(const id of ['recordYearFilter','recordMonthFilter','recordTypeFilter'])byId(id)?.addEventListener('change',renderHistory);}
 
-function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fund:0,crypto:0};let v=0,c=0,covered=0,all=0;for(const a of state.assets){const z=valuation(a);if(z.q<=0)continue;all++;if(z.value!==null){totals[a.type]=(totals[a.type]||0)+z.value;counts[a.type]=(counts[a.type]||0)+1;v+=z.value;covered++;if(z.costTwd!==null)c+=z.costTwd;}}byId('total').textContent=covered?money(v):'尚無可估值資產';byId('pnl').textContent=covered&&c>0?'可估值部位未實現損益 '+money(v-c)+'（'+((v/c-1)*100).toFixed(2)+'%）':'損益待確認';byId('pnl').className=covered&&v-c<0?'negative':'positive';const estCount=state.trades.filter(t=>t.estimated).length;byId('coverage').textContent=`已估值 ${covered}/${all} 檔持有標的（零持倉不計入）；未估值部位不計入總額。美元成本以目前匯率換算，非實際匯兌損益。期初成本待核對。`+(estCount?` 有 ${estCount} 筆預估入庫，股數及損益可能變動。`:'');for(const [type,id] of [['tw','twtotal'],['us','ustotal'],['fund','fundtotal'],['crypto','cryptototal']])byId(id).textContent=counts[type]?money(totals[type]):'待估值';byId('count').textContent=covered+' / '+all;byId('progresslabel').textContent=covered?`${(v/300000*100).toFixed(1)}%（部分估值${estCount?'・含預估':''}）`:'—';byId('progress').style.width=Math.max(0,Math.min(100,v/300000*100))+'%';renderCategoryDetails(totals);renderMarketTicker();renderAssetTrend();renderAllocation(totals);renderBtcStatus();renderPeriodMetrics();byId('marketinfo').innerHTML=state.assets.map(a=>{
+function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fund:0,crypto:0};let v=0,c=0,covered=0,all=0;for(const a of state.assets){const z=valuation(a);if(z.q<=0)continue;all++;if(z.value!==null){totals[a.type]=(totals[a.type]||0)+z.value;counts[a.type]=(counts[a.type]||0)+1;v+=z.value;covered++;if(z.costTwd!==null)c+=z.costTwd;}}byId('total').textContent=covered?money(v):'尚無可估值資產';byId('pnl').textContent=covered&&c>0?'可估值部位未實現損益 '+money(v-c)+'（'+((v/c-1)*100).toFixed(2)+'%）':'損益待確認';byId('pnl').className=covered&&v-c<0?'negative':'positive';const hp=byId('heroPnlValue'),hr=byId('heroReturn'),hc=byId('heroCost');if(hp){hp.textContent=covered&&c>0?money(v-c):'待確認';hp.style.color=v-c<0?'#f47486':'#51d69b';}if(hr){hr.textContent=covered&&c>0?((v/c-1)*100).toFixed(2)+'%':'—';hr.style.color=v-c<0?'#f47486':'#51d69b';}if(hc)hc.textContent=covered&&c>0?money(c):'待確認';const estCount=state.trades.filter(t=>t.estimated).length;byId('coverage').textContent=`已估值 ${covered}/${all} 檔持有標的（零持倉不計入）；未估值部位不計入總額。美元成本以目前匯率換算，非實際匯兌損益。期初成本待核對。`+(estCount?` 有 ${estCount} 筆預估入庫，股數及損益可能變動。`:'');for(const [type,id] of [['tw','twtotal'],['us','ustotal'],['fund','fundtotal'],['crypto','cryptototal']])byId(id).textContent=counts[type]?money(totals[type]):'待估值';byId('count').textContent=covered+' / '+all;byId('progresslabel').textContent=covered?`${(v/300000*100).toFixed(1)}%（部分估值${estCount?'・含預估':''}）`:'—';byId('progress').style.width=Math.max(0,Math.min(100,v/300000*100))+'%';renderCategoryDetails(totals);renderMarketTicker();renderAssetTrend();renderAllocation(totals);renderBtcStatus();renderPeriodMetrics();byId('marketinfo').innerHTML=state.assets.map(a=>{
   const z=valuation(a),held=z.q>0,p=z.p,quoteOk=validQuote(p);
   const rate=a.currency==='USD'?fx():1;
   const priced=held&&z.value!==null;
@@ -834,41 +834,18 @@ function renderEthCostRepair(){
   byId('ethRepairButton').disabled=hasTrades||Math.abs(z.q-0.01129778)>0.00000001;
 }
 function renderMonthlyBudget(){
-  const panel=byId('monthlyBudgetPanel');
-  if(!panel)return;
-  installHeroToggle();
-  const month=budgetMonth(),ledger=budgetLedger(month);
-  const adjustment=Number(state.monthlyBudget?.[month]||0);
-  const total=ledger.amount+adjustment;
-  const tone=total>=MONTHLY_BUDGET?'#ff777f':total>=MONTHLY_BUDGET/2?'#ffd36a':'#f5f7fc';
-  const ratio=Math.max(0,Math.min(100,total/MONTHLY_BUDGET*100));
-  panel.innerHTML=`<div style="font-size:12px;color:#aebdd2">${safe(month)} · 每月投入預算</div>
-    <div class="budget-amount" style="color:${tone}">${Math.round(total).toLocaleString('zh-TW')} <span style="font-size:15px;color:#a9b9cf">/ 30,000</span></div>
-    <div class="budget-track"><div style="height:100%;width:${ratio}%;background:${tone}"></div></div>
-    <div class="budget-sub">預算使用率：${(total/MONTHLY_BUDGET*100).toFixed(1)}%<br>網站當月買入：${money(ledger.amount)}<br>其他已投入調整：${money(adjustment)}</div>
-    ${ledger.unknown.length?`<p style="font-size:11px;color:#ffd36a">${ledger.unknown.length} 筆美元買入缺交易時匯率／台幣扣款，尚未計入。</p>`:''}
-    <details><summary>校正本月投入（避免漏算）</summary>
-    <p class="budget-sub">只填尚未記入網站交易簿的額外投入；已登記的買入不要重複計入。</p>
-    <label>其他已投入金額（TWD）<input type="number" step="0.01" id="monthlyBudgetAdjustment" value="${adjustment}"></label>
-    <button type="button" id="monthlyBudgetSave">儲存本月調整</button></details>`;
-  byId('monthlyBudgetSave').addEventListener('click',()=>{
-    const raw=byId('monthlyBudgetAdjustment').value;
-    if(raw.trim()===''||!Number.isFinite(Number(raw)))return alert('請輸入有效的台幣金額');
-    state.monthlyBudget??={};state.monthlyBudget[month]=Number(raw);save();renderMonthlyBudget();
-  });
+ installHeroToggle();
+ const panel=byId('monthlyBudgetPanel');if(!panel)return;
+ const month=budgetMonth(),ledger=budgetLedger(month),adjustment=Number(state.monthlyBudget?.[month]||0),total=ledger.amount+adjustment;
+ const ratio=Math.max(0,Math.min(100,total/MONTHLY_BUDGET*100)),tone=total>=MONTHLY_BUDGET?'#ff7188':'#8dbbff';
+ panel.innerHTML=`<div class="between"><small>${safe(month)} · 每月投入預算</small><small>預算使用率 ${(total/MONTHLY_BUDGET*100).toFixed(1)}%</small></div><div class="budget-amount" style="color:${tone}">${Math.round(total).toLocaleString('zh-TW')} <span style="font-size:15px;color:#b7c5d7">/ 30,000</span></div><div class="budget-track"><div style="height:100%;width:${ratio}%;background:${tone}"></div></div><div class="budget-sub">網站當月買入：${money(ledger.amount)}　｜　其他已投入調整：${money(adjustment)}</div>${ledger.unknown.length?`<p class="hint">${ledger.unknown.length} 筆交易缺少可核對台幣扣款，尚未計入。</p>`:''}<details><summary>校正本月投入（避免漏算）</summary><p class="hint">只填未登錄交易簿的額外投入，避免重複計算。</p><label>其他已投入金額（TWD）<input type="number" step="0.01" id="monthlyBudgetAdjustment" value="${adjustment}"></label><button type="button" id="monthlyBudgetSave">儲存本月調整</button></details>`;
+ byId('monthlyBudgetSave').addEventListener('click',()=>{const raw=byId('monthlyBudgetAdjustment').value;if(raw.trim()===''||!Number.isFinite(Number(raw)))return alert('請輸入有效的台幣金額');state.monthlyBudget??={};state.monthlyBudget[month]=Number(raw);save();renderMonthlyBudget();});
 }
 function installHeroToggle(){
-  const hero=byId('valuationHero'),button=byId('heroToggleView'),budget=byId('monthlyBudgetPanel');
-  if(!hero||!button||!budget||button.dataset.bound)return;
-  button.dataset.bound='1';
-  button.addEventListener('click',()=>{
-    const active=!hero.classList.contains('budget-active');
-    hero.classList.toggle('budget-active',active);
-    budget.hidden=!active;
-    byId('heroViewTitle').textContent=active?'每月投入預算 · TWD':'投資資產總覽 · TWD（不含現金）';
-    button.textContent=active?'⇄ 返回投資總覽':'⇄ 切換每月投入';
-    button.setAttribute('aria-pressed',String(active));
-  });
+ const summary=byId('heroSummary'),period=byId('heroPeriodView'),toggle=byId('heroToggleView'),back=byId('heroPeriodBack');
+ if(!summary||!period||!toggle||toggle.dataset.bound)return;toggle.dataset.bound='1';
+ toggle.addEventListener('click',()=>{summary.hidden=true;period.hidden=false;});
+ back?.addEventListener('click',()=>{period.hidden=true;summary.hidden=false;});
 }
 
 function installReliableAddAsset(){

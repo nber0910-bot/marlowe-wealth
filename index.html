@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1119.173500</title>
+<title>MONO WEALTH V26.1119.181500</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -423,7 +423,7 @@ body{background:#0d0e12}
 @media(max-width:390px){.portfolio-position{padding:10px 8px}.portfolio-position b{font-size:11px}.portfolio-table-head{padding:10px 8px}.category-totals b{font-size:11px}}
 
 
-/* V26.1119.173500: tighter heading and vertical rhythm */
+/* V26.1119.181500: tighter heading and vertical rhythm */
 main{padding-top:12px}
 main>header{margin:0 0 8px}
 main>header h1{margin:3px 0 6px;font-size:clamp(18px,4.7vw,22px);letter-spacing:1.1px;line-height:1.2}
@@ -435,7 +435,7 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 @media(max-width:390px){main{padding-top:10px}main>header h1{letter-spacing:.6px}}
 
 
-/* V26.1119.173500 — compact, stable-height overview/budget switch */
+/* V26.1119.181500 — compact, stable-height overview/budget switch */
 .market-ticker{margin-top:calc(env(safe-area-inset-top, 0px) + 16px);margin-left:12px;margin-right:12px;border:1px solid #2b3543;border-radius:11px;height:39px;padding:0 12px;filter:none;backdrop-filter:none;-webkit-backdrop-filter:none}
 .market-ticker-track,.ticker-item{filter:none;text-shadow:none}
 .trend-outside{display:flex;justify-content:flex-end;margin:0 0 7px;padding-right:1px}
@@ -462,6 +462,33 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 #assetGrid{margin-top:9px}
 @media(max-width:390px){.market-ticker{margin-left:10px;margin-right:10px}#valuationHero{padding:13px 14px}.hero-budget-view{left:14px;right:14px;top:78px;bottom:13px}#valuationHero .hero-actions{right:14px;top:12px}}
 
+
+/* MONO WEALTH reference-style compact overview — V26.1119.181500 */
+:root{color-scheme:dark}
+body{background:#090d14}
+main{padding:8px 13px 110px;max-width:760px}
+main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spacing:.8px}
+.market-ticker{margin-top:calc(env(safe-area-inset-top,0px) + 8px);margin-left:12px;margin-right:12px;height:31px;border-radius:10px;background:#101722;padding:0 7px}
+.ticker-item{padding:0 12px;gap:5px}.ticker-item strong{font-size:11px}.ticker-item em{font-size:10px}
+#valuationHero{padding:14px 15px 12px!important;border:1px solid #425875;border-radius:17px;background:linear-gradient(115deg,#172234,#0e151f 75%);margin:0 0 9px;min-height:0!important;height:auto!important}
+#valuationHero .hero-topline{padding:0!important;min-height:0;display:flex;align-items:center;justify-content:space-between}
+#valuationHero .hero-actions{position:static!important;width:auto}.hero-label{font-size:18px;letter-spacing:.2px}.hero-chip{display:inline-block;background:#152d4c;color:#89baff;padding:3px 6px;border-radius:5px;font-size:10px;margin-left:5px}
+#valuationHero .hero-total{display:flex;align-items:baseline;gap:7px;margin:9px 0 12px;font-variant-numeric:tabular-nums}#valuationHero .hero-total span{font-size:15px;color:#dce7f4}#valuationHero .hero-total strong{font-size:clamp(29px,7.2vw,42px);line-height:1;font-weight:750;letter-spacing:-.6px}
+.hero-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;min-height:55px}.hero-summary>div,.hero-summary>button{min-width:0;border-right:1px solid #354358;padding:0 10px;background:transparent;text-align:left}.hero-summary>div:first-child,.hero-summary>button:first-child{padding-left:0}.hero-summary>div:last-child{border-right:0;padding-right:0}.hero-summary small,.period-metric small{display:block;font-size:11px;color:#b2c0d0;margin-bottom:6px}.hero-summary strong{display:block;font-size:clamp(15px,4vw,22px);font-variant-numeric:tabular-nums;white-space:nowrap}.summary-click{cursor:pointer;color:#e8f2ff}.summary-click strong{color:#f47486}.period-back{border:0;background:transparent;color:#aacbff;padding:0;font-size:12px;margin:0 0 7px}
+#heroPeriodView{min-height:0}#heroPeriodView[hidden],#heroSummary[hidden]{display:none!important}.hero-period-view .period-metrics{margin:0;gap:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.hero-period-view .period-metric{padding:0 7px;border-right:1px solid #354358}.hero-period-view .period-metric:first-child{padding-left:0}.hero-period-view .period-metric:last-child{border:0}.hero-period-view .period-metric strong{font-size:clamp(13px,3.7vw,20px);white-space:nowrap}.hero-period-view .period-metric span{font-size:9px;line-height:1.4;color:#9baec7;display:block;margin-top:7px}.hero-data-note{display:none!important}
+#assetGrid{background:transparent;border:0;border-radius:0;margin:6px 0 12px;overflow:visible}
+#assetGrid .portfolio-table-toolbar{padding:6px 2px 8px;gap:5px}#assetGrid .portfolio-table-toolbar strong{display:none}#assetGrid .portfolio-filter{margin-left:auto}#assetGrid .portfolio-filter select{font-size:10px;padding:5px}
+#assetGrid .portfolio-table-head{grid-template-columns:41% 28% 31%;padding:6px 5px;font-size:10px;border:0}
+#assetGrid .asset-card{border:1px solid #2b384c!important;border-radius:11px!important;margin-bottom:6px!important;overflow:hidden!important;background:#0e141e!important}
+#assetGrid .asset-heading{padding:7px 9px;background:linear-gradient(90deg,#1b2839,#141c29);border:0;gap:6px}#assetGrid .asset-heading>span:first-child{font-size:12px}#assetGrid .asset-heading small{font-size:10px}#assetGrid .asset-indicator{font-size:13px}
+#assetGrid .category-totals{flex-direction:row;align-items:center;gap:8px}#assetGrid .category-totals b,#assetGrid .category-totals span{font-size:10px;white-space:nowrap}
+#assetGrid .portfolio-position{padding:6px 9px;grid-template-columns:41% 28% 31%;min-height:40px}#assetGrid .portfolio-position b{font-size:11px;line-height:1.25}#assetGrid .portfolio-position small{font-size:10px;line-height:1.3}
+#assetGrid .portfolio-disclaimer{display:none}
+#assetTrendCard{margin:10px 0!important;padding:11px 12px;border-radius:14px;background:linear-gradient(115deg,#121d2b,#0e151f);min-height:105px}.trend-compact-title{display:flex;justify-content:space-between;align-items:center;gap:10px}.trend-compact-title b{font-size:13px}.trend-compact-title small{font-size:9px;color:#8ea0b7;text-align:right}.trend-plot svg{height:65px;margin:4px 0}.trend-plot .between{font-size:9px}.trend-plot p{font-size:11px}
+.monthly-budget-card{padding:12px 14px;border:1px solid #33465f;border-radius:14px;background:linear-gradient(115deg,#142034,#0f1620);margin:10px 0 16px}.monthly-budget-card .budget-amount{font-size:clamp(22px,6vw,31px);font-weight:750;margin:6px 0;line-height:1.15}.monthly-budget-card .budget-track{height:8px;border-radius:9px;background:#33465f;overflow:hidden;margin:8px 0}.monthly-budget-card .budget-sub{font-size:10px;color:#b5c4d8;line-height:1.65}.monthly-budget-card details{font-size:11px;margin:8px 0}.monthly-budget-card summary{font-size:11px}
+.tabs{background:#0e1827;padding:7px 5px calc(7px + env(safe-area-inset-bottom))}.tabs button{font-size:11px;padding:9px 2px}
+@media(max-width:390px){#assetGrid .category-totals{gap:3px}#assetGrid .category-totals b,#assetGrid .category-totals span{font-size:9px}#assetGrid .asset-heading{padding:7px 5px}#assetGrid .portfolio-position{padding:6px 5px}.hero-summary strong{font-size:15px}}
+
 </style>
 </head>
 
@@ -469,32 +496,18 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 <div class="market-ticker" aria-label="主要市場指數與報價"><div class="market-ticker-track" id="marketTicker"><span>市場指數行情讀取中…</span></div></div>
 <main>
 <header>
-<h1>✦ MONO <span style="color:#b6d5ff">WEALTH</span> <small>V26.1119.173500</small></h1>
+<h1>✦ MONO <span style="color:#b6d5ff">WEALTH</span> </h1>
 </header>
 
 <!-- OVERVIEW -->
 <section id="overview">
-<div class="trend-outside"><button type="button" id="miniTrendButton" class="mini-trend" aria-label="查看資產走勢"><small>資產走勢 · 30 日</small><svg viewBox="0 0 100 38" id="miniTrendSvg" aria-hidden="true"></svg><small id="miniTrendHint">資料累積中</small></button></div>
 <div class="card" id="valuationHero">
-<div class="hero-topline"><small id="heroViewTitle">投資資產總覽 · TWD（不含現金）</small><div class="hero-actions"><button type="button" id="overviewRefreshButton" class="mini-refresh" aria-label="重新讀取行情檔">↻ 更新</button></div></div><button type="button" id="heroToggleView" class="hero-toggle" aria-label="切換投資總覽與每月投入預算" aria-pressed="false">⇄ 切換每月投入</button><div id="heroOverviewContent">
-<small id="overviewRefreshNote" class="refresh-status">按下更新會重新讀取已發布的行情檔</small>
-<div class="big" id="total">—</div>
-<div class="period-metrics" aria-label="期間投資盈虧">
-<div class="period-metric"><small>今日盈虧</small><strong id="periodToday">—</strong><span id="periodTodayHint">等待可比行情</span></div>
-<div class="period-metric"><small>7 日累積盈虧</small><strong id="period7">—</strong><span id="period7Hint">等待可比行情</span></div>
-<div class="period-metric"><small>30 日累積盈虧</small><strong id="period30">—</strong><span id="period30Hint">等待可比行情</span></div>
+<div class="hero-topline"><div><b class="hero-label" id="heroViewTitle">投資資產總覽</b> <span class="hero-chip">含息 · 含稅</span></div><div class="hero-actions"><button type="button" id="overviewRefreshButton" class="mini-refresh">↻ 更新</button></div></div>
+<div id="heroOverviewContent"><div class="hero-total"><span>TWD</span><strong id="total">—</strong></div>
+<div class="hero-summary" id="heroSummary"><button type="button" id="heroToggleView" class="summary-click" aria-label="切換期間盈虧"><small>預估損益 ›</small><strong id="heroPnlValue">—</strong></button><div><small>報酬率</small><strong id="heroReturn">—</strong></div><div><small>總投入成本</small><strong id="heroCost">—</strong></div></div>
+<div class="hero-period-view" id="heroPeriodView" hidden><button type="button" id="heroPeriodBack" class="period-back">‹ 期間盈虧 · 返回總覽</button><div class="period-metrics"><div class="period-metric"><small>今日盈虧</small><strong id="periodToday">—</strong><span id="periodTodayHint">—</span></div><div class="period-metric"><small>7 日累積盈虧</small><strong id="period7">—</strong><span id="period7Hint">—</span></div><div class="period-metric"><small>30 日累積盈虧</small><strong id="period30">—</strong><span id="period30Hint">—</span></div></div></div></div>
+<div class="hero-data-note" id="heroDataNote" hidden><span id="overviewRefreshNote"></span><span id="pnl"></span><span id="coverage"></span><span id="periodFootnote"></span><span id="progresslabel"></span><div id="progress"></div></div>
 </div>
-<div class="period-footnote" id="periodFootnote">依封存行情計算，排除新投入本金；無足夠資料不估算。</div>
-<div id="pnl"></div>
-<p class="hint" id="coverage"></p>
-<div class="between">
-<small>30 萬目標進度</small>
-<b id="progresslabel">—</b>
-</div>
-<div class="bar"><div id="progress" class="fill"></div></div>
-</div><div id="monthlyBudgetPanel" class="hero-budget-view" hidden></div>
-</div>
-<div id="assetTrendCard" class="trend-card" hidden><div class="between"><b>資產走勢</b><div class="trend-controls"><button type="button" data-days="7">7 日</button><button type="button" data-days="30" class="selected">30 日</button><button type="button" data-days="90">90 日</button></div></div><div class="trend-plot" id="assetTrendPlot"></div><p class="trend-caption" id="assetTrendCaption">以已記錄的每日資產快照呈現，不補造缺漏日期。</p></div>
 <div class="portfolio-table" id="assetGrid">
 <div class="portfolio-table-toolbar"><strong>我的投資持倉</strong><label class="portfolio-filter">排序 <select id="portfolioSort" aria-label="持倉排序"><option value="default">原始順序</option><option value="value">市值由高至低</option><option value="pnl">損益由高至低</option><option value="name">標的名稱</option></select></label></div>
 <div class="portfolio-table-head"><span>標的／分類</span><span>庫存／市值</span><span>損益／報酬率</span></div>
@@ -505,7 +518,9 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 <p class="portfolio-disclaimer">依目前已確認持倉及最新可用行情估值；不同市場的報價日期可能不同。紅漲綠跌，金額均為新台幣。</p>
 </div>
 
-<div class="card" id="allocationCard">
+<div id="assetTrendCard" class="trend-card"><div class="trend-compact-title"><b>資產走勢（30 日）</b><small id="assetTrendCaption">使用實際歷史快照，不補造資料</small></div><div class="trend-plot" id="assetTrendPlot"></div><div class="trend-controls" hidden><button type="button" data-days="7">7 日</button><button type="button" data-days="30" class="selected">30 日</button><button type="button" data-days="90">90 日</button></div><svg id="miniTrendSvg" hidden></svg><span id="miniTrendHint" hidden></span></div>
+<div id="monthlyBudgetPanel" class="monthly-budget-card"></div>
+<div class="card" id="allocationCard" style="display:none">
 <h2>資產配置</h2>
 <small>依目前可估值資產計算</small>
 <div class="allocation-layout">
@@ -526,7 +541,7 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 </p>
 </div>
 
-<div class="card">
+<div class="card" style="display:none">
 <h2>估值覆蓋</h2>
 <div id="count">—</div>
 <p class="hint" id="btcPriceNote">
@@ -785,10 +800,10 @@ BTC/TWD 請輸入一枚 BTC 的台幣價格。
 <button data-tab="settings">設定</button>
 </nav>
 
-<script src="app.js?v=261119170000"></script>
+<script src="app.js?v=261119181500"></script>
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=261119170000');
+  navigator.serviceWorker.register('./sw.js?v=261119181500');
 }
 </script>
 </body>
