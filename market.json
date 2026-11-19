@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-19T13:30:24+00:00",
+  "updated_at": "2026-11-19T15:10:32+00:00",
   "fx": {
-    "value": 32.91,
+    "value": 32.93,
     "date": "2026-11-19",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -22,13 +22,13 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 671.309998,
-      "date": "2026-11-18",
+      "value": 676.599976,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 150.960007,
-      "date": "2026-11-18",
+      "value": 155.580002,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
@@ -72,8 +72,8 @@
       "pair": "eth_twd"
     },
     "KO": {
-      "value": 98.089996,
-      "date": "2026-11-18",
+      "value": 95.334999,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     }
   },
@@ -85,28 +85,28 @@
       "change_pct": -4.3986
     },
     "SP500": {
-      "value": 7323.629883,
-      "date": "2026-11-18",
+      "value": 7380.470215,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -0.2302
+      "change_pct": 0.7517
     },
     "NASDAQ": {
-      "value": 24429.880859,
-      "date": "2026-11-18",
+      "value": 24802.408203,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 0.4172
+      "change_pct": 1.5249
     },
     "SOX": {
-      "value": 9652.799805,
-      "date": "2026-11-18",
+      "value": 10049.03418,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 0.1029
+      "change_pct": 4.1049
     },
     "DJI": {
-      "value": 50198.171875,
-      "date": "2026-11-18",
+      "value": 50141.398438,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -1.1057
+      "change_pct": -0.1166
     }
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
