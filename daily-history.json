@@ -389,6 +389,90 @@
       },
       "kind": "latest_available_observation",
       "note": "Mixed quote dates; NOT verified synchronized closing P&L."
+    },
+    {
+      "date": "2026-11-19",
+      "captured_at": "2026-11-19T22:26:20.914022+08:00",
+      "market_updated_at": "2026-11-19T13:30:24+00:00",
+      "fx": {
+        "value": 32.91,
+        "date": "2026-11-19",
+        "source": "Yahoo Finance daily close (delayed)"
+      },
+      "prices": {
+        "009816": {
+          "value": 13.5,
+          "date": "2026-11-19",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "00646": {
+          "value": 76.599998,
+          "date": "2026-11-19",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "00713": {
+          "value": 60.799999,
+          "date": "2026-11-19",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "VOO": {
+          "value": 671.309998,
+          "date": "2026-11-18",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "NVDA": {
+          "value": 150.960007,
+          "date": "2026-11-18",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "BTC": {
+          "value": 2101757.0,
+          "date": "2026-11-19",
+          "source": "BitoPro BTC/TWD last traded price",
+          "retrieved_at": "2026-11-19T07:31:57+00:00",
+          "quote_type": "last_traded",
+          "currency": "TWD",
+          "pair": "btc_twd"
+        },
+        "YUANTA_NEW": {
+          "value": 112.76,
+          "date": "2026-11-19",
+          "source": "MoneyDJ published fund NAV"
+        },
+        "YUANTA_DIV": {
+          "value": 35.74,
+          "date": "2026-11-19",
+          "source": "MoneyDJ published fund NAV"
+        },
+        "FUBON_SP500": {
+          "value": 11.8,
+          "date": "2026-11-11",
+          "source": "MoneyDJ published fund NAV",
+          "note": "Restored from prior user-provided market.json; not a new quote"
+        },
+        "FUBON_NASDAQ100": {
+          "value": 11.58,
+          "date": "2026-11-11",
+          "source": "MoneyDJ published fund NAV",
+          "note": "Restored from prior user-provided market.json; not a new quote"
+        },
+        "ETH": {
+          "value": 59541.0,
+          "date": "2026-11-19",
+          "source": "BitoPro ETH/TWD last traded price",
+          "retrieved_at": "2026-11-19T07:31:58+00:00",
+          "quote_type": "last_traded",
+          "currency": "TWD",
+          "pair": "eth_twd"
+        },
+        "KO": {
+          "value": 98.089996,
+          "date": "2026-11-18",
+          "source": "Yahoo Finance daily close (delayed)"
+        }
+      },
+      "kind": "latest_available_observation",
+      "note": "Mixed quote dates; NOT verified synchronized closing P&L."
     }
   ]
 }
