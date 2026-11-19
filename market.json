@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-19T15:10:32+00:00",
+  "updated_at": "2026-11-19T16:14:46+00:00",
   "fx": {
-    "value": 32.93,
+    "value": 32.991001,
     "date": "2026-11-19",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -22,12 +22,12 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 676.599976,
+      "value": 669.622498,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 155.580002,
+      "value": 153.020004,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     },
@@ -72,7 +72,7 @@
       "pair": "eth_twd"
     },
     "KO": {
-      "value": 95.334999,
+      "value": 95.485001,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     }
@@ -85,28 +85,28 @@
       "change_pct": -4.3986
     },
     "SP500": {
-      "value": 7380.470215,
+      "value": 7302.049805,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 0.7517
+      "change_pct": -0.2947
     },
     "NASDAQ": {
-      "value": 24802.408203,
+      "value": 24486.978516,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 1.5249
+      "change_pct": 0.2388
     },
     "SOX": {
-      "value": 10049.03418,
+      "value": 9777.118164,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 4.1049
+      "change_pct": 1.2879
     },
     "DJI": {
-      "value": 50141.398438,
+      "value": 49675.550781,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -0.1166
+      "change_pct": -1.0186
     }
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
