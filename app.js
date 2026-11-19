@@ -731,22 +731,31 @@ function budgetLedger(month){
 // Local historical portfolio snapshots only: no fabricated points or deposits counted as returns.
 let trendDays=30;
 function renderAssetTrend(){
- const mini=byId('miniTrendSvg'),hint=byId('miniTrendHint'),plot=byId('assetTrendPlot');if(!mini||!plot)return;
- const all=(state.history?.snapshots||[]).filter(x=>dateValid(x.date)&&Number.isFinite(Number(x.value))&&Number(x.value)>0).sort((x,y)=>x.date.localeCompare(y.date));
+ const plot=byId('assetTrendPlot'), caption=byId('assetTrendCaption');if(!plot||!caption)return;
+ const all=(state.history?.snapshots||[]).filter(x=>dateValid(x.date)&&Number.isFinite(Number(x.value))&&Number(x.value)>0).sort((a,b)=>a.date.localeCompare(b.date));
  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-trendDays+1);const cutoffDate=cutoff.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
  const data=all.filter(x=>x.date>=cutoffDate);
- const miniData=all.filter(x=>{const d=new Date();d.setDate(d.getDate()-29);return x.date>=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});});
- function pathFor(rows,w,h){if(rows.length<2)return '';const values=rows.map(x=>Number(x.value)),min=Math.min(...values),max=Math.max(...values),span=max-min||1;return rows.map((x,i)=>`${i?'L':'M'}${(i/(rows.length-1)*w).toFixed(1)} ${(h-5-(Number(x.value)-min)/span*(h-10)).toFixed(1)}`).join(' ');}
- if(miniData.length>=2){mini.innerHTML=`<path d="${pathFor(miniData,100,38)}" fill="none" stroke="#a5cafa" stroke-width="2.5" stroke-linecap="round"/>`;hint.textContent=miniData.length+' 個觀測日';}
- else{mini.innerHTML='<path d="M8 19 H92" stroke="#536579" stroke-width="1.5" stroke-dasharray="4 4"/>';hint.textContent='等待歷史快照';}
- if(data.length<2){plot.innerHTML='<p class="hint">目前沒有足夠的每日資產快照可以繪製走勢。持續開啟 APP 並更新行情後，會逐日累積。</p>';byId('assetTrendCaption').textContent=`近 ${trendDays} 日只有 ${data.length} 筆有效快照，不推算缺漏日期。`;return;}
- // Break line when observation dates are not consecutive, rather than bridging unknown days.
- const min=Math.min(...data.map(x=>Number(x.value))),max=Math.max(...data.map(x=>Number(x.value))),span=max-min||1;
- const start=new Date(data[0].date+'T00:00:00Z').getTime(),end=new Date(data[data.length-1].date+'T00:00:00Z').getTime();
- let d='',prev=null;for(const x of data){const ms=new Date(x.date+'T00:00:00Z').getTime(),xx=12+(ms-start)/Math.max(86400000,end-start)*296,yy=138-(Number(x.value)-min)/span*120;d+=`${prev&&ms-prev===86400000?'L':'M'}${xx.toFixed(1)} ${yy.toFixed(1)} `;prev=ms;}
- plot.innerHTML=`<svg viewBox="0 0 320 155" role="img" aria-label="已記錄資產估值走勢"><path d="M12 138 H308" stroke="#35465d" stroke-width="1"/><path d="${d}" stroke="#a5cafa" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg><div class="between"><small>${safe(data[0].date)}</small><small>${safe(data[data.length-1].date)}</small></div>`;
- byId('assetTrendCaption').textContent=`${data.length} 筆實際資產快照；此圖為資產市值，不是扣除投入本金後的報酬曲線。缺少日期不連線。`;
+ const heading=byId('trendPeriodTitle');if(heading)heading.textContent=`資產走勢（${trendDays} 日）`;
+ const number=byId('trendObservationCount');if(number)number.textContent=`${data.length} 筆快照`;
+ if(data.length<2){plot.innerHTML='<div class="trend-empty">尚無足夠的資產快照，持續更新後即可顯示走勢。</div>';caption.textContent=`近 ${trendDays} 日僅 ${data.length} 筆資料 · 不補造缺漏日期`;return;}
+ const w=320,h=76,left=5,right=315,top=8,bottom=63;
+ const vals=data.map(x=>Number(x.value)),min=Math.min(...vals),max=Math.max(...vals),span=max-min||1;
+ const begin=Date.parse(data[0].date+'T00:00:00Z'),finish=Date.parse(data[data.length-1].date+'T00:00:00Z');
+ const points=data.map(x=>({x:left+(Date.parse(x.date+'T00:00:00Z')-begin)/Math.max(86400000,finish-begin)*(right-left),y:bottom-(Number(x.value)-min)/span*(bottom-top),date:x.date,value:Number(x.value)}));
+ const segments=[];
+ for(let i=1;i<points.length;i++){
+  const prev=points[i-1],cur=points[i];
+  if(Date.parse(cur.date+'T00:00:00Z')-Date.parse(prev.date+'T00:00:00Z')!==86400000)continue;
+  const rising=cur.value>prev.value,falling=cur.value<prev.value;
+  const color=rising?'#fb7185':falling?'#45c998':'#a5b4c9';
+  const path=`M${prev.x.toFixed(2)} ${prev.y.toFixed(2)} L${cur.x.toFixed(2)} ${cur.y.toFixed(2)}`;
+  segments.push(`<path d="${path} L${cur.x.toFixed(2)} ${bottom} L${prev.x.toFixed(2)} ${bottom} Z" fill="${color}" opacity=".11"/><path d="${path}" fill="none" stroke="${color}" stroke-width="2.7" stroke-linecap="round"/>`);
+ }
+ const overall=vals.at(-1)-vals[0],overallColor=overall>0?'#fb7185':overall<0?'#45c998':'#b7c5d7';
+ plot.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="實際資產快照走勢，紅色上漲、綠色下跌，缺漏日期不連線"><path d="M${left} ${bottom} H${right}" stroke="#2b3a50" stroke-width=".8"/>${segments.join('')}</svg><div class="trend-date-row"><small>${safe(data[0].date)}</small><small>${safe(data[data.length-1].date)}</small></div>`;
+ caption.innerHTML=`<span style="color:${overallColor}">${overall>0?'▲':overall<0?'▼':'—'} 市值${overall>0?'增加':overall<0?'減少':'持平'}</span> · ${data.length} 筆觀測 · 非扣除投入後的報酬`;
 }
+
 function installAssetTrend(){byId('miniTrendButton')?.addEventListener('click',()=>{const el=byId('assetTrendCard');el.hidden=!el.hidden;if(!el.hidden){renderAssetTrend();el.scrollIntoView({behavior:'smooth',block:'nearest'});}});document.querySelectorAll('.trend-controls button').forEach(b=>b.addEventListener('click',()=>{trendDays=Number(b.dataset.days);document.querySelectorAll('.trend-controls button').forEach(x=>x.classList.toggle('selected',x===b));renderAssetTrend();}));}
 
 function installOverviewRefresh(){
@@ -765,7 +774,7 @@ function settlementItems(){if(!Array.isArray(state.settlementItems))state.settle
 function installSettlementPlanner(){
  const overview=byId('overview');if(!overview||byId('settlementPlanner'))return;
  const card=document.createElement('div');card.className='card';card.id='settlementPlanner';
- card.innerHTML=`<h2>🏦 交割資金管理</h2><p class="hint">重要：台股一般為 T+2 交割；實際扣款日與金額請以券商為準。此處是資金提醒，不會重複計入投資成本。</p>
+ card.innerHTML=`<details class="settlement-fold"><summary>🏦 交割資金管理 <span id="settleSummaryCompact">點擊查看交割與現金</span></summary><div class="settlement-fold-body"><p class="hint">重要：台股一般為 T+2 交割；實際扣款日與金額請以券商為準。此處是資金提醒，不會重複計入投資成本。</p>
  <div class="settle-summary"><div><small>未結清交割款</small><strong id="settleUnpaid">—</strong></div><div><small>預計可用現金</small><strong id="settleCashValue">—</strong></div><div><small>預估資金缺口</small><strong id="settleShortfall">—</strong></div></div>
  <label>交割專用可用現金（TWD）<input id="settleCash" type="number" min="0" step="0.01" inputmode="decimal" placeholder="輸入已可用的交割帳戶餘額"></label>
  <button type="button" id="settleSaveCash">更新可用現金</button>
@@ -775,7 +784,7 @@ function installSettlementPlanner(){
  <label>應付金額（新台幣）<input id="settleAmount" type="number" min="0.01" step="0.01" inputmode="decimal"></label>
  <button type="button" id="settleAdd">新增交割提醒</button></details>
  <div id="settleEntries"></div>
- <p class="hint">交割紀錄需要自行確認「已繳款」。現金欄位不會自動扣款，也不會影響總資產；請以銀行與券商餘額為準。</p>`;
+ <p class="hint">交割紀錄需要自行確認「已繳款」。現金欄位不會自動扣款，也不會影響總資產；請以銀行與券商餘額為準。</p></div></details>`;
  const portfolio=byId('assetGrid');(portfolio||byId('valuationHero'))?.after(card);
  byId('settleCash').value=state.settlementCash??'';
  byId('settleDate').value=twDate();
@@ -784,7 +793,7 @@ function installSettlementPlanner(){
  renderSettlementPlanner();
 }
 function renderSettlementPlanner(){if(!byId('settlementPlanner'))return;const items=settlementItems(),open=items.filter(x=>!x.paid),sum=open.reduce((v,x)=>v+Number(x.amount||0),0),cash=state.settlementCash;
- byId('settleUnpaid').textContent=money(sum);
+ byId('settleUnpaid').textContent=money(sum);const compact=byId('settleSummaryCompact');if(compact)compact.textContent=sum>0?'待交割 '+money(sum):'目前無待交割款';
  byId('settleCashValue').textContent=cash===null||cash===undefined?'待輸入':money(Number(cash));
  const short= cash===null||cash===undefined?null:Math.max(0,sum-Number(cash));
  byId('settleShortfall').textContent=short===null?'待計算':money(short);
