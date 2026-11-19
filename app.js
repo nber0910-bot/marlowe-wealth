@@ -834,26 +834,21 @@ function renderEthCostRepair(){
   byId('ethRepairButton').disabled=hasTrades||Math.abs(z.q-0.01129778)>0.00000001;
 }
 function renderMonthlyBudget(){
-  const overview=byId('overview');if(!overview)return;
-  let panel=byId('monthlyBudgetPanel');
-  if(!panel){
-    panel=document.createElement('div');panel.id='monthlyBudgetPanel';panel.className='card';
-    panel.style.cssText='margin:14px 0;padding:18px;border-radius:18px';
-    const hero=byId('valuationHero')||overview.querySelector('.hero')||overview.firstElementChild;
-    if(hero)hero.insertAdjacentElement('afterend',panel);else overview.prepend(panel);
-  }
+  const panel=byId('monthlyBudgetPanel');
+  if(!panel)return;
+  installHeroToggle();
   const month=budgetMonth(),ledger=budgetLedger(month);
   const adjustment=Number(state.monthlyBudget?.[month]||0);
   const total=ledger.amount+adjustment;
   const tone=total>=MONTHLY_BUDGET?'#ff777f':total>=MONTHLY_BUDGET/2?'#ffd36a':'#f5f7fc';
   const ratio=Math.max(0,Math.min(100,total/MONTHLY_BUDGET*100));
-  panel.innerHTML=`<div style="font-size:13px;opacity:.75">${safe(month)} · 每月投入預算</div>
-    <div style="font-size:clamp(24px,6vw,34px);font-weight:800;line-height:1.5;color:${tone};font-variant-numeric:tabular-nums">${Math.round(total).toLocaleString('zh-TW')} / 30,000</div>
-    <div style="height:9px;border-radius:8px;background:#34465e;overflow:hidden;margin:8px 0 12px"><div style="height:100%;width:${ratio}%;background:${tone};transition:width .2s"></div></div>
-    <div style="font-size:12px;opacity:.85">網站當月買入紀錄：${money(ledger.amount)}｜其他已投入調整：${money(adjustment)}</div>
-    ${ledger.unknown.length?`<p style="font-size:12px;color:#ffd36a">${ledger.unknown.length} 筆美元買入缺交易時匯率／台幣扣款，尚未計入。請核對後補足。</p>`:''}
-    <details style="margin-top:12px"><summary style="cursor:pointer">校正本月投入（避免漏算）</summary>
-    <p style="font-size:12px;opacity:.85">只填「尚未記入網站交易簿」的額外投入。已列入交易簿的 VOO、NVDA 不要再加一次。負數僅用於更正重複或錯誤紀錄。</p>
+  panel.innerHTML=`<div style="font-size:12px;color:#aebdd2">${safe(month)} · 每月投入預算</div>
+    <div class="budget-amount" style="color:${tone}">${Math.round(total).toLocaleString('zh-TW')} <span style="font-size:15px;color:#a9b9cf">/ 30,000</span></div>
+    <div class="budget-track"><div style="height:100%;width:${ratio}%;background:${tone}"></div></div>
+    <div class="budget-sub">預算使用率：${(total/MONTHLY_BUDGET*100).toFixed(1)}%<br>網站當月買入：${money(ledger.amount)}<br>其他已投入調整：${money(adjustment)}</div>
+    ${ledger.unknown.length?`<p style="font-size:11px;color:#ffd36a">${ledger.unknown.length} 筆美元買入缺交易時匯率／台幣扣款，尚未計入。</p>`:''}
+    <details><summary>校正本月投入（避免漏算）</summary>
+    <p class="budget-sub">只填尚未記入網站交易簿的額外投入；已登記的買入不要重複計入。</p>
     <label>其他已投入金額（TWD）<input type="number" step="0.01" id="monthlyBudgetAdjustment" value="${adjustment}"></label>
     <button type="button" id="monthlyBudgetSave">儲存本月調整</button></details>`;
   byId('monthlyBudgetSave').addEventListener('click',()=>{
@@ -862,6 +857,20 @@ function renderMonthlyBudget(){
     state.monthlyBudget??={};state.monthlyBudget[month]=Number(raw);save();renderMonthlyBudget();
   });
 }
+function installHeroToggle(){
+  const hero=byId('valuationHero'),button=byId('heroToggleView'),budget=byId('monthlyBudgetPanel');
+  if(!hero||!button||!budget||button.dataset.bound)return;
+  button.dataset.bound='1';
+  button.addEventListener('click',()=>{
+    const active=!hero.classList.contains('budget-active');
+    hero.classList.toggle('budget-active',active);
+    budget.hidden=!active;
+    byId('heroViewTitle').textContent=active?'每月投入預算 · TWD':'投資資產總覽 · TWD（不含現金）';
+    button.textContent=active?'⇄ 返回投資總覽':'⇄ 切換每月投入';
+    button.setAttribute('aria-pressed',String(active));
+  });
+}
+
 function installReliableAddAsset(){
   const holdings=byId('holdings');if(!holdings||byId('reliableAssetPanel'))return;
   const panel=document.createElement('div');panel.id='reliableAssetPanel';panel.className='card';

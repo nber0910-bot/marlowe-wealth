@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1119.171500</title>
+<title>MONO WEALTH V26.1119.173500</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -423,7 +423,7 @@ body{background:#0d0e12}
 @media(max-width:390px){.portfolio-position{padding:10px 8px}.portfolio-position b{font-size:11px}.portfolio-table-head{padding:10px 8px}.category-totals b{font-size:11px}}
 
 
-/* V26.1119.171500: tighter heading and vertical rhythm */
+/* V26.1119.173500: tighter heading and vertical rhythm */
 main{padding-top:12px}
 main>header{margin:0 0 8px}
 main>header h1{margin:3px 0 6px;font-size:clamp(18px,4.7vw,22px);letter-spacing:1.1px;line-height:1.2}
@@ -434,6 +434,34 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 #valuationHero .big{margin:6px 0 10px;line-height:1.12}
 @media(max-width:390px){main{padding-top:10px}main>header h1{letter-spacing:.6px}}
 
+
+/* V26.1119.173500 — compact, stable-height overview/budget switch */
+.market-ticker{margin-top:calc(env(safe-area-inset-top, 0px) + 16px);margin-left:12px;margin-right:12px;border:1px solid #2b3543;border-radius:11px;height:39px;padding:0 12px;filter:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.market-ticker-track,.ticker-item{filter:none;text-shadow:none}
+.trend-outside{display:flex;justify-content:flex-end;margin:0 0 7px;padding-right:1px}
+.trend-outside .mini-trend{width:124px;padding:5px 7px}
+.trend-outside .mini-trend svg{height:33px}
+#valuationHero{position:relative;padding:15px 16px}
+#valuationHero .hero-topline{align-items:center;min-height:29px;padding-right:120px}
+#valuationHero .hero-actions{position:absolute;right:16px;top:14px;width:auto}
+#valuationHero .hero-topline>small{font-size:11px}
+.hero-toggle{display:block;margin:5px 0 3px;padding:3px 0;border:0;background:transparent;color:#a5cafa;font-size:11px;cursor:pointer;text-align:left}
+#heroOverviewContent{visibility:visible}
+#valuationHero.budget-active #heroOverviewContent{visibility:hidden;pointer-events:none}
+.hero-budget-view{position:absolute;top:82px;left:16px;right:16px;bottom:15px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.hero-budget-view[hidden]{display:none!important}
+.hero-budget-view .budget-amount{font-size:clamp(26px,7vw,36px);font-weight:750;line-height:1.2;margin:5px 0 12px;font-variant-numeric:tabular-nums}
+.hero-budget-view .budget-track{height:8px;border-radius:8px;background:#34465e;overflow:hidden;margin:9px 0 12px}
+.hero-budget-view .budget-sub{font-size:11px;color:#b2c2d7;line-height:1.55}
+.hero-budget-view details{margin-top:14px;font-size:12px}
+.hero-budget-view details summary{cursor:pointer;color:#b6d5ff}
+.hero-budget-view label{font-size:11px}
+.hero-budget-view input{max-width:100%}
+#valuationHero .big{margin:5px 0 8px}
+#valuationHero .period-metrics{margin:11px 0 8px}
+#assetGrid{margin-top:9px}
+@media(max-width:390px){.market-ticker{margin-left:10px;margin-right:10px}#valuationHero{padding:13px 14px}.hero-budget-view{left:14px;right:14px;top:78px;bottom:13px}#valuationHero .hero-actions{right:14px;top:12px}}
+
 </style>
 </head>
 
@@ -441,13 +469,14 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 <div class="market-ticker" aria-label="主要市場指數與報價"><div class="market-ticker-track" id="marketTicker"><span>市場指數行情讀取中…</span></div></div>
 <main>
 <header>
-<h1>✦ MONO <span style="color:#b6d5ff">WEALTH</span> <small>V26.1119.171500</small></h1>
+<h1>✦ MONO <span style="color:#b6d5ff">WEALTH</span> <small>V26.1119.173500</small></h1>
 </header>
 
 <!-- OVERVIEW -->
 <section id="overview">
+<div class="trend-outside"><button type="button" id="miniTrendButton" class="mini-trend" aria-label="查看資產走勢"><small>資產走勢 · 30 日</small><svg viewBox="0 0 100 38" id="miniTrendSvg" aria-hidden="true"></svg><small id="miniTrendHint">資料累積中</small></button></div>
 <div class="card" id="valuationHero">
-<div class="hero-topline"><small>投資資產總覽 · TWD（不含現金）</small><div class="hero-actions"><button type="button" id="miniTrendButton" class="mini-trend" aria-label="查看資產走勢"><small>資產走勢 · 30 日</small><svg viewBox="0 0 100 38" id="miniTrendSvg" aria-hidden="true"></svg><small id="miniTrendHint">資料累積中</small></button><button type="button" id="overviewRefreshButton" class="mini-refresh" aria-label="重新讀取行情檔">↻ 更新</button></div></div>
+<div class="hero-topline"><small id="heroViewTitle">投資資產總覽 · TWD（不含現金）</small><div class="hero-actions"><button type="button" id="overviewRefreshButton" class="mini-refresh" aria-label="重新讀取行情檔">↻ 更新</button></div></div><button type="button" id="heroToggleView" class="hero-toggle" aria-label="切換投資總覽與每月投入預算" aria-pressed="false">⇄ 切換每月投入</button><div id="heroOverviewContent">
 <small id="overviewRefreshNote" class="refresh-status">按下更新會重新讀取已發布的行情檔</small>
 <div class="big" id="total">—</div>
 <div class="period-metrics" aria-label="期間投資盈虧">
@@ -463,6 +492,7 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 <b id="progresslabel">—</b>
 </div>
 <div class="bar"><div id="progress" class="fill"></div></div>
+</div><div id="monthlyBudgetPanel" class="hero-budget-view" hidden></div>
 </div>
 <div id="assetTrendCard" class="trend-card" hidden><div class="between"><b>資產走勢</b><div class="trend-controls"><button type="button" data-days="7">7 日</button><button type="button" data-days="30" class="selected">30 日</button><button type="button" data-days="90">90 日</button></div></div><div class="trend-plot" id="assetTrendPlot"></div><p class="trend-caption" id="assetTrendCaption">以已記錄的每日資產快照呈現，不補造缺漏日期。</p></div>
 <div class="portfolio-table" id="assetGrid">
