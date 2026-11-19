@@ -119,6 +119,37 @@ for asset_id, symbol in MARKET_SECURITIES:
     time.sleep(1)
 
 
+# Major market indices for the top ticker. Stored separately from owned holdings.
+# A failed lookup retains the last verified value, and never invents a quote.
+indices = old.get("indices", {})
+if not isinstance(indices, dict):
+    indices = {}
+INDEX_SYMBOLS = [
+    ("TWII", "^TWII"),
+    ("SP500", "^GSPC"),
+    ("NASDAQ", "^IXIC"),
+    ("SOX", "^SOX"),
+    ("DJI", "^DJI"),
+]
+for index_id, symbol in INDEX_SYMBOLS:
+    try:
+        item = chart(symbol)
+        # Daily close from Yahoo, plus previous completed candle for day-on-day change.
+        url = ("https://query1.finance.yahoo.com/v8/finance/chart/"
+               + urllib.parse.quote(symbol, safe="") + "?range=10d&interval=1d")
+        result = json.loads(download(url))["chart"]["result"][0]
+        closes = [float(x) for x in result["indicators"]["quote"][0]["close"]
+                  if isinstance(x, (int, float)) and math.isfinite(x) and x > 0]
+        if len(closes) >= 2:
+            item["change_pct"] = round((closes[-1] / closes[-2] - 1) * 100, 4)
+        previous = indices.get(index_id, {})
+        if not isinstance(previous, dict) or item["date"] >= previous.get("date", ""):
+            indices[index_id] = item
+        print("INDEX", index_id, item)
+    except Exception as exc:
+        print("INDEX unavailable", index_id, exc)
+    time.sleep(1)
+
 # USD/TWD
 try:
     item = chart("TWD=X")
@@ -255,6 +286,7 @@ payload = {
     "updated_at": iso_utc(utc_now()),
     "fx": fx,
     "prices": prices,
+    "indices": indices,
     "notes": (
         "Taiwan/US securities: Yahoo Finance delayed daily close; "
         "funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. "

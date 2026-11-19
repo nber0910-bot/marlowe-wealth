@@ -1,5 +1,5 @@
 'use strict';
-// MONO WEALTH V26.1117.183000 — full valuation coverage and header build version.
+// MONO WEALTH V26.1119.160915 — full valuation coverage and header build version.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -118,9 +118,9 @@ function renderBtcStatus(){
 function updateBuildVersion(){
   const heading=document.querySelector('h1');if(!heading||!heading.textContent.includes('WEALTH'))return;
   const small=heading.querySelector('small');
-  if(small)small.textContent='V26.1117.183000';
-  else heading.insertAdjacentHTML('beforeend',' <small>V26.1117.183000</small>');
-  document.title='MONO WEALTH V26.1117.183000';
+  if(small)small.textContent='V26.1119.160915';
+  else heading.insertAdjacentHTML('beforeend',' <small>V26.1119.160915</small>');
+  document.title='MONO WEALTH V26.1119.160915';
 }
 
 function position(a){let q=num(a.qty)||0,c=num(a.cost)||0;const trades=state.trades.filter(t=>t.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));for(const t of trades){const tq=num(t.qty)||0,tp=num(t.price)||0,tf=num(t.fee)||0;if(t.side==='buy'){q+=tq;c+=tq*tp+tf;}else if(t.side==='sell'&&tq<=q+1e-8){const avg=q>0?c/q:0;c-=avg*tq;q-=tq;if(Math.abs(q)<1e-8){q=0;c=0;}}}return {q,c};}
@@ -129,9 +129,42 @@ function estimatedTrades(id){return state.trades.filter(t=>t.asset===id&&t.estim
 const CATEGORY_ORDER=['tw','us','fund','crypto'];
 const CATEGORY_INFO={tw:{name:'台股 ETF',color:'#83b8ff'},us:{name:'美股 ETF',color:'#83d9c1'},fund:{name:'基金',color:'#c5a4ff'},crypto:{name:'加密貨幣',color:'#f2bd74'}};
 function categoryRows(type){return state.assets.filter(a=>a.type===type).map(a=>({asset:a,...valuation(a)})).filter(z=>z.q>0);}
-function renderCategoryDetails(totals){for(const type of CATEGORY_ORDER){const el=byId(type+'details');if(!el)continue;const rows=categoryRows(type);el.innerHTML=rows.length?rows.map(z=>{const a=z.asset,pnl=z.value!==null&&z.costTwd!==null?z.value-z.costTwd:null,pct=z.value!==null&&totals[type]>0?z.value/totals[type]*100:null;return `<div class="asset-detail-row"><div class="asset-detail-name">${safe(a.name)}${estimatedTrades(a.id).length?' · 🟡 預估':''}</div><div class="asset-detail-value">${z.value!==null?money(z.value):'待估值'}</div><div class="asset-detail-meta">${pnl===null?'損益待確認':`<span class="${pnl<0?'negative':'positive'}">${money(pnl)}</span>`}${pct===null?'':` · 類別占比 ${pct.toFixed(1)}%`}</div></div>`;}).join(''):'<p class="hint">目前沒有持倉</p>';}}
+function renderCategoryDetails(totals){
+ const sort=byId('portfolioSort')?.value||'default';
+ for(const type of ['fund','tw','us','crypto']){
+  const el=byId(type+'details');if(!el)continue;
+  const rows=categoryRows(type).map(z=>({...z,pnl:z.value!==null&&z.costTwd!==null?z.value-z.costTwd:null}));
+  if(sort==='value')rows.sort((a,b)=>(b.value??-1)-(a.value??-1));
+  else if(sort==='pnl')rows.sort((a,b)=>(b.pnl??-Infinity)-(a.pnl??-Infinity));
+  else if(sort==='name')rows.sort((a,b)=>a.asset.name.localeCompare(b.asset.name,'zh-Hant'));
+  const count=byId(type+'count');if(count)count.textContent='('+rows.length+')';
+  const categoryPnl=rows.reduce((s,z)=>s+(z.pnl??0),0);
+  const hasUnknown=rows.some(z=>z.pnl===null);
+  const p=byId(type+'pnl');if(p){p.textContent=hasUnknown?'部分損益待確認':(categoryPnl>=0?'+':'')+money(categoryPnl);p.className=hasUnknown?'muted':categoryPnl<0?'negative':'positive';}
+  el.innerHTML=rows.length?rows.map(z=>{
+   const a=z.asset,pct=z.pnl!==null&&z.costTwd>0?z.pnl/z.costTwd*100:null;
+   const n=z.q<1?fmtQty(z.q):new Intl.NumberFormat('zh-TW',{maximumFractionDigits:6}).format(z.q);
+   return `<div class="portfolio-position"><div class="position-name"><b>${safe(a.name)}</b><small>${safe(a.id)}${estimatedTrades(a.id).length?' · 預估入庫':''}</small></div><div class="position-value"><b>${n}</b><small>${z.value!==null?money(z.value):'待估值'}</small></div><div class="position-pnl ${z.pnl===null?'muted':z.pnl<0?'negative':'positive'}"><b>${z.pnl===null?'待確認':(z.pnl>=0?'+':'')+money(z.pnl)}</b><small>${pct===null?'—':(pct>=0?'+':'')+pct.toFixed(2)+'%'}</small></div></div>`;
+  }).join(''):'<p class="hint" style="padding:12px">目前沒有持倉</p>';
+ }
+}
+function renderMarketTicker(){
+ const el=byId('marketTicker');if(!el)return;
+ const names=[['TWII','加權指數'],['SP500','S&P 500'],['NASDAQ','NASDAQ'],['SOX','費半'],['DJI','道瓊']];
+ const items=names.map(([id,name])=>({name,p:feed.indices?.[id]}));
+ items.push({name:'BTC／TWD',p:feed.prices?.BTC});
+ const format=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n);
+ const parts=items.map(({name,p})=>{
+  if(!validQuote(p))return `<span class="ticker-item"><b>${safe(name)}</b><em>待更新</em></span>`;
+  const change=Number(p.change_pct),validChange=Number.isFinite(change)&&p.change_pct!==undefined;
+  const cls=!validChange?'muted':change<0?'negative':'positive';
+  const detail=validChange?`<em class="${cls}">${change>0?'▲':change<0?'▼':'—'} ${Math.abs(change).toFixed(2)}%</em>`:'<em class="muted">延遲行情</em>';
+  return `<span class="ticker-item" title="報價日期 ${safe(p.date||'未知')}"><b>${safe(name)}</b><strong>${format(Number(p.value))}</strong>${detail}</span>`;
+ }).join('<span class="ticker-separator">│</span>');
+ el.innerHTML=parts+parts;
+}
 function renderAllocation(totals){const donut=byId('allocationDonut'),legend=byId('allocationLegend'),center=byId('allocationCenter');if(!donut||!legend||!center)return;const total=CATEGORY_ORDER.reduce((s,t)=>s+Math.max(0,totals[t]||0),0);if(!(total>0)){donut.style.background='#34465e';donut.setAttribute('aria-label','尚無可估值資產');center.textContent='待估值';legend.innerHTML='<small>尚無可估值的資產配置資料</small>';return;}let sum=0;const seg=[];for(const t of CATEGORY_ORDER){const v=Math.max(0,totals[t]||0);if(!v)continue;const start=sum/total*100;sum+=v;seg.push(`${CATEGORY_INFO[t].color} ${start.toFixed(5)}% ${(sum/total*100).toFixed(5)}%`);}donut.style.background=`conic-gradient(${seg.join(',')})`;donut.setAttribute('aria-label',CATEGORY_ORDER.map(t=>`${CATEGORY_INFO[t].name} ${((totals[t]||0)/total*100).toFixed(1)}%`).join('、'));center.textContent='100%';legend.innerHTML=CATEGORY_ORDER.map(t=>`<div class="allocation-legend-row"><span class="allocation-legend-name"><span class="allocation-dot" style="background:${CATEGORY_INFO[t].color}"></span>${CATEGORY_INFO[t].name}</span><span class="allocation-legend-value">${((totals[t]||0)/total*100).toFixed(1)}%</span></div>`).join('');}
-function installAssetCardInteractions(){document.querySelectorAll('.asset-card').forEach(card=>{const toggle=()=>card.setAttribute('aria-expanded',String(card.classList.toggle('is-open')));card.addEventListener('click',toggle);card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});});}
+function installAssetCardInteractions(){document.querySelectorAll('.asset-card').forEach(card=>{const toggle=()=>card.setAttribute('aria-expanded',String(card.classList.toggle('is-open')));const heading=card.querySelector('.asset-heading')||card;heading.setAttribute('role','button');heading.setAttribute('tabindex','0');heading.addEventListener('click',toggle);heading.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});});}
 
 // History snapshots are observations, NOT verified exchange closes.
 // Never backfill missing days or infer returns across a trade/position change.
@@ -652,7 +685,7 @@ async function loadHistoricalArchive(){
 }
 function installHistoryFilters(){for(const id of ['recordYearFilter','recordMonthFilter','recordTypeFilter'])byId(id)?.addEventListener('change',renderHistory);}
 
-function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fund:0,crypto:0};let v=0,c=0,covered=0,all=0;for(const a of state.assets){const z=valuation(a);if(z.q<=0)continue;all++;if(z.value!==null){totals[a.type]=(totals[a.type]||0)+z.value;counts[a.type]=(counts[a.type]||0)+1;v+=z.value;covered++;if(z.costTwd!==null)c+=z.costTwd;}}byId('total').textContent=covered?money(v):'尚無可估值資產';byId('pnl').textContent=covered&&c>0?'可估值部位未實現損益 '+money(v-c)+'（'+((v/c-1)*100).toFixed(2)+'%）':'損益待確認';byId('pnl').className=covered&&v-c<0?'negative':'positive';const estCount=state.trades.filter(t=>t.estimated).length;byId('coverage').textContent=`已估值 ${covered}/${all} 檔持有標的（零持倉不計入）；未估值部位不計入總額。美元成本以目前匯率換算，非實際匯兌損益。期初成本待核對。`+(estCount?` 有 ${estCount} 筆預估入庫，股數及損益可能變動。`:'');for(const [type,id] of [['tw','twtotal'],['us','ustotal'],['fund','fundtotal'],['crypto','cryptototal']])byId(id).textContent=counts[type]?money(totals[type]):'待估值';byId('count').textContent=covered+' / '+all;byId('progresslabel').textContent=covered?`${(v/300000*100).toFixed(1)}%（部分估值${estCount?'・含預估':''}）`:'—';byId('progress').style.width=Math.max(0,Math.min(100,v/300000*100))+'%';renderCategoryDetails(totals);renderAllocation(totals);renderBtcStatus();renderPeriodMetrics();byId('marketinfo').innerHTML=state.assets.map(a=>{
+function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fund:0,crypto:0};let v=0,c=0,covered=0,all=0;for(const a of state.assets){const z=valuation(a);if(z.q<=0)continue;all++;if(z.value!==null){totals[a.type]=(totals[a.type]||0)+z.value;counts[a.type]=(counts[a.type]||0)+1;v+=z.value;covered++;if(z.costTwd!==null)c+=z.costTwd;}}byId('total').textContent=covered?money(v):'尚無可估值資產';byId('pnl').textContent=covered&&c>0?'可估值部位未實現損益 '+money(v-c)+'（'+((v/c-1)*100).toFixed(2)+'%）':'損益待確認';byId('pnl').className=covered&&v-c<0?'negative':'positive';const estCount=state.trades.filter(t=>t.estimated).length;byId('coverage').textContent=`已估值 ${covered}/${all} 檔持有標的（零持倉不計入）；未估值部位不計入總額。美元成本以目前匯率換算，非實際匯兌損益。期初成本待核對。`+(estCount?` 有 ${estCount} 筆預估入庫，股數及損益可能變動。`:'');for(const [type,id] of [['tw','twtotal'],['us','ustotal'],['fund','fundtotal'],['crypto','cryptototal']])byId(id).textContent=counts[type]?money(totals[type]):'待估值';byId('count').textContent=covered+' / '+all;byId('progresslabel').textContent=covered?`${(v/300000*100).toFixed(1)}%（部分估值${estCount?'・含預估':''}）`:'—';byId('progress').style.width=Math.max(0,Math.min(100,v/300000*100))+'%';renderCategoryDetails(totals);renderMarketTicker();renderAllocation(totals);renderBtcStatus();renderPeriodMetrics();byId('marketinfo').innerHTML=state.assets.map(a=>{
   const z=valuation(a),held=z.q>0,p=z.p,quoteOk=validQuote(p);
   const rate=a.currency==='USD'?fx():1;
   const priced=held&&z.value!==null;
@@ -695,17 +728,13 @@ function budgetLedger(month){
   return {amount,unknown};
 }
 function installOverviewRefresh(){
- const hero=byId('valuationHero');if(!hero||byId('overviewRefreshButton'))return;
- const bar=document.createElement('div');bar.id='overviewRefreshBar';bar.style.cssText='margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center';
- bar.innerHTML='<button type="button" id="overviewRefreshButton" style="flex:1;min-width:160px">↻ 取得最新行情檔</button><small id="overviewRefreshNote" style="flex-basis:100%;color:#a6b7cd">重新讀取 GitHub 已發布的行情檔，不會觸發即時抓價或改動交易。</small>';
- hero.appendChild(bar);
- byId('overviewRefreshButton').addEventListener('click',async()=>{
-  const btn=byId('overviewRefreshButton');btn.disabled=true;btn.textContent='正在檢查行情檔…';
-  const before=feed.updated_at||'';
+ const btn=byId('overviewRefreshButton');if(!btn)return;
+ btn.addEventListener('click',async()=>{
+  btn.disabled=true;btn.textContent='↻ 讀取中';const before=feed.updated_at||'';
   try{await loadFeed(true);await loadDailyMarketArchive();const after=feed.updated_at||'';
-   byId('overviewRefreshNote').textContent=feedError?'讀取失敗：'+feedError:after===before?'已重新檢查：伺服器行情檔尚未更新；可稍後再試。':'已取得更新行情檔：'+taiwanTime(after)+'（個別標的可能為較早收盤價）';
-  }catch(e){byId('overviewRefreshNote').textContent='更新失敗：'+e.message;}
-  finally{btn.disabled=false;btn.textContent='↻ 取得最新行情檔';}
+   byId('overviewRefreshNote').textContent=feedError?'行情讀取失敗：'+feedError:after===before?'已檢查：行情檔尚未發布新版本（個別報價可能較舊）':'行情檔更新：'+taiwanTime(after)+'（個別標的日期請見設定）';
+  }catch(e){byId('overviewRefreshNote').textContent='讀取失敗：'+e.message;}
+  finally{btn.disabled=false;btn.textContent='↻ 更新';}
  });
 }
 
@@ -725,7 +754,7 @@ function installSettlementPlanner(){
  <button type="button" id="settleAdd">新增交割提醒</button></details>
  <div id="settleEntries"></div>
  <p class="hint">交割紀錄需要自行確認「已繳款」。現金欄位不會自動扣款，也不會影響總資產；請以銀行與券商餘額為準。</p>`;
- const hero=byId('valuationHero');hero?.after(card);
+ const portfolio=byId('assetGrid');(portfolio||byId('valuationHero'))?.after(card);
  byId('settleCash').value=state.settlementCash??'';
  byId('settleDate').value=twDate();
  byId('settleSaveCash').addEventListener('click',()=>{const v=byId('settleCash').value.trim();if(v!==''&&(!Number.isFinite(Number(v))||Number(v)<0))return alert('請輸入正確現金金額');state.settlementCash=v===''?null:Number(v);save();renderSettlementPlanner();});
@@ -987,4 +1016,4 @@ function confirmEstimatedTrade(created){const t=state.trades.find(t=>t.created==
 function renderPendingSummary(){let el=byId('estimatedSummary');if(!el){const target=byId('total')?.closest('.card')||byId('total')?.parentElement;if(!target)return;el=document.createElement('div');el.id='estimatedSummary';el.className='item';target.appendChild(el);}const pending=state.trades.filter(t=>t.estimated);if(!pending.length){el.style.display='none';return;}el.style.display='';const total=pending.reduce((s,t)=>s+(num(t.twdTotal)||0),0);el.innerHTML=`<b>🟡 預估入庫 · ${pending.length} 筆</b><p>已記入持倉的預估投入：${money(total)}</p><small>此金額已反映於預估持倉，請勿與總資產再相加。實際成交股數、匯率及損益仍待券商確認。</small>`;}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==b.dataset.tab));document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));window.scrollTo(0,0);}));
 byId('tradedate').value=today();byId('manualdate').value=today();
-try{updateBuildVersion();installReliableAddAsset();installTradeLedger();installEthSetup();installEthCostRepair();installOverviewRefresh();installSettlementPlanner();installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}
+try{updateBuildVersion();installReliableAddAsset();installTradeLedger();installEthSetup();installEthCostRepair();installOverviewRefresh();installSettlementPlanner();installEstimatedUI();for(const id of ['estimateFx','estimatePrice'])byId(id)?.addEventListener('input',e=>{e.target.dataset.userEdited='1';});installAssetCardInteractions();byId('portfolioSort')?.addEventListener('change',()=>renderCategoryDetails({}));installCalendar();installHistoryFilters();render();loadHistoricalArchive();loadDailyMarketArchive();loadFeed();}catch(e){byId('feedstatus').textContent='程式錯誤：'+e.message;alert('WEALTH 啟動失敗：'+e.message);}

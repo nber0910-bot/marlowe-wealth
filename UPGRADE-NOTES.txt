@@ -1,0 +1,14 @@
+MONO WEALTH 首頁改版 V26.1119.160915（台灣時間）
+
+更新：
+1. 頂端大盤指數跑馬燈：加權指數、S&P 500、NASDAQ、費城半導體、道瓊、BTC。
+2. 持倉依基金／台股／美股／加密貨幣四類展開收合，逐檔顯示數量、市值與損益，支援排序。
+3. 首頁右上角精簡行情檔更新按鈕。
+4. 原交割資金管理卡片保留並移至持倉清單下方。
+5. market.json 更新程式額外抓取 indices，舊行情檔尚未產生 indices 時顯示待更新，不捏造數字。
+6. 原 localStorage key marlowe_wealth_v2 不變；不重設交易、持倉、手動價格。
+
+部署：上傳 ZIP 內 marlowe-wealth-main 資料夾的檔案到 GitHub main 分支根目錄，保留 .github/workflows。GitHub Actions 下次執行 refresh-prices.yml 後才會有指數行情；可在 Actions 手動 Run workflow。
+
+注意：頁面「更新」只讀取已發布的 market.json，不會立即觸發 GitHub Actions 抓價。各行情仍有收盤／淨值發布延遲。
+提醒：請先從 APP 設定匯出目前本機資料備份；GitHub ZIP 不包含手機 localStorage 持倉。
