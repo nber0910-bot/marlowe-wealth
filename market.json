@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-19T07:32:01+00:00",
+  "updated_at": "2026-11-19T08:14:01+00:00",
   "fx": {
-    "value": 32.924999,
+    "value": 32.91,
     "date": "2026-11-19",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -32,10 +32,10 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 2101757.0,
+      "value": 2103019.0,
       "date": "2026-11-19",
       "source": "BitoPro BTC/TWD last traded price",
-      "retrieved_at": "2026-11-19T07:31:57+00:00",
+      "retrieved_at": "2026-11-19T08:13:57+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "btc_twd"
@@ -63,10 +63,10 @@
       "note": "Restored from prior user-provided market.json; not a new quote"
     },
     "ETH": {
-      "value": 59541.0,
+      "value": 59566.0,
       "date": "2026-11-19",
       "source": "BitoPro ETH/TWD last traded price",
-      "retrieved_at": "2026-11-19T07:31:58+00:00",
+      "retrieved_at": "2026-11-19T08:13:58+00:00",
       "quote_type": "last_traded",
       "currency": "TWD",
       "pair": "eth_twd"
@@ -75,6 +75,38 @@
       "value": 98.089996,
       "date": "2026-11-18",
       "source": "Yahoo Finance daily close (delayed)"
+    }
+  },
+  "indices": {
+    "TWII": {
+      "value": 40194.910156,
+      "date": "2026-11-18",
+      "source": "Yahoo Finance daily close (delayed)",
+      "change_pct": 0.2564
+    },
+    "SP500": {
+      "value": 7323.629883,
+      "date": "2026-11-18",
+      "source": "Yahoo Finance daily close (delayed)",
+      "change_pct": -0.2302
+    },
+    "NASDAQ": {
+      "value": 24429.880859,
+      "date": "2026-11-18",
+      "source": "Yahoo Finance daily close (delayed)",
+      "change_pct": 0.4172
+    },
+    "SOX": {
+      "value": 9652.799805,
+      "date": "2026-11-18",
+      "source": "Yahoo Finance daily close (delayed)",
+      "change_pct": 0.1029
+    },
+    "DJI": {
+      "value": 50198.171875,
+      "date": "2026-11-18",
+      "source": "Yahoo Finance daily close (delayed)",
+      "change_pct": -1.1057
     }
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
