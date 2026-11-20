@@ -1,23 +1,23 @@
 {
-  "updated_at": "2026-11-20T04:41:25+00:00",
+  "updated_at": "2026-11-20T05:14:13+00:00",
   "fx": {
-    "value": 32.959,
+    "value": 32.964001,
     "date": "2026-11-20",
     "source": "Yahoo Finance daily close (delayed)"
   },
   "prices": {
     "009816": {
-      "value": 12.7,
+      "value": 12.61,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00646": {
-      "value": 74.300003,
+      "value": 74.099998,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00713": {
-      "value": 58.700001,
+      "value": 58.200001,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
@@ -79,10 +79,10 @@
   },
   "indices": {
     "TWII": {
-      "value": 36196.300781,
+      "value": 35967.410156,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -5.8048
+      "change_pct": -6.4004
     },
     "SP500": {
       "value": 7175.830078,
@@ -97,16 +97,16 @@
       "change_pct": -2.2541
     },
     "SOX": {
-      "value": 9419.722656,
+      "value": 9419.719727,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
       "change_pct": -2.4146
     },
     "DJI": {
-      "value": 49097.101562,
+      "value": 49097.058594,
       "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.1934
+      "change_pct": -2.1935
     }
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
