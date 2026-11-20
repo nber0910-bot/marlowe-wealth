@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-20T08:27:33+00:00",
+  "updated_at": "2026-11-20T10:18:11+00:00",
   "fx": {
-    "value": 32.964001,
+    "value": 32.912998,
     "date": "2026-11-20",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -41,13 +41,13 @@
       "pair": "btc_twd"
     },
     "YUANTA_NEW": {
-      "value": 112.76,
-      "date": "2026-11-19",
+      "value": 104.11,
+      "date": "2026-11-20",
       "source": "MoneyDJ published fund NAV"
     },
     "YUANTA_DIV": {
-      "value": 35.74,
-      "date": "2026-11-19",
+      "value": 32.61,
+      "date": "2026-11-20",
       "source": "MoneyDJ published fund NAV"
     },
     "FUBON_SP500": {
