@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-11-19T23:55:00+00:00",
+  "updated_at": "2026-11-20T01:21:52+00:00",
   "fx": {
-    "value": 33.026001,
-    "date": "2026-11-19",
+    "value": 33.015999,
+    "date": "2026-11-20",
     "source": "Yahoo Finance daily close (delayed)"
   },
   "prices": {
@@ -79,10 +79,10 @@
   },
   "indices": {
     "TWII": {
-      "value": 38426.890625,
-      "date": "2026-11-19",
+      "value": 37035.839844,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -4.3986
+      "change_pct": -7.8594
     },
     "SP500": {
       "value": 7175.830078,
