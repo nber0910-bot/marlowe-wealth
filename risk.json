@@ -1,0 +1,35 @@
+{
+  "updated_at": null,
+  "metrics": {
+    "vix": {
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
+    },
+    "dxy": {
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
+    },
+    "us10y": {
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
+    },
+    "hyspread": {
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
+    },
+    "margin": {
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
+    },
+    "foreign": {
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
+    }
+  }
+}

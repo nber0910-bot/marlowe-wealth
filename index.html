@@ -529,7 +529,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 @media(max-width:370px){#allocationCard .allocation-donut{width:108px;height:108px}#allocationCard .allocation-donut::after{inset:23px}#allocationCard .allocation-layout{gap:9px}}
 
 </style>
-</head>
+<style>#market-risk{padding:18px 4px 110px;color:#e8f0fc}.risk-title{font-size:20px;font-weight:800;letter-spacing:1px}.risk-title span{color:#a6caff}.risk-muted,.risk-panel p{color:#9eafc6;font-size:13px;line-height:1.7}.risk-panel,.risk-tile{background:#131e2e;border:1px solid #405572;border-radius:18px;padding:18px;margin:14px 0}.risk-panel h2{font-size:26px}.risk-panel small,.risk-tile small{color:#a3b5cb}.risk-panel button{background:#1b2d45;color:#fff;border:1px solid #607b9c;border-radius:10px;padding:9px 16px}.risk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.risk-tile{margin:0;padding:15px;min-width:0}.risk-tile strong{display:block;font-size:23px;margin:13px 0}.risk-tile small{font-size:11px;line-height:1.6}</style></head>
 
 <body>
 <div class="market-ticker" aria-label="主要市場指數與報價"><div class="market-ticker-track" id="marketTicker"><span>市場指數行情讀取中…</span></div></div>
@@ -829,6 +829,7 @@ BTC/TWD 請輸入一枚 BTC 的台幣價格。
 </section>
 </main>
 
+<section id="market-risk" class="hidden"><div class="risk-title">✦ MONO <span>MARKET RISK</span></div><h2>全球市場風險</h2><p class="risk-muted">六項指標 · 每項顯示資料日期</p><div class="risk-panel"><small>GLOBAL RISK MONITOR</small><h2 id="riskStatus">⚪ 資料檢查中</h2><p id="riskSummary">未取得足夠資料前，不提供推測燈號。</p><button id="riskRefresh">↻ 更新</button></div><div id="riskGrid" class="risk-grid"></div><div class="risk-panel"><b>風險判讀</b><p>同時觀察波動、信用市場、利率與槓桿壓力。風險燈號不是買賣指示。再次點擊「總覽」即可返回資產頁。</p></div></section>
 <!-- SIX TABS -->
 <nav class="tabs">
 <button data-tab="overview" class="active">總覽</button>
@@ -839,10 +840,11 @@ BTC/TWD 請輸入一枚 BTC 的台幣價格。
 <button data-tab="settings">設定</button>
 </nav>
 
-<script src="app.js?v=261119183000"></script>
+<script src="app.js?v=261121risk"></script>
+<script src="risk.js?v=261121risk"></script>
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=261119183000');
+  navigator.serviceWorker.register('./sw.js?v=261121risk');
 }
 </script>
 </body>
