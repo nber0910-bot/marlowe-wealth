@@ -1,34 +1,34 @@
 {
-  "updated_at": "2026-11-20T04:06:05+00:00",
+  "updated_at": "2026-11-19T07:32:01+00:00",
   "fx": {
-    "value": 32.984001,
-    "date": "2026-11-20",
+    "value": 32.924999,
+    "date": "2026-11-19",
     "source": "Yahoo Finance daily close (delayed)"
   },
   "prices": {
     "009816": {
-      "value": 12.76,
-      "date": "2026-11-20",
+      "value": 13.5,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00646": {
-      "value": 74.400002,
-      "date": "2026-11-20",
+      "value": 76.599998,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00713": {
-      "value": 58.75,
-      "date": "2026-11-20",
+      "value": 60.799999,
+      "date": "2026-11-19",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 658.01001,
-      "date": "2026-11-19",
+      "value": 671.309998,
+      "date": "2026-11-18",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 145.979996,
-      "date": "2026-11-19",
+      "value": 150.960007,
+      "date": "2026-11-18",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
@@ -41,13 +41,13 @@
       "pair": "btc_twd"
     },
     "YUANTA_NEW": {
-      "value": 112.76,
-      "date": "2026-11-19",
+      "value": 122.29,
+      "date": "2026-11-18",
       "source": "MoneyDJ published fund NAV"
     },
     "YUANTA_DIV": {
-      "value": 35.74,
-      "date": "2026-11-19",
+      "value": 38.53,
+      "date": "2026-11-18",
       "source": "MoneyDJ published fund NAV"
     },
     "FUBON_SP500": {
@@ -72,41 +72,9 @@
       "pair": "eth_twd"
     },
     "KO": {
-      "value": 96.089996,
-      "date": "2026-11-19",
+      "value": 98.089996,
+      "date": "2026-11-18",
       "source": "Yahoo Finance daily close (delayed)"
-    }
-  },
-  "indices": {
-    "TWII": {
-      "value": 36291.460938,
-      "date": "2026-11-20",
-      "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -5.5571
-    },
-    "SP500": {
-      "value": 7175.830078,
-      "date": "2026-11-19",
-      "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.0181
-    },
-    "NASDAQ": {
-      "value": 23879.199219,
-      "date": "2026-11-19",
-      "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.2541
-    },
-    "SOX": {
-      "value": 9419.722656,
-      "date": "2026-11-19",
-      "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.4146
-    },
-    "DJI": {
-      "value": 49097.058594,
-      "date": "2026-11-19",
-      "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.1935
     }
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."

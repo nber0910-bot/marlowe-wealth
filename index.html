@@ -509,6 +509,25 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 #settlementPlanner .settlement-fold-body{padding:0 14px 14px}
 #settlementPlanner .settlement-fold-body .hint{font-size:11px}
 
+
+/* V26.1120.130000 — repair chart height and restore allocation */
+#assetTrendCard{height:auto!important;min-height:0!important;max-height:none!important;display:block!important;align-self:auto!important;flex:none!important;overflow:hidden!important;padding:12px 13px!important;margin:10px 0!important}
+#assetTrendCard .trend-plot{height:auto!important;min-height:0!important;max-height:none!important;display:block!important;overflow:visible!important;padding:0!important;margin:0!important}
+#assetTrendCard .trend-plot svg{display:block!important;height:88px!important;max-height:88px!important;min-height:0!important;margin:3px 0 0!important}
+#assetTrendCard .trend-date-row{margin:0 0 5px!important;line-height:1.2}
+#assetTrendCard .trend-footer{margin:5px 0 0!important;padding:0!important;min-height:0!important}
+#assetTrendCard #miniTrendSvg[hidden],#assetTrendCard #miniTrendHint[hidden]{display:none!important}
+#allocationCard{display:block!important;height:auto!important;min-height:0!important;margin:10px 0!important;padding:13px 14px!important;border-radius:14px!important;border:1px solid #34465e!important;background:linear-gradient(115deg,#142034,#0f1620)!important}
+#allocationCard h2{font-size:14px;margin:0 0 3px}
+#allocationCard>small{font-size:10px}
+#allocationCard .allocation-layout{margin-top:10px;gap:12px;flex-wrap:nowrap;justify-content:space-around}
+#allocationCard .allocation-donut{width:126px;height:126px;flex-shrink:0}
+#allocationCard .allocation-donut::after{inset:26px;background:#142034}
+#allocationCard .allocation-center b{font-size:14px}
+#allocationCard .allocation-legend{min-width:0;max-width:none;flex:1}
+#allocationCard .allocation-note{font-size:10px;line-height:1.4;color:#90a5be;margin:9px 0 0}
+@media(max-width:370px){#allocationCard .allocation-donut{width:108px;height:108px}#allocationCard .allocation-donut::after{inset:23px}#allocationCard .allocation-layout{gap:9px}}
+
 </style>
 </head>
 
@@ -539,8 +558,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 </div>
 
 <div id="assetTrendCard" class="trend-card"><div class="trend-compact-title"><b id="trendPeriodTitle">資產走勢（30 日）</b><span id="trendObservationCount" class="trend-count">—</span></div><div class="trend-plot" id="assetTrendPlot"></div><div class="trend-footer"><small id="assetTrendCaption">使用實際歷史快照，不補造資料</small><div class="trend-controls"><button type="button" data-days="7">7 日</button><button type="button" data-days="30" class="selected">30 日</button><button type="button" data-days="90">90 日</button></div></div><svg id="miniTrendSvg" hidden></svg><span id="miniTrendHint" hidden></span></div>
-<div id="monthlyBudgetPanel" class="monthly-budget-card"></div>
-<div class="card" id="allocationCard" style="display:none">
+<div class="card" id="allocationCard">
 <h2>資產配置</h2>
 <small>依目前可估值資產計算</small>
 <div class="allocation-layout">
@@ -560,6 +578,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 未估值資產不計入比例。
 </p>
 </div>
+<div id="monthlyBudgetPanel" class="monthly-budget-card"></div>
 
 <div class="card" style="display:none">
 <h2>估值覆蓋</h2>
