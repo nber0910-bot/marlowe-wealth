@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1119.183000</title>
+<title>MONO WEALTH V26.1121.030000</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -423,7 +423,7 @@ body{background:#0d0e12}
 @media(max-width:390px){.portfolio-position{padding:10px 8px}.portfolio-position b{font-size:11px}.portfolio-table-head{padding:10px 8px}.category-totals b{font-size:11px}}
 
 
-/* V26.1119.183000: tighter heading and vertical rhythm */
+/* V26.1121.030000: tighter heading and vertical rhythm */
 main{padding-top:12px}
 main>header{margin:0 0 8px}
 main>header h1{margin:3px 0 6px;font-size:clamp(18px,4.7vw,22px);letter-spacing:1.1px;line-height:1.2}
@@ -435,7 +435,7 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 @media(max-width:390px){main{padding-top:10px}main>header h1{letter-spacing:.6px}}
 
 
-/* V26.1119.183000 — compact, stable-height overview/budget switch */
+/* V26.1121.030000 — compact, stable-height overview/budget switch */
 .market-ticker{margin-top:calc(env(safe-area-inset-top, 0px) + 16px);margin-left:12px;margin-right:12px;border:1px solid #2b3543;border-radius:11px;height:39px;padding:0 12px;filter:none;backdrop-filter:none;-webkit-backdrop-filter:none}
 .market-ticker-track,.ticker-item{filter:none;text-shadow:none}
 .trend-outside{display:flex;justify-content:flex-end;margin:0 0 7px;padding-right:1px}
@@ -463,7 +463,7 @@ main>header h1 small{font-size:10px;letter-spacing:1px;white-space:nowrap}
 @media(max-width:390px){.market-ticker{margin-left:10px;margin-right:10px}#valuationHero{padding:13px 14px}.hero-budget-view{left:14px;right:14px;top:78px;bottom:13px}#valuationHero .hero-actions{right:14px;top:12px}}
 
 
-/* MONO WEALTH reference-style compact overview — V26.1119.183000 */
+/* MONO WEALTH reference-style compact overview — V26.1121.030000 */
 :root{color-scheme:dark}
 body{background:#090d14}
 main{padding:8px 13px 110px;max-width:760px}
@@ -490,7 +490,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 @media(max-width:390px){#assetGrid .category-totals{gap:3px}#assetGrid .category-totals b,#assetGrid .category-totals span{font-size:9px}#assetGrid .asset-heading{padding:7px 5px}#assetGrid .portfolio-position{padding:6px 5px}.hero-summary strong{font-size:15px}}
 
 
-/* V26.1119.183000 — compact trend and settlement, Taiwan red-up green-down */
+/* V26.1121.030000 — compact trend and settlement, Taiwan red-up green-down */
 #assetTrendCard{margin:10px 0!important;padding:12px 13px!important;min-height:0!important;overflow:hidden}
 #assetTrendCard .trend-compact-title{align-items:center}
 #assetTrendCard .trend-count{font-size:10px;color:#aabbd0}
@@ -827,9 +827,9 @@ BTC/TWD 請輸入一枚 BTC 的台幣價格。
 </p>
 </div>
 </section>
+<section id="market-risk" class="hidden"><div class="risk-title">✦ MONO <span>MARKET RISK</span></div><h2>全球市場風險</h2><p class="risk-muted">六項指標 · 每項顯示資料日期</p><div class="risk-panel"><small>GLOBAL RISK MONITOR</small><h2 id="riskStatus">⚪ 資料檢查中</h2><p id="riskSummary">未取得足夠資料前，不提供推測燈號。</p><button id="riskRefresh">↻ 更新</button></div><div id="riskGrid" class="risk-grid"></div><div class="risk-panel"><b>風險判讀</b><p>同時觀察波動、信用市場、利率與槓桿壓力。風險燈號不是買賣指示。再次點擊「總覽」即可返回資產頁。</p></div></section>
 </main>
 
-<section id="market-risk" class="hidden"><div class="risk-title">✦ MONO <span>MARKET RISK</span></div><h2>全球市場風險</h2><p class="risk-muted">六項指標 · 每項顯示資料日期</p><div class="risk-panel"><small>GLOBAL RISK MONITOR</small><h2 id="riskStatus">⚪ 資料檢查中</h2><p id="riskSummary">未取得足夠資料前，不提供推測燈號。</p><button id="riskRefresh">↻ 更新</button></div><div id="riskGrid" class="risk-grid"></div><div class="risk-panel"><b>風險判讀</b><p>同時觀察波動、信用市場、利率與槓桿壓力。風險燈號不是買賣指示。再次點擊「總覽」即可返回資產頁。</p></div></section>
 <!-- SIX TABS -->
 <nav class="tabs">
 <button data-tab="overview" class="active">總覽</button>
@@ -840,11 +840,11 @@ BTC/TWD 請輸入一枚 BTC 的台幣價格。
 <button data-tab="settings">設定</button>
 </nav>
 
-<script src="app.js?v=261121risk"></script>
-<script src="risk.js?v=261121risk"></script>
+<script src="app.js?v=261121030000"></script>
+<script src="risk.js?v=261121030000"></script>
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=261121risk');
+  navigator.serviceWorker.register('./sw.js?v=261121030000');
 }
 </script>
 </body>

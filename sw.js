@@ -1,5 +1,5 @@
 /* MONO WEALTH — network-first service worker, 2026-11-14 */
-const CACHE_NAME = 'mono-wealth-static-261121risk';
+const CACHE_NAME = 'mono-wealth-static-261121030000';
 self.addEventListener('install', event => { self.skipWaiting(); });
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
