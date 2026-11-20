@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-20T13:26:42+00:00",
+  "updated_at": "2026-11-20T15:08:12+00:00",
   "fx": {
     "value": 32.903999,
     "date": "2026-11-20",
@@ -22,13 +22,13 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 658.01001,
-      "date": "2026-11-19",
+      "value": 658.400024,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 145.979996,
-      "date": "2026-11-19",
+      "value": 141.824997,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
@@ -72,8 +72,8 @@
       "pair": "eth_twd"
     },
     "KO": {
-      "value": 96.089996,
-      "date": "2026-11-19",
+      "value": 97.105003,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     }
   },
@@ -85,28 +85,28 @@
       "change_pct": -6.229
     },
     "SP500": {
-      "value": 7175.830078,
-      "date": "2026-11-19",
+      "value": 7178.339844,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.0181
+      "change_pct": 0.035
     },
     "NASDAQ": {
-      "value": 23879.199219,
-      "date": "2026-11-19",
+      "value": 23723.890625,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.2541
+      "change_pct": -0.6504
     },
     "SOX": {
-      "value": 9419.719727,
-      "date": "2026-11-19",
+      "value": 9111.765625,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.4146
+      "change_pct": -3.2692
     },
     "DJI": {
-      "value": 49097.058594,
-      "date": "2026-11-19",
+      "value": 49534.179688,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.1935
+      "change_pct": 0.8868
     }
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
