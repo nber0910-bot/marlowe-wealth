@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-20T19:15:26+00:00",
+  "updated_at": "2026-11-20T20:14:22+00:00",
   "fx": {
-    "value": 32.952999,
+    "value": 32.986,
     "date": "2026-11-20",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -22,12 +22,12 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 641.244995,
+      "value": 637.700012,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 132.885498,
+      "value": 127.080002,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
@@ -72,7 +72,7 @@
       "pair": "eth_twd"
     },
     "KO": {
-      "value": 97.504997,
+      "value": 97.370003,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     }
@@ -85,28 +85,28 @@
       "change_pct": -6.229
     },
     "SP500": {
-      "value": 6992.149902,
+      "value": 6953.290039,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -2.5597
+      "change_pct": -3.1012
     },
     "NASDAQ": {
-      "value": 22916.699219,
+      "value": 22748.296875,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -4.0307
+      "change_pct": -4.7359
     },
     "SOX": {
-      "value": 8569.110352,
+      "value": 8459.331055,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -9.0301
+      "change_pct": -10.1955
     },
     "DJI": {
-      "value": 48653.078125,
+      "value": 48441.640625,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -0.9043
+      "change_pct": -1.3369
     }
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
