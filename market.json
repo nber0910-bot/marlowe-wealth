@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-20T15:08:12+00:00",
+  "updated_at": "2026-11-20T16:08:41+00:00",
   "fx": {
-    "value": 32.903999,
+    "value": 32.931,
     "date": "2026-11-20",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -22,12 +22,12 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 658.400024,
+      "value": 649.215027,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 141.824997,
+      "value": 136.899994,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
@@ -72,7 +72,7 @@
       "pair": "eth_twd"
     },
     "KO": {
-      "value": 97.105003,
+      "value": 97.345001,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     }
@@ -85,28 +85,28 @@
       "change_pct": -6.229
     },
     "SP500": {
-      "value": 7178.339844,
+      "value": 7079.209961,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 0.035
+      "change_pct": -1.3465
     },
     "NASDAQ": {
-      "value": 23723.890625,
+      "value": 23272.019531,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -0.6504
+      "change_pct": -2.5427
     },
     "SOX": {
-      "value": 9111.765625,
+      "value": 8761.251953,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -3.2692
+      "change_pct": -6.9903
     },
     "DJI": {
-      "value": 49534.179688,
+      "value": 49072.429688,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 0.8868
+      "change_pct": -0.0502
     }
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
