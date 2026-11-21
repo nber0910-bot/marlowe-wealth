@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-11-21T01:40:23+00:00",
+  "updated_at": "2026-11-21T02:03:43+00:00",
   "metrics": {
     "vix": {
-      "value": 35.89,
-      "date": "2026-11-20",
-      "source": "Yahoo Finance · CBOE VIX (delayed)",
+      "value": 28.44,
+      "date": "2026-11-19",
+      "source": "FRED · CBOE VIX",
       "unit": "index"
     },
     "dxy": {
@@ -15,30 +15,31 @@
       "change_5d_pct": 0.416
     },
     "us10y": {
-      "value": 4.912,
-      "date": "2026-11-20",
-      "source": "Yahoo Finance · CBOE 10Y yield index (delayed)",
+      "value": 5.04,
+      "date": "2026-11-19",
+      "source": "FRED · US Treasury 10Y",
       "unit": "%",
-      "change_5d": -0.242
+      "change_5d": -0.06
     },
     "hyspread": {
-      "value": null,
-      "date": null,
-      "source": "尚未串接"
+      "value": 3.52,
+      "date": "2026-11-19",
+      "source": "FRED · ICE BofA US HY OAS",
+      "unit": "percentage points"
     },
     "margin": {
       "value": null,
       "date": null,
-      "source": "同口徑官方資料待串接（不以其他融資指標替代）"
+      "source": "同口徑官方資料待串接（不以其他融資指標替代）",
+      "unit": "%"
     },
     "foreign": {
-      "value": null,
-      "date": null,
-      "source": "尚未串接"
+      "value": -95.11,
+      "date": "2026-11-20",
+      "source": "TWSE · 三大法人買賣金額統計表",
+      "unit": "億元",
+      "sum_5d": -2186.69
     }
   },
-  "errors": {
-    "hyspread": "The read operation timed out",
-    "foreign": "TWSE institutional flow unavailable"
-  }
+  "errors": {}
 }
