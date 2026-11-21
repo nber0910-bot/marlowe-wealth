@@ -1,12 +1,21 @@
 """Refresh verified market risk metrics. No portfolio data is read or modified."""
-import csv, datetime as dt, io, json, math, pathlib, urllib.request
+import csv, datetime as dt, io, json, math, pathlib, urllib.request, time
 ROOT=pathlib.Path(__file__).parent
 OUT=ROOT/"risk.json"
 HEAD={"User-Agent":"Mozilla/5.0 (compatible; MonoWealthRisk/1.0)"}
 def get(url):
-    with urllib.request.urlopen(urllib.request.Request(url,headers=HEAD),timeout=18) as r:return r.read()
+    last=None
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url,headers=HEAD),timeout=12) as r:
+                return r.read()
+        except Exception as exc:
+            last=exc
+            if attempt==0: time.sleep(1)
+    raise last
 def fred(series):
-    url=f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}"
+    start=(dt.date.today()-dt.timedelta(days=45)).isoformat()
+    url=f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}&cosd={start}"
     rows=list(csv.DictReader(io.StringIO(get(url).decode("utf-8-sig"))))
     vals=[]
     for r in rows:
@@ -26,6 +35,17 @@ def yahoo_dxy():
             out.append((dt.datetime.fromtimestamp(t,dt.timezone.utc).date().isoformat(),float(v)))
     if not out:raise ValueError("DXY unavailable")
     return out[-6:]
+def yahoo_series(symbol):
+    from urllib.parse import quote
+    url=f"https://query1.finance.yahoo.com/v8/finance/chart/{quote(symbol,safe='')}?range=1mo&interval=1d"
+    data=json.loads(get(url))["chart"]["result"][0]
+    out=[]
+    for t,v in zip(data["timestamp"],data["indicators"]["quote"][0]["close"]):
+        if isinstance(v,(int,float)) and math.isfinite(v):
+            out.append((dt.datetime.fromtimestamp(t,dt.timezone.utc).date().isoformat(),float(v)))
+    if not out:raise ValueError(f"Yahoo {symbol} unavailable")
+    return out[-6:]
+
 def record(rows,source,unit):
     d,v=rows[-1]
     return {"value":round(v,3),"date":d,"source":source,"unit":unit}
@@ -64,7 +84,19 @@ def main():
             rows=fred(series); obj=record(rows,source,unit)
             if key=="us10y" and len(rows)>=6:obj["change_5d"]=round(rows[-1][1]-rows[-6][1],3)
             metrics[key]=obj
-        except Exception as e:errors[key]=str(e)
+        except Exception as e:
+            errors[key]=str(e)
+            # Fallback is explicitly labeled. FRED is preferred for the original series.
+            fallback={'vix':('^VIX','Yahoo Finance · CBOE VIX (delayed)'),
+                      'us10y':('^TNX','Yahoo Finance · CBOE 10Y yield index (delayed)')}.get(key)
+            if fallback:
+                try:
+                    rows=yahoo_series(fallback[0]);obj=record(rows,fallback[1],unit)
+                    if key=='us10y' and len(rows)>=6:obj['change_5d']=round(rows[-1][1]-rows[-6][1],3)
+                    metrics[key]=obj
+                    errors.pop(key,None)
+                except Exception as backup_error:
+                    errors[key]+='; backup: '+str(backup_error)
     try:
         rows=yahoo_dxy();obj=record(rows,"Yahoo Finance · DX-Y.NYB (delayed)","index")
         if len(rows)>=6 and rows[-6][1]:obj["change_5d_pct"]=round((rows[-1][1]/rows[-6][1]-1)*100,3)
@@ -76,6 +108,6 @@ def main():
         errors["foreign"]=str(e)
     # 不限用途擔保維持率與融資擔保維持率不同，禁止混用。
     metrics.setdefault("margin",{"value":None,"date":None,"source":"同口徑官方資料待串接"})
-    OUT.write_text(json.dumps({"updated_at":dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),"metrics":metrics,"errors":errors},ensure_ascii=False,indent=2)+"\\n")
+    OUT.write_text(json.dumps({"updated_at":dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),"metrics":metrics,"errors":errors},ensure_ascii=False,indent=2)+"\n")
     print("Risk metrics updated:",", ".join(k for k in jobs if k not in errors), "DXY" if "dxy" not in errors else "", "errors:",errors)
 if __name__=="__main__":main()
