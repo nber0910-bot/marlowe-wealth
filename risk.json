@@ -1,5 +1,5 @@
 {
-  "updated_at": null,
+  "updated_at": "2026-11-21T01:06:46+00:00",
   "metrics": {
     "vix": {
       "value": null,
@@ -7,9 +7,11 @@
       "source": "尚未串接"
     },
     "dxy": {
-      "value": null,
-      "date": null,
-      "source": "尚未串接"
+      "value": 103.84,
+      "date": "2026-11-20",
+      "source": "Yahoo Finance · DX-Y.NYB (delayed)",
+      "unit": "index",
+      "change_5d_pct": 0.416
     },
     "us10y": {
       "value": null,
@@ -31,5 +33,11 @@
       "date": null,
       "source": "尚未串接"
     }
+  },
+  "errors": {
+    "vix": "The read operation timed out",
+    "us10y": "The read operation timed out",
+    "hyspread": "The read operation timed out",
+    "foreign": "TWSE institutional flow unavailable"
   }
-}
+}\n
