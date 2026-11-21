@@ -1,22 +1,27 @@
 """Refresh verified market risk metrics. No portfolio data is read or modified."""
-import csv, datetime as dt, io, json, math, pathlib, urllib.request, time
+import csv, datetime as dt, io, json, math, pathlib, urllib.request, urllib.error, time
 ROOT=pathlib.Path(__file__).parent
 OUT=ROOT/"risk.json"
 HEAD={"User-Agent":"Mozilla/5.0 (compatible; MonoWealthRisk/1.0)"}
-def get(url):
+def get(url, timeout=7):
     last=None
     for attempt in range(2):
         try:
-            with urllib.request.urlopen(urllib.request.Request(url,headers=HEAD),timeout=12) as r:
+            with urllib.request.urlopen(urllib.request.Request(url,headers=HEAD),timeout=timeout) as r:
                 return r.read()
         except Exception as exc:
             last=exc
-            if attempt==0: time.sleep(1)
+            if attempt==0: time.sleep(0.5)
     raise last
 def fred(series):
     start=(dt.date.today()-dt.timedelta(days=45)).isoformat()
     url=f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}&cosd={start}"
-    rows=list(csv.DictReader(io.StringIO(get(url).decode("utf-8-sig"))))
+    try:
+        raw=get(url, timeout=7)
+    except Exception:
+        # Alternative FRED CSV endpoint, same series and observation dates.
+        raw=get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}",timeout=7)
+    rows=list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
     vals=[]
     for r in rows:
         try:
@@ -51,25 +56,27 @@ def record(rows,source,unit):
     return {"value":round(v,3),"date":d,"source":source,"unit":unit}
 
 def twse_foreign():
-    """Latest TWSE institutional flow; units are TWD, output in 100m TWD."""
+    """TWSE BFI82U: official net flow, 100m TWD; never infer from turnover."""
     today=dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).date()
     observations=[]
-    for delta in range(12,-1,-1):
-        day=today-dt.timedelta(days=delta)
-        if day.weekday()>=5:continue
+    # Limit calls to the latest 8 trading days, avoiding the previous 13 sequential timeouts.
+    days=[today-dt.timedelta(days=i) for i in range(16)]
+    days=[day for day in days if day.weekday()<5][:7]
+    for day in days:
         url=f"https://www.twse.com.tw/rwd/zh/fund/BFI82U?type=day&dayDate={day:%Y%m%d}&response=json"
         try:
-            payload=json.loads(get(url))
-            rows=payload.get("data") or []
-            foreign=next((r for r in rows if r and "外資及陸資" in str(r[0]) and "自營商" not in str(r[0])),None)
+            payload=json.loads(get(url,timeout=4))
+            rows=payload.get('data') or []
+            foreign=next((r for r in rows if r and ('外資及陸資' in str(r[0]) or '外資及陸資(不含外資自營商)' in str(r[0])) and '自營商' not in str(r[0])),None)
             if not foreign or len(foreign)<4:continue
-            amount=float(str(foreign[3]).replace(",","").replace("+",""))
+            amount=float(str(foreign[3]).replace(',','').replace('+',''))
             observations.append((day.isoformat(),amount/100000000))
-        except (ValueError,TypeError,KeyError,IndexError,StopIteration,OSError):continue
-    if not observations:raise ValueError("TWSE institutional flow unavailable")
-    date,value=observations[-1]
-    obj={"value":round(value,2),"date":date,"source":"TWSE · 三大法人買賣金額統計表","unit":"億元"}
-    if len(observations)>=5:obj["sum_5d"]=round(sum(v for _,v in observations[-5:]),2)
+            if len(observations)>=5:break
+        except Exception:continue
+    if not observations:raise ValueError('TWSE institutional flow unavailable')
+    date,value=observations[0]
+    obj={'value':round(value,2),'date':date,'source':'TWSE · 三大法人買賣金額統計表','unit':'億元'}
+    if len(observations)>=5:obj['sum_5d']=round(sum(v for _,v in observations[:5]),2)
     return obj
 
 def main():
@@ -107,7 +114,11 @@ def main():
     except Exception as e:
         errors["foreign"]=str(e)
     # 不限用途擔保維持率與融資擔保維持率不同，禁止混用。
-    metrics.setdefault("margin",{"value":None,"date":None,"source":"同口徑官方資料待串接"})
+    metrics["margin"]={"value":None,"date":None,"source":"同口徑官方資料待串接（不以其他融資指標替代）"}
+    # Preserve only dated verified observations; stale values are explicitly signaled by the UI.
+    for key, item in list(metrics.items()):
+        if not isinstance(item, dict):
+            metrics[key]={"value":None,"date":None,"source":"資料格式錯誤"}
     OUT.write_text(json.dumps({"updated_at":dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),"metrics":metrics,"errors":errors},ensure_ascii=False,indent=2)+"\n")
     print("Risk metrics updated:",", ".join(k for k in jobs if k not in errors), "DXY" if "dxy" not in errors else "", "errors:",errors)
 if __name__=="__main__":main()

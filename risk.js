@@ -54,26 +54,21 @@
       if(!response.ok)throw Error('資料檔無法讀取（HTTP '+response.status+'）');
       const j=readJson(await response.text()),m=j.metrics||{};
       tiles(m);
-      const core=['vix','dxy','us10y','hyspread'];
-      const missing=core.filter(k=>!Number.isFinite(m[k]?.value)||!m[k]?.date);
-      const stale=core.filter(k=>{
-        const d=m[k];if(!Number.isFinite(d?.value)||!d.date)return false;
-        const ts=Date.parse(d.date+'T23:59:59Z');
-        const age=(Date.now()-ts)/86400000;
-        return !Number.isFinite(age)||age>5||age< -1;
-      });
-      if(missing.length||stale.length){
-        el('riskStatus').textContent='⚪ 資料不足';
-        const issues=[];
-        if(missing.length)issues.push('缺少：'+missing.join('、'));
-        if(stale.length)issues.push('過期：'+stale.join('、'));
-        const errors=Object.entries(j.errors||{}).map(([k,v])=>k+'：'+String(v).slice(0,80));
-        el('riskSummary').textContent=issues.join('；')+'。尚不能可靠判定整體風險。'+(errors.length?' 更新診斷：'+errors.join('；'):'');
-        return;
-      }
-      const score=(m.vix.value>=30?2:m.vix.value>=20?1:0)+(m.hyspread.value>=5?2:m.hyspread.value>=4?1:0)+(Number.isFinite(m.dxy.change_5d_pct)&&m.dxy.change_5d_pct>=2?1:0)+(Number.isFinite(m.us10y.change_5d)&&m.us10y.change_5d>=0.3?1:0);
-      el('riskStatus').textContent=score>=4?'🔴 高風險':score>=2?'🟡 警戒':'🟢 相對平穩';
-      el('riskSummary').textContent='依波動、信用利差、美元與利率變化簡化評估；台灣資料缺漏時不納入評分。';
+      const all=fields.map(x=>x[0]);
+      const assessed=all.map(k=>({key:k, signal:signal(k,m[k]||{})}));
+      const valid=assessed.filter(x=>x.signal[0]!=='gray');
+      const red=valid.filter(x=>x.signal[0]==='red');
+      const yellow=valid.filter(x=>x.signal[0]==='yellow');
+      const unknown=assessed.filter(x=>x.signal[0]==='gray');
+      const names=Object.fromEntries(fields.map(([k,,label])=>[k,label]));
+      const headline=red.length?'🔴 已偵測高風險':yellow.length?'🟡 已偵測警戒':unknown.length?'⚪ 整體待確認':'🟢 未見主要警訊';
+      el('riskStatus').textContent=headline;
+      const parts=['已判讀 '+valid.length+'/6 項'];
+      if(red.length)parts.push('紅燈：'+red.map(x=>names[x.key]).join('、'));
+      if(yellow.length)parts.push('黃燈：'+yellow.map(x=>names[x.key]).join('、'));
+      if(unknown.length)parts.push('未能判讀：'+unknown.map(x=>names[x.key]).join('、'));
+      parts.push(unknown.length?'資料不完整，不能判定整體安全。':'燈號反映個別指標，不代表投資建議。');
+      el('riskSummary').textContent=parts.join('；');
     }catch(error){
       tiles({});
       el('riskStatus').textContent='⚪ 資料讀取失敗';

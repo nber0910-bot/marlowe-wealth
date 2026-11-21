@@ -1,0 +1,2 @@
+MONO WEALTH V26.1121.103000
+Risk updater: TWSE fetch bounded to recent trading days, FRED alternate endpoint; partial risk summary shows confirmed red/yellow signals without claiming safety. Missing metrics stay gray; no fabricated values. No portfolio data modifications.
