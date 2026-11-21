@@ -1,25 +1,20 @@
 {
-  "updated_at": "2026-11-21T01:18:03+00:00",
+  "updated_at": null,
   "metrics": {
     "vix": {
-      "value": 35.89,
-      "date": "2026-11-20",
-      "source": "Yahoo Finance · CBOE VIX (delayed)",
-      "unit": "index"
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
     },
     "dxy": {
-      "value": 103.84,
-      "date": "2026-11-20",
-      "source": "Yahoo Finance · DX-Y.NYB (delayed)",
-      "unit": "index",
-      "change_5d_pct": 0.416
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
     },
     "us10y": {
-      "value": 4.912,
-      "date": "2026-11-20",
-      "source": "Yahoo Finance · CBOE 10Y yield index (delayed)",
-      "unit": "%",
-      "change_5d": -0.242
+      "value": null,
+      "date": null,
+      "source": "尚未串接"
     },
     "hyspread": {
       "value": null,
@@ -36,9 +31,5 @@
       "date": null,
       "source": "尚未串接"
     }
-  },
-  "errors": {
-    "hyspread": "The read operation timed out",
-    "foreign": "TWSE institutional flow unavailable"
   }
 }

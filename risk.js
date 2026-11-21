@@ -3,11 +3,39 @@
   const fields=[['vix','VIX','恐慌指數',''],['dxy','DXY','美元指數',''],['us10y','US10Y','美債10年殖利率','%'],['hyspread','HY SPREAD','高收益債利差','%'],['margin','MARGIN','融資維持率','%'],['foreign','FOREIGN','外資買賣超','億元']];
   const el=id=>document.getElementById(id);
   const esc=x=>String(x??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // 燈號只在有足夠且未過期的資料時顯示；未知不當成綠燈。
+  function signal(k,d){
+    const v=d?.value;
+    if(!Number.isFinite(v)||!d?.date)return ['gray','資料不足'];
+    const age=(Date.now()-Date.parse(d.date+'T23:59:59Z'))/86400000;
+    if(!Number.isFinite(age)||age>5||age< -1)return ['gray','資料過期'];
+    if(k==='vix')return v>=30?['red','高風險']:v>=20?['yellow','警戒']:['green','相對平穩'];
+    if(k==='hyspread')return v>=5?['red','高風險']:v>=4?['yellow','警戒']:['green','相對平穩'];
+    if(k==='dxy'){
+      const c=d.change_5d_pct;
+      if(!Number.isFinite(c))return ['gray','缺少5日變化'];
+      return c>=2?['red','美元急升']:c>=1?['yellow','美元走強']:['green','未見急升'];
+    }
+    if(k==='us10y'){
+      const c=d.change_5d;
+      if(!Number.isFinite(c))return ['gray','缺少5日變化'];
+      return c>=0.3?['red','利率急升']:c>=0.15?['yellow','利率上行']:['green','未見急升'];
+    }
+    if(k==='foreign'){
+      const c=d.sum_5d;
+      if(!Number.isFinite(c))return ['gray','缺少5日累計'];
+      return c<=-500?['red','持續賣超']:c<0?['yellow','偏向賣超']:['green','未見淨賣超'];
+    }
+    // 融資維持率各券商口徑不同，未定義可靠門檻前不強行分級。
+    return ['gray','門檻待校準'];
+  }
   function tiles(m){
     const grid=el('riskGrid'); if(!grid)return;
     grid.innerHTML=fields.map(([k,n,label,u])=>{
       const d=m[k]||{}, value=typeof d.value==='number'&&Number.isFinite(d.value)?d.value:null;
-      return `<div class="risk-tile"><small>${label}</small><strong>${value===null?'—':value.toLocaleString('zh-TW')+u}</strong><small>${n} · ${esc(d.date||'待更新')}<br>${esc(d.source||'資料待串接')}${Number.isFinite(d.sum_5d)?'<br>近5日累計 '+d.sum_5d+' 億元':''}</small></div>`;
+      const [color,status]=signal(k,d);
+      const details=Number.isFinite(d.sum_5d)?'<br>近5日累計 '+esc(d.sum_5d)+' 億元':'';
+      return `<div class="risk-tile"><small>${label}</small><div class="risk-reading"><strong>${value===null?'—':value.toLocaleString('zh-TW')+u}</strong><span class="risk-light risk-light-${color}" role="img" aria-label="風險燈號：${esc(status)}" title="${esc(status)}"></span></div><div class="risk-tile-status risk-status-${color}">${esc(status)}</div><small>${n} · ${esc(d.date||'待更新')}<br>${esc(d.source||'資料待串接')}${details}</small></div>`;
     }).join('');
   }
   function readJson(raw){
