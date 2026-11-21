@@ -1,0 +1,6 @@
+MONO WEALTH V26.1121.043000
+1. MARKET RISK mode hides global ticker and MONO WEALTH heading; overview double-tap behavior remains.
+2. Market ticker is a faster vertical single-item carousel; reduced-motion setting stops animation.
+3. MARKET RISK includes missing-source diagnostics. risk.json starts as a placeholder: run GitHub Actions > Refresh MONO MARKET RISK to populate, and check logs if sources fail. Margin data is deliberately unconnected until verified official source.
+4. BTC and ETH remain sourced from BitoPro BTC/TWD and ETH/TWD public spot tickers. TradingView web display is not an authenticated stable JSON price API; do not scrape it or silently substitute different market/FX quotes.
+5. No changes to portfolio storage, trades, holdings, or P&L calculations.
