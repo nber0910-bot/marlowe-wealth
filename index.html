@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1121.110000</title>
+<title>MONO WEALTH V26.1121.190000</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -539,6 +539,26 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 .risk-light-gray{background:#8897ab}
 .risk-tile-status{font-size:11px;font-weight:700;margin-bottom:10px;line-height:1.35}
 .risk-status-red{color:#f06c7c}.risk-status-yellow{color:#f1bf5b}.risk-status-green{color:#41c99a}.risk-status-gray{color:#a3b5cb}
+
+/* V26.1121.190000 — single SAVINGS balance; independent from investment P/L */
+.savings-asset-card .savings-category-caption{font-size:10px;color:#8fa5be;font-weight:400}
+.savings-asset-row{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;gap:12px;color:#e9f1ff}
+.savings-asset-row span{font-weight:650}.savings-asset-row small{display:block;color:#91a4be;font-weight:400;margin-top:3px}
+.savings-asset-row strong{white-space:nowrap;font-variant-numeric:tabular-nums}
+.savings-panel{margin-top:15px}.savings-panel-head{display:flex;justify-content:space-between;align-items:center}
+.savings-panel-head h2{margin:5px 0 14px}.savings-eyebrow{letter-spacing:1.5px;color:#9fc5fa}
+.savings-panel-icon{font-size:27px;color:#9fc5fa}.savings-balance-label{color:#9caec6;font-size:13px}
+.savings-balance{font-size:clamp(28px,8vw,39px);font-weight:750;letter-spacing:-1px;margin:7px 0 10px;font-variant-numeric:tabular-nums}
+.savings-form{display:grid;gap:11px;margin:18px 0}.savings-form label{display:block;color:#b8c9df;font-size:13px}
+.savings-form input,.savings-form select{display:block;width:100%;box-sizing:border-box;margin-top:6px;min-height:43px;background:#101b2b;color:#e8f1ff;border:1px solid #3c526f;border-radius:9px;padding:9px 11px;font-size:16px}
+.savings-submit{width:100%;min-height:44px;border-radius:10px;background:#9cc8fa;color:#0b1729;font-weight:700;border:0}
+.savings-history-title{display:flex;align-items:center;justify-content:space-between;margin-top:23px;border-top:1px solid #33465f;padding-top:13px}
+.savings-history-title h3{margin:0}.savings-history-title small{color:#9caec6}
+.savings-entry{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #26374e}
+.savings-entry small{display:block;color:#9caec6;margin-top:4px}.savings-entry-right{text-align:right}
+.savings-entry-right strong{display:block;font-variant-numeric:tabular-nums}.savings-entry-right button{margin-top:5px;font-size:12px;padding:3px 9px;border:1px solid #52637c;background:transparent;color:#c6d5e9;border-radius:7px}
+.savings-overall{margin-top:10px;display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border:1px solid #354c68;border-radius:12px;background:#111e30;color:#b7cce6}
+.savings-overall strong{color:#f2f6ff}
 </style>
 <style>#market-risk{padding:18px 4px 110px;color:#e8f0fc}.risk-title{font-size:20px;font-weight:800;letter-spacing:1px}.risk-title span{color:#a6caff}.risk-muted,.risk-panel p{color:#9eafc6;font-size:13px;line-height:1.7}.risk-panel,.risk-tile{background:#131e2e;border:1px solid #405572;border-radius:18px;padding:18px;margin:14px 0}.risk-panel h2{font-size:26px}.risk-panel small,.risk-tile small{color:#a3b5cb}.risk-panel button{background:#1b2d45;color:#fff;border:1px solid #607b9c;border-radius:10px;padding:9px 16px}.risk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.risk-tile{margin:0;padding:15px;min-width:0}.risk-tile strong{display:block;font-size:23px;margin:13px 0}.risk-tile small{font-size:11px;line-height:1.6}
 /* V26.1121.110000: vertical, faster, single-line market ticker; risk full-screen */
@@ -567,6 +587,7 @@ body.risk-mode #market-risk{padding-top:12px;}
 <div class="hero-period-view" id="heroPeriodView" hidden><button type="button" id="heroPeriodBack" class="period-back">‹ 期間盈虧 · 返回總覽</button><div class="period-metrics"><div class="period-metric"><small>今日盈虧</small><strong id="periodToday">—</strong><span id="periodTodayHint">—</span></div><div class="period-metric"><small>7 日累積盈虧</small><strong id="period7">—</strong><span id="period7Hint">—</span></div><div class="period-metric"><small>30 日累積盈虧</small><strong id="period30">—</strong><span id="period30Hint">—</span></div></div></div></div>
 <div class="hero-data-note" id="heroDataNote" hidden><span id="overviewRefreshNote"></span><span id="pnl"></span><span id="coverage"></span><span id="periodFootnote"></span><span id="progresslabel"></span><div id="progress"></div></div>
 </div>
+<div id="savingsOverall" class="savings-overall" data-investment="0"><span>個人總資產 <small>投資＋存款</small></span><strong>—</strong></div>
 <div class="portfolio-table" id="assetGrid">
 <div class="portfolio-table-toolbar"><strong>我的投資持倉</strong><label class="portfolio-filter">排序 <select id="portfolioSort" aria-label="持倉排序"><option value="default">原始順序</option><option value="value">市值由高至低</option><option value="pnl">損益由高至低</option><option value="name">標的名稱</option></select></label></div>
 <div class="portfolio-table-head"><span>標的／分類</span><span>庫存／市值</span><span>損益／報酬率</span></div>
@@ -574,6 +595,7 @@ body.risk-mode #market-risk{padding-top:12px;}
 <div class="asset-card" data-asset-type="tw" aria-expanded="true"><div class="asset-heading"><span>▥ 台股／ETF <small id="twcount"></small></span><span class="category-totals"><b id="twtotal">—</b><span id="twpnl"></span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="twdetails"></div></div>
 <div class="asset-card" data-asset-type="us" aria-expanded="true"><div class="asset-heading"><span>◈ 美股／ETF <small id="uscount"></small></span><span class="category-totals"><b id="ustotal">—</b><span id="uspnl"></span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="usdetails"></div></div>
 <div class="asset-card" data-asset-type="crypto" aria-expanded="true"><div class="asset-heading"><span>₿ 加密貨幣 <small id="cryptocount"></small></span><span class="category-totals"><b id="cryptototal">—</b><span id="cryptopnl"></span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="cryptodetails"></div></div>
+<div class="asset-card savings-asset-card" data-asset-type="savings" aria-expanded="true"><div class="asset-heading"><span>▣ 存款 <small>(1)</small></span><span class="category-totals"><b id="savingstotal">NT$0.00</b><span class="savings-category-caption">不計入投資損益</span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="savingsdetails"><div class="savings-asset-row"><span>個人存款<small>SAVINGS · TWD</small></span><strong id="savingsrowtotal">NT$0.00</strong></div></div></div>
 <p class="portfolio-disclaimer">依目前已確認持倉及最新可用行情估值；不同市場的報價日期可能不同。紅漲綠跌，金額均為新台幣。</p>
 </div>
 
@@ -616,6 +638,22 @@ body.risk-mode #market-risk{padding-top:12px;}
 <h2>我的持倉</h2>
 <div id="holdlist"></div>
 </div>
+<!-- SAVINGS: stored independently from investment ledger -->
+<section id="savingsHoldingsPanel" class="savings-panel card">
+  <div class="savings-panel-head"><div><small class="savings-eyebrow">SAVINGS · TWD</small><h2>存款管理</h2></div><span class="savings-panel-icon">▣</span></div>
+  <div class="savings-balance-label">目前存款總額</div>
+  <div id="savingsBalance" class="savings-balance">NT$0.00</div>
+  <p class="hint">只記錄真正留存的個人儲蓄，不包含生活費、收入中轉金或待繳款項。與投資持倉分開計算。</p>
+  <form id="savingsForm" class="savings-form">
+    <label>操作<select id="savingsAction"><option value="deposit">新增存款</option><option value="withdraw">提領存款</option></select></label>
+    <label>金額（新台幣）<input id="savingsAmount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="例如：10000" required></label>
+    <label>日期<input id="savingsDate" type="date" required></label>
+    <label>備註（選填）<input id="savingsNote" type="text" maxlength="120" placeholder="例如：12 月儲蓄"></label>
+    <button type="submit" class="savings-submit">儲存存款紀錄</button>
+  </form>
+  <div class="savings-history-title"><h3>存款紀錄</h3><small id="savingsRecordCount">0 筆</small></div>
+  <div id="savingsHistory" class="savings-history"><p class="hint">尚無存款紀錄</p></div>
+</section>
 </section>
 
 <!-- TRADE -->
