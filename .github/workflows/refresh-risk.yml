@@ -1,0 +1,34 @@
+name: Refresh MONO MARKET RISK
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '27 12 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: refresh-mono-risk
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Fetch market risk data
+        run: python update_risk.py
+      - name: Commit risk JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add risk.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update MONO MARKET RISK data"
+            for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 3
+          done
+          exit 1
+          fi
