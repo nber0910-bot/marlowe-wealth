@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-21T04:02:25+00:00",
+  "updated_at": "2026-11-21T05:06:28+00:00",
   "fx": {
     "value": 33.026299,
     "date": "2026-11-20",
@@ -91,13 +91,13 @@
       "change_pct": -3.6991
     },
     "NASDAQ": {
-      "value": 22617.732422,
+      "value": 22617.730469,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
       "change_pct": -5.2827
     },
     "SOX": {
-      "value": 8408.59082,
+      "value": 8408.589844,
       "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
       "change_pct": -10.7342
