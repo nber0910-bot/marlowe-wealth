@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1121.190000</title>
+<title>MONO WEALTH V26.1121.201500</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -540,7 +540,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 .risk-tile-status{font-size:11px;font-weight:700;margin-bottom:10px;line-height:1.35}
 .risk-status-red{color:#f06c7c}.risk-status-yellow{color:#f1bf5b}.risk-status-green{color:#41c99a}.risk-status-gray{color:#a3b5cb}
 
-/* V26.1121.190000 — single SAVINGS balance; independent from investment P/L */
+/* V26.1121.201500 — single SAVINGS balance; independent from investment P/L */
 .savings-asset-card .savings-category-caption{font-size:10px;color:#8fa5be;font-weight:400}
 .savings-asset-row{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;gap:12px;color:#e9f1ff}
 .savings-asset-row span{font-weight:650}.savings-asset-row small{display:block;color:#91a4be;font-weight:400;margin-top:3px}
@@ -559,6 +559,11 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 .savings-entry-right strong{display:block;font-variant-numeric:tabular-nums}.savings-entry-right button{margin-top:5px;font-size:12px;padding:3px 9px;border:1px solid #52637c;background:transparent;color:#c6d5e9;border-radius:7px}
 .savings-overall{margin-top:10px;display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border:1px solid #354c68;border-radius:12px;background:#111e30;color:#b7cce6}
 .savings-overall strong{color:#f2f6ff}
+/* V26.1121.201500: no redundant total card, consistent Taiwan red-up green-down */
+.savings-overall{display:none!important}
+.positive{color:#ff747e}.negative{color:#63c895}
+#valuationHero .hero-total{gap:0}
+#assetGrid .category-totals .positive{color:#ff747e}#assetGrid .category-totals .negative{color:#63c895}
 </style>
 <style>#market-risk{padding:18px 4px 110px;color:#e8f0fc}.risk-title{font-size:20px;font-weight:800;letter-spacing:1px}.risk-title span{color:#a6caff}.risk-muted,.risk-panel p{color:#9eafc6;font-size:13px;line-height:1.7}.risk-panel,.risk-tile{background:#131e2e;border:1px solid #405572;border-radius:18px;padding:18px;margin:14px 0}.risk-panel h2{font-size:26px}.risk-panel small,.risk-tile small{color:#a3b5cb}.risk-panel button{background:#1b2d45;color:#fff;border:1px solid #607b9c;border-radius:10px;padding:9px 16px}.risk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.risk-tile{margin:0;padding:15px;min-width:0}.risk-tile strong{display:block;font-size:23px;margin:13px 0}.risk-tile small{font-size:11px;line-height:1.6}
 /* V26.1121.110000: vertical, faster, single-line market ticker; risk full-screen */
@@ -581,13 +586,13 @@ body.risk-mode #market-risk{padding-top:12px;}
 <!-- OVERVIEW -->
 <section id="overview">
 <div class="card" id="valuationHero">
-<div class="hero-topline"><div><b class="hero-label" id="heroViewTitle">投資資產總覽</b> <span class="hero-chip">含息 · 含稅</span></div><div class="hero-actions"><button type="button" id="overviewRefreshButton" class="mini-refresh">↻ 更新</button></div></div>
-<div id="heroOverviewContent"><div class="hero-total"><span>TWD</span><strong id="total">—</strong></div>
+<div class="hero-topline"><div><b class="hero-label" id="heroViewTitle">投資資產總覽</b> </div><div class="hero-actions"><button type="button" id="overviewRefreshButton" class="mini-refresh">↻ 更新</button></div></div>
+<div id="heroOverviewContent"><div class="hero-total"><strong id="total">—</strong></div>
 <div class="hero-summary" id="heroSummary"><button type="button" id="heroToggleView" class="summary-click" aria-label="切換期間盈虧"><small>預估損益 ›</small><strong id="heroPnlValue">—</strong></button><div><small>報酬率</small><strong id="heroReturn">—</strong></div><div><small>總投入成本</small><strong id="heroCost">—</strong></div></div>
 <div class="hero-period-view" id="heroPeriodView" hidden><button type="button" id="heroPeriodBack" class="period-back">‹ 期間盈虧 · 返回總覽</button><div class="period-metrics"><div class="period-metric"><small>今日盈虧</small><strong id="periodToday">—</strong><span id="periodTodayHint">—</span></div><div class="period-metric"><small>7 日累積盈虧</small><strong id="period7">—</strong><span id="period7Hint">—</span></div><div class="period-metric"><small>30 日累積盈虧</small><strong id="period30">—</strong><span id="period30Hint">—</span></div></div></div></div>
 <div class="hero-data-note" id="heroDataNote" hidden><span id="overviewRefreshNote"></span><span id="pnl"></span><span id="coverage"></span><span id="periodFootnote"></span><span id="progresslabel"></span><div id="progress"></div></div>
 </div>
-<div id="savingsOverall" class="savings-overall" data-investment="0"><span>個人總資產 <small>投資＋存款</small></span><strong>—</strong></div>
+
 <div class="portfolio-table" id="assetGrid">
 <div class="portfolio-table-toolbar"><strong>我的投資持倉</strong><label class="portfolio-filter">排序 <select id="portfolioSort" aria-label="持倉排序"><option value="default">原始順序</option><option value="value">市值由高至低</option><option value="pnl">損益由高至低</option><option value="name">標的名稱</option></select></label></div>
 <div class="portfolio-table-head"><span>標的／分類</span><span>庫存／市值</span><span>損益／報酬率</span></div>
@@ -595,7 +600,7 @@ body.risk-mode #market-risk{padding-top:12px;}
 <div class="asset-card" data-asset-type="tw" aria-expanded="true"><div class="asset-heading"><span>▥ 台股／ETF <small id="twcount"></small></span><span class="category-totals"><b id="twtotal">—</b><span id="twpnl"></span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="twdetails"></div></div>
 <div class="asset-card" data-asset-type="us" aria-expanded="true"><div class="asset-heading"><span>◈ 美股／ETF <small id="uscount"></small></span><span class="category-totals"><b id="ustotal">—</b><span id="uspnl"></span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="usdetails"></div></div>
 <div class="asset-card" data-asset-type="crypto" aria-expanded="true"><div class="asset-heading"><span>₿ 加密貨幣 <small id="cryptocount"></small></span><span class="category-totals"><b id="cryptototal">—</b><span id="cryptopnl"></span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="cryptodetails"></div></div>
-<div class="asset-card savings-asset-card" data-asset-type="savings" aria-expanded="true"><div class="asset-heading"><span>▣ 存款 <small>(1)</small></span><span class="category-totals"><b id="savingstotal">NT$0.00</b><span class="savings-category-caption">不計入投資損益</span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="savingsdetails"><div class="savings-asset-row"><span>個人存款<small>SAVINGS · TWD</small></span><strong id="savingsrowtotal">NT$0.00</strong></div></div></div>
+<div class="asset-card savings-asset-card" data-asset-type="savings" aria-expanded="true"><div class="asset-heading"><span>▣ 存款 <small>(1)</small></span><span class="category-totals"><b id="savingstotal">NT$0.00</b><span class="savings-category-caption">長期儲蓄 · 投資自己</span></span><span class="asset-indicator">⌄</span></div><div class="asset-details" id="savingsdetails"><div class="savings-asset-row"><span>個人存款<small>SAVINGS · TWD</small></span><strong id="savingsrowtotal">NT$0.00</strong></div></div></div>
 <p class="portfolio-disclaimer">依目前已確認持倉及最新可用行情估值；不同市場的報價日期可能不同。紅漲綠跌，金額均為新台幣。</p>
 </div>
 
@@ -898,11 +903,11 @@ BTC/TWD 請輸入一枚 BTC 的台幣價格。
 <button data-tab="settings">設定</button>
 </nav>
 
-<script src="app.js?v=261121110000"></script>
-<script src="risk.js?v=261121110000"></script>
+<script src="app.js?v=261121201500"></script>
+<script src="risk.js?v=261121201500"></script>
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=261121110000');
+  navigator.serviceWorker.register('./sw.js?v=261121201500');
 }
 </script>
 </body>

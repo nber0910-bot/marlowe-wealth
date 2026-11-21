@@ -1,0 +1,7 @@
+V26.1121.201500
+1. Remove TWD before the large portfolio total.
+2. Taiwan colors: positive red, negative green, including category totals and summary metrics.
+3. Remove dividend/tax badge.
+4. Remove redundant combined investment+savings total panel (savings ledger remains).
+5. Refresh JS and service worker cache versions.
+Portfolio localStorage keys and transaction data untouched.
