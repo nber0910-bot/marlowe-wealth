@@ -1,5 +1,5 @@
 'use strict';
-// MONO WEALTH V26.1122.170000 — full valuation coverage and header build version.
+// MONO WEALTH V26.1122.173000 — full valuation coverage and header build version.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -118,16 +118,16 @@ function renderBtcStatus(){
 function updateBuildVersion(){
   const heading=document.querySelector('h1');if(!heading||!heading.textContent.includes('WEALTH'))return;
   const small=heading.querySelector('small');
-  if(small)small.textContent='V26.1122.170000';
-  else heading.insertAdjacentHTML('beforeend',' <small>V26.1122.170000</small>');
-  document.title='MONO WEALTH V26.1122.170000';
+  if(small)small.textContent='V26.1122.173000';
+  else heading.insertAdjacentHTML('beforeend',' <small>V26.1122.173000</small>');
+  document.title='MONO WEALTH V26.1122.173000';
 }
 
 function position(a){let q=num(a.qty)||0,c=num(a.cost)||0;const trades=state.trades.filter(t=>t.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));for(const t of trades){const tq=num(t.qty)||0,tp=num(t.price)||0,tf=num(t.fee)||0;if(t.side==='buy'){q+=tq;c+=tq*tp+tf;}else if(t.side==='sell'&&tq<=q+1e-8){const avg=q>0?c/q:0;c-=avg*tq;q-=tq;if(Math.abs(q)<1e-8){q=0;c=0;}}}return {q,c};}
 function valuation(a){const {q,c}=position(a),p=price(a),rate=a.currency==='USD'?fx():1,valid=q>0&&validQuote(p)&&rate>0;return {q,c,p,value:valid?q*num(p.value)*rate:null,costTwd:a.currency==='USD'&&rate?c*rate:a.currency==='TWD'?c:null};}
 function estimatedTrades(id){return state.trades.filter(t=>t.asset===id&&t.estimated===true);}
-const CATEGORY_ORDER=['tw','us','fund','crypto'];
-const CATEGORY_INFO={tw:{name:'台股 ETF',color:'#83b8ff'},us:{name:'美股 ETF',color:'#83d9c1'},fund:{name:'基金',color:'#c5a4ff'},crypto:{name:'加密貨幣',color:'#f2bd74'}};
+const CATEGORY_ORDER=['tw','us','fund','crypto','cash'];
+const CATEGORY_INFO={tw:{name:'台股 ETF',color:'#83b8ff'},us:{name:'美股 ETF',color:'#83d9c1'},fund:{name:'基金',color:'#c5a4ff'},crypto:{name:'加密貨幣',color:'#f2bd74'},cash:{name:'現金',color:'#a9b8cc'}};
 function categoryRows(type){return state.assets.filter(a=>a.type===type).map(a=>({asset:a,...valuation(a)})).filter(z=>z.q>0);}
 function renderCategoryDetails(totals){
  const sort=byId('portfolioSort')?.value||'default';
@@ -687,7 +687,7 @@ async function loadHistoricalArchive(){
 }
 function installHistoryFilters(){for(const id of ['recordYearFilter','recordMonthFilter','recordTypeFilter'])byId(id)?.addEventListener('change',renderHistory);}
 
-function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fund:0,crypto:0};let v=0,c=0,covered=0,all=0;for(const a of state.assets){const z=valuation(a);if(z.q<=0)continue;all++;if(z.value!==null){totals[a.type]=(totals[a.type]||0)+z.value;counts[a.type]=(counts[a.type]||0)+1;v+=z.value;covered++;if(z.costTwd!==null)c+=z.costTwd;}}window.monoInvestmentValue=v;window.monoInvestmentCovered=covered;updateHeroAssetMode();byId('pnl').textContent=covered&&c>0?'可估值部位未實現損益 '+money(v-c)+'（'+((v/c-1)*100).toFixed(2)+'%）':'損益待確認';byId('pnl').className=covered&&v-c<0?'negative':'positive';const hp=byId('heroPnlValue'),hr=byId('heroReturn'),hc=byId('heroCost');if(hp){hp.textContent=covered&&c>0?money(v-c):'待確認';hp.style.color=v-c<0?'#63c895':'#ff747e';}if(hr){hr.textContent=covered&&c>0?((v/c-1)*100).toFixed(2)+'%':'—';hr.style.color=v-c<0?'#63c895':'#ff747e';}if(hc)hc.textContent=covered&&c>0?money(c):'待確認';const estCount=state.trades.filter(t=>t.estimated).length;byId('coverage').textContent=`已估值 ${covered}/${all} 檔持有標的（零持倉不計入）；未估值部位不計入總額。美元成本以目前匯率換算，非實際匯兌損益。期初成本待核對。`+(estCount?` 有 ${estCount} 筆預估入庫，股數及損益可能變動。`:'');for(const [type,id] of [['tw','twtotal'],['us','ustotal'],['fund','fundtotal'],['crypto','cryptototal']])byId(id).textContent=counts[type]?money(totals[type]):'待估值';byId('count').textContent=covered+' / '+all;byId('progresslabel').textContent=covered?`${(v/300000*100).toFixed(1)}%（部分估值${estCount?'・含預估':''}）`:'—';byId('progress').style.width=Math.max(0,Math.min(100,v/300000*100))+'%';renderCategoryDetails(totals);renderMarketTicker();renderAssetTrend();renderAllocation(totals);renderBtcStatus();renderPeriodMetrics();byId('marketinfo').innerHTML=state.assets.map(a=>{
+function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fund:0,crypto:0};let v=0,c=0,covered=0,all=0;for(const a of state.assets){const z=valuation(a);if(z.q<=0)continue;all++;if(z.value!==null){totals[a.type]=(totals[a.type]||0)+z.value;counts[a.type]=(counts[a.type]||0)+1;v+=z.value;covered++;if(z.costTwd!==null)c+=z.costTwd;}}window.monoInvestmentValue=v;window.monoInvestmentCovered=covered;updateHeroAssetMode();byId('pnl').textContent=covered&&c>0?'可估值部位未實現損益 '+money(v-c)+'（'+((v/c-1)*100).toFixed(2)+'%）':'損益待確認';byId('pnl').className=covered&&v-c<0?'negative':'positive';const hp=byId('heroPnlValue'),hr=byId('heroReturn'),hc=byId('heroCost');if(hp){hp.textContent=covered&&c>0?money(v-c):'待確認';hp.style.color=v-c<0?'#63c895':'#ff747e';}if(hr){hr.textContent=covered&&c>0?((v/c-1)*100).toFixed(2)+'%':'—';hr.style.color=v-c<0?'#63c895':'#ff747e';}if(hc)hc.textContent=covered&&c>0?money(c):'待確認';const estCount=state.trades.filter(t=>t.estimated).length;byId('coverage').textContent=`已估值 ${covered}/${all} 檔持有標的（零持倉不計入）；未估值部位不計入總額。美元成本以目前匯率換算，非實際匯兌損益。期初成本待核對。`+(estCount?` 有 ${estCount} 筆預估入庫，股數及損益可能變動。`:'');for(const [type,id] of [['tw','twtotal'],['us','ustotal'],['fund','fundtotal'],['crypto','cryptototal']])byId(id).textContent=counts[type]?money(totals[type]):'待估值';byId('count').textContent=covered+' / '+all;byId('progresslabel').textContent=covered?`${(v/300000*100).toFixed(1)}%（部分估值${estCount?'・含預估':''}）`:'—';byId('progress').style.width=Math.max(0,Math.min(100,v/300000*100))+'%';renderCategoryDetails(totals);renderMarketTicker();renderAssetTrend();renderAllocation({...totals,cash:Math.max(0,savingsBalance())});renderBtcStatus();renderPeriodMetrics();byId('marketinfo').innerHTML=state.assets.map(a=>{
   const z=valuation(a),held=z.q>0,p=z.p,quoteOk=validQuote(p);
   const rate=a.currency==='USD'?fx():1;
   const priced=held&&z.value!==null;
@@ -1037,7 +1037,7 @@ function renderPendingSummary(){let el=byId('estimatedSummary');if(!el){const ta
 const MONO_SAVINGS_GOAL=200000;let monoHeroMode='assets';
 function updateHeroAssetMode(){const el=document.getElementById('total');if(!el)return;const savings=typeof savingsBalance==='function'?savingsBalance():0;const invest=Number(window.monoInvestmentValue||0);const isSavings=monoHeroMode==='savings';el.textContent=money(isSavings?savings:invest+savings);document.getElementById('heroViewTitle').textContent=isSavings?'個人總存款':'個人總資產';document.getElementById('heroSummary').hidden=isSavings;document.getElementById('heroSavingsSummary').hidden=!isSavings;document.getElementById('heroSavingsProgress').hidden=!isSavings;if(isSavings)document.getElementById('heroPeriodView').hidden=true;document.getElementById('heroSavingsPercent').textContent=(savings/MONO_SAVINGS_GOAL*100).toFixed(2)+'%';document.getElementById('heroSavingsRemaining').textContent=money(Math.max(0,MONO_SAVINGS_GOAL-savings));document.getElementById('heroSavingsProgressFill').style.width=Math.min(100,Math.max(0,savings/MONO_SAVINGS_GOAL*100))+'%';}
 function installSavingsHeroSwitch(){const el=document.getElementById('heroModeSwitch');if(!el)return;const toggle=()=>{monoHeroMode=monoHeroMode==='assets'?'savings':'assets';updateHeroAssetMode();};el.addEventListener('click',toggle);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});}
-// SAVINGS V26.1122.170000: separate ledger, never written to marlowe_wealth_v2.
+// SAVINGS V26.1122.173000: separate ledger, never written to marlowe_wealth_v2.
 const SAVINGS_KEY='mono_wealth_savings_v1';
 function savingsRead(){
   try{const x=JSON.parse(localStorage.getItem(SAVINGS_KEY));return x&&Array.isArray(x.entries)?x.entries:[];}
@@ -1050,6 +1050,11 @@ function savingsMoney(n){return 'NT$'+Number(n||0).toLocaleString('en-US',{minim
 function renderSavings(){
   const entries=savingsRead(),balance=savingsBalance(entries);
   updateHeroAssetMode();
+  if(typeof renderAllocation==='function' && typeof state!=='undefined' && Array.isArray(state.assets)){
+    const alloc={tw:0,us:0,fund:0,crypto:0,cash:Math.max(0,balance)};
+    for(const asset of state.assets){const z=valuation(asset);if(z.q>0&&z.value!==null&&Object.prototype.hasOwnProperty.call(alloc,asset.type))alloc[asset.type]+=z.value;}
+    renderAllocation(alloc);
+  }
   for(const id of ['savingstotal','savingsrowtotal','savingsBalance']){
     const node=document.getElementById(id);if(node)node.textContent=savingsMoney(balance);
   }
