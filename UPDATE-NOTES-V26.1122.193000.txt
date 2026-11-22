@@ -1,0 +1,1 @@
+Compact equal-size top asset card in all three modes; removed large blank gaps; corrected period value wrapping; savings progress directly below balance. Portfolio and savings storage unchanged.
