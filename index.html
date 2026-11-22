@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1122.203000</title>
+<title>MONO WEALTH V26.1122.210000</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -618,6 +618,20 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 #valuationHero .period-back{margin:0 0 7px!important}
 #valuationHero .hero-period-view .period-metric span{white-space:normal!important;overflow-wrap:normal!important}
 @media(max-width:390px){#valuationHero{height:174px!important;min-height:174px!important;max-height:174px!important;padding:12px 12px 11px!important}}
+
+/* V26.1122.210000 — equal top/bottom padding, same geometry for all three modes */
+#valuationHero{height:184px!important;min-height:184px!important;max-height:184px!important;padding:15px 15px!important;overflow:hidden!important}
+#valuationHero .hero-topline{min-height:28px!important}
+#valuationHero .hero-total{margin:10px 0 13px!important}
+#valuationHero .hero-summary{padding-bottom:0!important}
+#valuationHero .hero-summary strong{line-height:1.25!important}
+#valuationHero .hero-period-view{margin-top:0!important}
+#valuationHero .hero-period-view .period-metrics{margin-top:2px!important}
+#valuationHero .hero-period-view .period-metric span{margin-top:5px!important}
+#periodTodayReturn{cursor:pointer;touch-action:manipulation}
+#periodTodayReturn:focus-visible{outline:2px solid #a5cafa;outline-offset:3px;border-radius:4px}
+#valuationHero #heroSavingsProgress{margin:0 0 12px!important}
+@media(max-width:390px){#valuationHero{height:184px!important;min-height:184px!important;max-height:184px!important;padding:15px 12px!important}}
 </style>
 <style>#market-risk{padding:18px 4px 110px;color:#e8f0fc}.risk-title{font-size:20px;font-weight:800;letter-spacing:1px}.risk-title span{color:#a6caff}.risk-muted,.risk-panel p{color:#9eafc6;font-size:13px;line-height:1.7}.risk-panel,.risk-tile{background:#131e2e;border:1px solid #405572;border-radius:18px;padding:18px;margin:14px 0}.risk-panel h2{font-size:26px}.risk-panel small,.risk-tile small{color:#a3b5cb}.risk-panel button{background:#1b2d45;color:#fff;border:1px solid #607b9c;border-radius:10px;padding:9px 16px}.risk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.risk-tile{margin:0;padding:15px;min-width:0}.risk-tile strong{display:block;font-size:23px;margin:13px 0}.risk-tile small{font-size:11px;line-height:1.6}
 /* V26.1121.110000: vertical, faster, single-line market ticker; risk full-screen */
@@ -643,7 +657,7 @@ body.risk-mode #market-risk{padding-top:12px;}
 <div class="hero-topline"><div><b class="hero-label" id="heroViewTitle">個人總資產</b> </div><div class="hero-actions"><button type="button" id="overviewRefreshButton" class="mini-refresh">↻ 更新</button></div></div>
 <div id="heroOverviewContent"><div class="hero-total" id="heroModeSwitch" role="button" tabindex="0" aria-label="切換個人總資產與個人總存款"><strong id="total">—</strong></div>
 <div class="hero-summary" id="heroSummary"><button type="button" id="heroToggleView" class="summary-click" aria-label="切換期間盈虧"><small>預估損益 ›</small><strong id="heroPnlValue">—</strong></button><div><small>報酬率</small><strong id="heroReturn">—</strong></div><div><small>總投入成本</small><strong id="heroCost">—</strong></div></div>
-<div id="heroSavingsProgress" hidden><div id="heroSavingsProgressFill"></div></div><div class="hero-summary" id="heroSavingsSummary" hidden><div><small>儲蓄目標</small><strong>$200,000</strong></div><div><small>完成進度</small><strong id="heroSavingsPercent">0.00%</strong></div><div><small>尚需儲蓄</small><strong id="heroSavingsRemaining">—</strong></div></div><div class="hero-period-view" id="heroPeriodView" hidden><button type="button" id="heroPeriodBack" class="period-back">‹ 期間盈虧 · 返回總覽</button><div class="period-metrics"><div class="period-metric"><small>今日盈虧</small><strong id="periodToday">—</strong><span id="periodTodayHint">—</span></div><div class="period-metric"><small>7 日累積盈虧</small><strong id="period7">—</strong><span id="period7Hint">—</span></div><div class="period-metric"><small>30 日累積盈虧</small><strong id="period30">—</strong><span id="period30Hint">—</span></div></div></div></div>
+<div id="heroSavingsProgress" hidden><div id="heroSavingsProgressFill"></div></div><div class="hero-summary" id="heroSavingsSummary" hidden><div><small>儲蓄目標</small><strong>$200,000</strong></div><div><small>完成進度</small><strong id="heroSavingsPercent">0.00%</strong></div><div><small>尚需儲蓄</small><strong id="heroSavingsRemaining">—</strong></div></div><div class="hero-period-view" id="heroPeriodView" hidden><div class="period-metrics"><div class="period-metric" id="periodTodayReturn" role="button" tabindex="0" aria-label="點擊今日盈虧返回總覽"><small>今日盈虧 ↩</small><strong id="periodToday">—</strong><span id="periodTodayHint">—</span></div><div class="period-metric"><small>7 日累積盈虧</small><strong id="period7">—</strong><span id="period7Hint">—</span></div><div class="period-metric"><small>30 日累積盈虧</small><strong id="period30">—</strong><span id="period30Hint">—</span></div></div></div></div>
 <div class="hero-data-note" id="heroDataNote" hidden><span id="overviewRefreshNote"></span><span id="pnl"></span><span id="coverage"></span><span id="periodFootnote"></span><span id="progresslabel"></span><div id="progress"></div></div>
 </div>
 

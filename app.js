@@ -853,10 +853,12 @@ function renderMonthlyBudget(){
  byId('monthlyBudgetSave').addEventListener('click',()=>{const raw=byId('monthlyBudgetAdjustment').value;if(raw.trim()===''||!Number.isFinite(Number(raw)))return alert('請輸入有效的台幣金額');state.monthlyBudget??={};state.monthlyBudget[month]=Number(raw);save();renderMonthlyBudget();});
 }
 function installHeroToggle(){
- const summary=byId('heroSummary'),period=byId('heroPeriodView'),toggle=byId('heroToggleView'),back=byId('heroPeriodBack');
+ const summary=byId('heroSummary'),period=byId('heroPeriodView'),toggle=byId('heroToggleView'),back=byId('periodTodayReturn');
  if(!summary||!period||!toggle||toggle.dataset.bound)return;toggle.dataset.bound='1';
  toggle.addEventListener('click',()=>{if(monoHeroMode==='savings')return;summary.hidden=true;period.hidden=false;});
- back?.addEventListener('click',()=>{period.hidden=true;summary.hidden=false;});
+ const returnToOverview=()=>{period.hidden=true;summary.hidden=false;};
+ back?.addEventListener('click',returnToOverview);
+ back?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();returnToOverview();}});
 }
 
 function installReliableAddAsset(){
