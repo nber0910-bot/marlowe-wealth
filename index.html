@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1122.193000</title>
+<title>MONO WEALTH V26.1122.203000</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -540,7 +540,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 .risk-tile-status{font-size:11px;font-weight:700;margin-bottom:10px;line-height:1.35}
 .risk-status-red{color:#f06c7c}.risk-status-yellow{color:#f1bf5b}.risk-status-green{color:#41c99a}.risk-status-gray{color:#a3b5cb}
 
-/* V26.1122.193000 — single SAVINGS balance; independent from investment P/L */
+/* V26.1122.203000 — single SAVINGS balance; independent from investment P/L */
 .savings-asset-card .savings-category-caption{font-size:10px;color:#8fa5be;font-weight:400}
 .savings-asset-row{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;gap:12px;color:#e9f1ff}
 .savings-asset-row span{font-weight:650}.savings-asset-row small{display:block;color:#91a4be;font-weight:400;margin-top:3px}
@@ -559,7 +559,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 .savings-entry-right strong{display:block;font-variant-numeric:tabular-nums}.savings-entry-right button{margin-top:5px;font-size:12px;padding:3px 9px;border:1px solid #52637c;background:transparent;color:#c6d5e9;border-radius:7px}
 .savings-overall{margin-top:10px;display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border:1px solid #354c68;border-radius:12px;background:#111e30;color:#b7cce6}
 .savings-overall strong{color:#f2f6ff}
-/* V26.1122.193000: no redundant total card, consistent Taiwan red-up green-down */
+/* V26.1122.203000: no redundant total card, consistent Taiwan red-up green-down */
 .savings-overall{display:none!important}
 .positive{color:#ff747e}.negative{color:#63c895}
 #valuationHero .hero-total{gap:0}
@@ -567,7 +567,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 
 #valuationHero{height:181px!important;min-height:181px!important;box-sizing:border-box;overflow:hidden;position:relative}#heroModeSwitch{cursor:pointer;touch-action:manipulation}#valuationHero .hero-summary{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}#valuationHero .hero-summary strong{font-size:clamp(13px,3.55vw,20px);letter-spacing:-.4px;overflow:hidden}#heroSavingsSummary[hidden],#heroSavingsProgress[hidden]{display:none!important}#heroSavingsProgress{position:absolute;bottom:8px;left:15px;right:15px;height:4px;border-radius:6px;background:#28384d;overflow:hidden}#heroSavingsProgressFill{height:100%;background:#a5cafa;border-radius:6px;transition:width .25s}@media(max-width:390px){#valuationHero{height:177px!important;min-height:177px!important}}
 
-/* V26.1122.193000 — allocation includes savings; hero is content-sized and never clips values */
+/* V26.1122.203000 — allocation includes savings; hero is content-sized and never clips values */
 #valuationHero{height:auto!important;min-height:0!important;overflow:visible!important;padding:17px 15px 19px!important;}
 #valuationHero .hero-total{margin:14px 0 22px!important;align-items:center!important;}
 #valuationHero .hero-total strong{line-height:1.18!important;display:block;}
@@ -577,7 +577,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 #valuationHero #heroSavingsProgress{bottom:9px;}
 @media(max-width:390px){#valuationHero{height:auto!important;min-height:0!important;padding-bottom:20px!important;}#valuationHero .hero-total{margin-bottom:19px!important;}}
 
-/* V26.1122.193000 — compact equal-size hero; no auto-spacer gaps or overflow */
+/* V26.1122.203000 — compact equal-size hero; no auto-spacer gaps or overflow */
 #valuationHero{box-sizing:border-box!important;width:100%!important;height:200px!important;min-height:200px!important;max-height:200px!important;padding:14px 15px 16px!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;gap:0!important}
 #valuationHero .hero-topline{flex:0 0 auto!important;min-height:30px!important}
 #heroOverviewContent{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important;justify-content:flex-start!important}
@@ -598,6 +598,26 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 #valuationHero .hero-period-view .period-metric strong{font-size:clamp(10px,2.8vw,15px)!important;line-height:1.35!important;letter-spacing:-.5px!important;white-space:nowrap!important;overflow-wrap:normal!important}
 #valuationHero .hero-period-view .period-metric span{font-size:clamp(8px,2.2vw,10px)!important;line-height:1.25!important;margin:0!important;white-space:nowrap!important}
 @media(max-width:390px){#valuationHero{padding:14px 12px 16px!important}#valuationHero .hero-summary>div,#valuationHero .hero-summary>button{padding-left:6px!important;padding-right:6px!important}#valuationHero .hero-summary>div:first-child,#valuationHero .hero-summary>button:first-child{padding-left:0!important}}
+
+/* V26.1122.203000 — compact equal-size hero across overview / savings / period.
+   Overrides old 200px height and flex-grow that created unused bottom space. */
+#valuationHero{
+  box-sizing:border-box!important;
+  height:174px!important;min-height:174px!important;max-height:174px!important;
+  padding:13px 15px 12px!important;
+  display:flex!important;flex-direction:column!important;
+  overflow:visible!important;
+}
+#valuationHero .hero-topline{flex:0 0 auto!important;min-height:28px!important}
+#heroOverviewContent{display:flex!important;flex-direction:column!important;flex:0 0 auto!important;min-height:0!important;justify-content:flex-start!important}
+#valuationHero .hero-total{margin:10px 0 11px!important;min-height:0!important;flex:0 0 auto!important}
+#valuationHero .hero-total strong{line-height:1.14!important}
+#valuationHero .hero-summary{min-height:0!important;flex:0 0 auto!important;padding-bottom:0!important}
+#valuationHero #heroSavingsProgress{margin:0 0 12px!important;height:6px!important}
+#valuationHero .hero-period-view{padding:0!important;margin:0!important}
+#valuationHero .period-back{margin:0 0 7px!important}
+#valuationHero .hero-period-view .period-metric span{white-space:normal!important;overflow-wrap:normal!important}
+@media(max-width:390px){#valuationHero{height:174px!important;min-height:174px!important;max-height:174px!important;padding:12px 12px 11px!important}}
 </style>
 <style>#market-risk{padding:18px 4px 110px;color:#e8f0fc}.risk-title{font-size:20px;font-weight:800;letter-spacing:1px}.risk-title span{color:#a6caff}.risk-muted,.risk-panel p{color:#9eafc6;font-size:13px;line-height:1.7}.risk-panel,.risk-tile{background:#131e2e;border:1px solid #405572;border-radius:18px;padding:18px;margin:14px 0}.risk-panel h2{font-size:26px}.risk-panel small,.risk-tile small{color:#a3b5cb}.risk-panel button{background:#1b2d45;color:#fff;border:1px solid #607b9c;border-radius:10px;padding:9px 16px}.risk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.risk-tile{margin:0;padding:15px;min-width:0}.risk-tile strong{display:block;font-size:23px;margin:13px 0}.risk-tile small{font-size:11px;line-height:1.6}
 /* V26.1121.110000: vertical, faster, single-line market ticker; risk full-screen */
