@@ -1,5 +1,5 @@
 'use strict';
-// MONO WEALTH V26.1122.173000 — full valuation coverage and header build version.
+// MONO WEALTH V26.1122.190000 — full valuation coverage and header build version.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -118,9 +118,9 @@ function renderBtcStatus(){
 function updateBuildVersion(){
   const heading=document.querySelector('h1');if(!heading||!heading.textContent.includes('WEALTH'))return;
   const small=heading.querySelector('small');
-  if(small)small.textContent='V26.1122.173000';
-  else heading.insertAdjacentHTML('beforeend',' <small>V26.1122.173000</small>');
-  document.title='MONO WEALTH V26.1122.173000';
+  if(small)small.textContent='V26.1122.190000';
+  else heading.insertAdjacentHTML('beforeend',' <small>V26.1122.190000</small>');
+  document.title='MONO WEALTH V26.1122.190000';
 }
 
 function position(a){let q=num(a.qty)||0,c=num(a.cost)||0;const trades=state.trades.filter(t=>t.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));for(const t of trades){const tq=num(t.qty)||0,tp=num(t.price)||0,tf=num(t.fee)||0;if(t.side==='buy'){q+=tq;c+=tq*tp+tf;}else if(t.side==='sell'&&tq<=q+1e-8){const avg=q>0?c/q:0;c-=avg*tq;q-=tq;if(Math.abs(q)<1e-8){q=0;c=0;}}}return {q,c};}
@@ -1035,9 +1035,9 @@ function confirmEstimatedTrade(created){const t=state.trades.find(t=>t.created==
 function renderPendingSummary(){let el=byId('estimatedSummary');if(!el){const target=byId('total')?.closest('.card')||byId('total')?.parentElement;if(!target)return;el=document.createElement('div');el.id='estimatedSummary';el.className='item';target.appendChild(el);}const pending=state.trades.filter(t=>t.estimated);if(!pending.length){el.style.display='none';return;}el.style.display='';const total=pending.reduce((s,t)=>s+(num(t.twdTotal)||0),0);el.innerHTML=`<b>🟡 預估入庫 · ${pending.length} 筆</b><p>已記入持倉的預估投入：${money(total)}</p><small>此金額已反映於預估持倉，請勿與總資產再相加。實際成交股數、匯率及損益仍待券商確認。</small>`;}
 
 const MONO_SAVINGS_GOAL=200000;let monoHeroMode='assets';
-function updateHeroAssetMode(){const el=document.getElementById('total');if(!el)return;const savings=typeof savingsBalance==='function'?savingsBalance():0;const invest=Number(window.monoInvestmentValue||0);const isSavings=monoHeroMode==='savings';el.textContent=money(isSavings?savings:invest+savings);document.getElementById('heroViewTitle').textContent=isSavings?'個人總存款':'個人總資產';document.getElementById('heroSummary').hidden=isSavings;document.getElementById('heroSavingsSummary').hidden=!isSavings;document.getElementById('heroSavingsProgress').hidden=!isSavings;if(isSavings)document.getElementById('heroPeriodView').hidden=true;document.getElementById('heroSavingsPercent').textContent=(savings/MONO_SAVINGS_GOAL*100).toFixed(2)+'%';document.getElementById('heroSavingsRemaining').textContent=money(Math.max(0,MONO_SAVINGS_GOAL-savings));document.getElementById('heroSavingsProgressFill').style.width=Math.min(100,Math.max(0,savings/MONO_SAVINGS_GOAL*100))+'%';}
-function installSavingsHeroSwitch(){const el=document.getElementById('heroModeSwitch');if(!el)return;const toggle=()=>{monoHeroMode=monoHeroMode==='assets'?'savings':'assets';updateHeroAssetMode();};el.addEventListener('click',toggle);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});}
-// SAVINGS V26.1122.173000: separate ledger, never written to marlowe_wealth_v2.
+function updateHeroAssetMode(){const el=document.getElementById('total');if(!el)return;const savings=typeof savingsBalance==='function'?savingsBalance():0;const invest=Number(window.monoInvestmentValue||0);const isSavings=monoHeroMode==='savings';el.textContent=money(isSavings?savings:invest+savings);document.getElementById('heroViewTitle').textContent=isSavings?'個人總存款':'個人總資產';document.getElementById('heroSummary').hidden=isSavings||!document.getElementById('heroPeriodView').hidden;document.getElementById('heroSavingsSummary').hidden=!isSavings;document.getElementById('heroSavingsProgress').hidden=!isSavings;if(isSavings){document.getElementById('heroPeriodView').hidden=true;document.getElementById('heroSummary').hidden=true;}document.getElementById('heroSavingsPercent').textContent=(savings/MONO_SAVINGS_GOAL*100).toFixed(2)+'%';document.getElementById('heroSavingsRemaining').textContent=money(Math.max(0,MONO_SAVINGS_GOAL-savings));document.getElementById('heroSavingsProgressFill').style.width=Math.min(100,Math.max(0,savings/MONO_SAVINGS_GOAL*100))+'%';}
+function installSavingsHeroSwitch(){const el=document.getElementById('heroModeSwitch');if(!el)return;const toggle=()=>{monoHeroMode=monoHeroMode==='assets'?'savings':'assets';document.getElementById('heroPeriodView').hidden=true;updateHeroAssetMode();};el.addEventListener('click',toggle);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});}
+// SAVINGS V26.1122.190000: separate ledger, never written to marlowe_wealth_v2.
 const SAVINGS_KEY='mono_wealth_savings_v1';
 function savingsRead(){
   try{const x=JSON.parse(localStorage.getItem(SAVINGS_KEY));return x&&Array.isArray(x.entries)?x.entries:[];}

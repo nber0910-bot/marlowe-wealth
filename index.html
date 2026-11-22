@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10151f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>MONO WEALTH V26.1122.173000</title>
+<title>MONO WEALTH V26.1122.190000</title>
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;
@@ -540,7 +540,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 .risk-tile-status{font-size:11px;font-weight:700;margin-bottom:10px;line-height:1.35}
 .risk-status-red{color:#f06c7c}.risk-status-yellow{color:#f1bf5b}.risk-status-green{color:#41c99a}.risk-status-gray{color:#a3b5cb}
 
-/* V26.1122.173000 — single SAVINGS balance; independent from investment P/L */
+/* V26.1122.190000 — single SAVINGS balance; independent from investment P/L */
 .savings-asset-card .savings-category-caption{font-size:10px;color:#8fa5be;font-weight:400}
 .savings-asset-row{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;gap:12px;color:#e9f1ff}
 .savings-asset-row span{font-weight:650}.savings-asset-row small{display:block;color:#91a4be;font-weight:400;margin-top:3px}
@@ -559,7 +559,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 .savings-entry-right strong{display:block;font-variant-numeric:tabular-nums}.savings-entry-right button{margin-top:5px;font-size:12px;padding:3px 9px;border:1px solid #52637c;background:transparent;color:#c6d5e9;border-radius:7px}
 .savings-overall{margin-top:10px;display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border:1px solid #354c68;border-radius:12px;background:#111e30;color:#b7cce6}
 .savings-overall strong{color:#f2f6ff}
-/* V26.1122.173000: no redundant total card, consistent Taiwan red-up green-down */
+/* V26.1122.190000: no redundant total card, consistent Taiwan red-up green-down */
 .savings-overall{display:none!important}
 .positive{color:#ff747e}.negative{color:#63c895}
 #valuationHero .hero-total{gap:0}
@@ -567,7 +567,7 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 
 #valuationHero{height:181px!important;min-height:181px!important;box-sizing:border-box;overflow:hidden;position:relative}#heroModeSwitch{cursor:pointer;touch-action:manipulation}#valuationHero .hero-summary{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}#valuationHero .hero-summary strong{font-size:clamp(13px,3.55vw,20px);letter-spacing:-.4px;overflow:hidden}#heroSavingsSummary[hidden],#heroSavingsProgress[hidden]{display:none!important}#heroSavingsProgress{position:absolute;bottom:8px;left:15px;right:15px;height:4px;border-radius:6px;background:#28384d;overflow:hidden}#heroSavingsProgressFill{height:100%;background:#a5cafa;border-radius:6px;transition:width .25s}@media(max-width:390px){#valuationHero{height:177px!important;min-height:177px!important}}
 
-/* V26.1122.173000 — allocation includes savings; hero is content-sized and never clips values */
+/* V26.1122.190000 — allocation includes savings; hero is content-sized and never clips values */
 #valuationHero{height:auto!important;min-height:0!important;overflow:visible!important;padding:17px 15px 19px!important;}
 #valuationHero .hero-total{margin:14px 0 22px!important;align-items:center!important;}
 #valuationHero .hero-total strong{line-height:1.18!important;display:block;}
@@ -576,6 +576,32 @@ main>header{margin:4px 0 12px}main>header h1{font-size:18px;margin:0;letter-spac
 #valuationHero .hero-period-view{padding-bottom:7px!important;}
 #valuationHero #heroSavingsProgress{bottom:9px;}
 @media(max-width:390px){#valuationHero{height:auto!important;min-height:0!important;padding-bottom:20px!important;}#valuationHero .hero-total{margin-bottom:19px!important;}}
+
+/* V26.1122.190000 — identical card geometry in all three modes. */
+#valuationHero{
+  box-sizing:border-box!important;
+  width:100%!important;
+  height:232px!important;
+  min-height:232px!important;
+  max-height:232px!important;
+  padding:16px 15px 19px!important;
+  overflow:visible!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+#valuationHero .hero-topline{flex:0 0 auto!important;min-height:31px!important}
+#heroOverviewContent{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important}
+#valuationHero .hero-total{flex:0 0 auto!important;margin:17px 0 0!important;min-height:48px!important;align-items:center!important}
+#valuationHero .hero-total strong{line-height:1.2!important;white-space:nowrap;font-size:clamp(27px,7.2vw,42px)!important}
+#valuationHero .hero-summary{flex:0 0 auto!important;min-height:0!important;margin-top:auto!important;padding:0 0 4px!important;align-items:start!important}
+#valuationHero .hero-summary strong{line-height:1.35!important;font-size:clamp(13px,3.55vw,20px)!important;overflow:visible!important}
+#valuationHero #heroSavingsProgress{position:static!important;flex:0 0 auto!important;width:100%!important;height:6px!important;margin:14px 0 0!important;background:#344258!important;border-radius:20px!important;overflow:hidden!important}
+#valuationHero #heroSavingsProgressFill{background:#f36a7d!important;height:100%!important;border-radius:20px!important}
+#valuationHero .hero-period-view{margin-top:auto!important;flex:0 0 auto!important;padding:0 0 2px!important}
+#valuationHero .hero-period-view .period-metrics{margin:12px 0 0!important}
+#valuationHero .hero-period-view .period-metric strong{font-size:clamp(12px,3.55vw,19px)!important;overflow-wrap:anywhere;white-space:normal!important}
+#valuationHero .hero-period-view .period-metric span{margin-top:5px!important}
+@media(max-width:390px){#valuationHero{height:232px!important;min-height:232px!important;max-height:232px!important;padding:16px 14px 19px!important}}
 </style>
 <style>#market-risk{padding:18px 4px 110px;color:#e8f0fc}.risk-title{font-size:20px;font-weight:800;letter-spacing:1px}.risk-title span{color:#a6caff}.risk-muted,.risk-panel p{color:#9eafc6;font-size:13px;line-height:1.7}.risk-panel,.risk-tile{background:#131e2e;border:1px solid #405572;border-radius:18px;padding:18px;margin:14px 0}.risk-panel h2{font-size:26px}.risk-panel small,.risk-tile small{color:#a3b5cb}.risk-panel button{background:#1b2d45;color:#fff;border:1px solid #607b9c;border-radius:10px;padding:9px 16px}.risk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.risk-tile{margin:0;padding:15px;min-width:0}.risk-tile strong{display:block;font-size:23px;margin:13px 0}.risk-tile small{font-size:11px;line-height:1.6}
 /* V26.1121.110000: vertical, faster, single-line market ticker; risk full-screen */
@@ -601,7 +627,7 @@ body.risk-mode #market-risk{padding-top:12px;}
 <div class="hero-topline"><div><b class="hero-label" id="heroViewTitle">個人總資產</b> </div><div class="hero-actions"><button type="button" id="overviewRefreshButton" class="mini-refresh">↻ 更新</button></div></div>
 <div id="heroOverviewContent"><div class="hero-total" id="heroModeSwitch" role="button" tabindex="0" aria-label="切換個人總資產與個人總存款"><strong id="total">—</strong></div>
 <div class="hero-summary" id="heroSummary"><button type="button" id="heroToggleView" class="summary-click" aria-label="切換期間盈虧"><small>預估損益 ›</small><strong id="heroPnlValue">—</strong></button><div><small>報酬率</small><strong id="heroReturn">—</strong></div><div><small>總投入成本</small><strong id="heroCost">—</strong></div></div>
-<div class="hero-summary" id="heroSavingsSummary" hidden><div><small>儲蓄目標</small><strong>$200,000</strong></div><div><small>完成進度</small><strong id="heroSavingsPercent">0.00%</strong></div><div><small>尚需儲蓄</small><strong id="heroSavingsRemaining">—</strong></div></div><div id="heroSavingsProgress" hidden><div id="heroSavingsProgressFill"></div></div><div class="hero-period-view" id="heroPeriodView" hidden><button type="button" id="heroPeriodBack" class="period-back">‹ 期間盈虧 · 返回總覽</button><div class="period-metrics"><div class="period-metric"><small>今日盈虧</small><strong id="periodToday">—</strong><span id="periodTodayHint">—</span></div><div class="period-metric"><small>7 日累積盈虧</small><strong id="period7">—</strong><span id="period7Hint">—</span></div><div class="period-metric"><small>30 日累積盈虧</small><strong id="period30">—</strong><span id="period30Hint">—</span></div></div></div></div>
+<div id="heroSavingsProgress" hidden><div id="heroSavingsProgressFill"></div></div><div class="hero-summary" id="heroSavingsSummary" hidden><div><small>儲蓄目標</small><strong>$200,000</strong></div><div><small>完成進度</small><strong id="heroSavingsPercent">0.00%</strong></div><div><small>尚需儲蓄</small><strong id="heroSavingsRemaining">—</strong></div></div><div class="hero-period-view" id="heroPeriodView" hidden><button type="button" id="heroPeriodBack" class="period-back">‹ 期間盈虧 · 返回總覽</button><div class="period-metrics"><div class="period-metric"><small>今日盈虧</small><strong id="periodToday">—</strong><span id="periodTodayHint">—</span></div><div class="period-metric"><small>7 日累積盈虧</small><strong id="period7">—</strong><span id="period7Hint">—</span></div><div class="period-metric"><small>30 日累積盈虧</small><strong id="period30">—</strong><span id="period30Hint">—</span></div></div></div></div>
 <div class="hero-data-note" id="heroDataNote" hidden><span id="overviewRefreshNote"></span><span id="pnl"></span><span id="coverage"></span><span id="periodFootnote"></span><span id="progresslabel"></span><div id="progress"></div></div>
 </div>
 
