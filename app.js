@@ -1,5 +1,5 @@
 'use strict';
-// MONO WEALTH V26.1122.193000 — full valuation coverage and header build version.
+// MONO WEALTH V26.1123.233000 — full valuation coverage and header build version.
 // Never change this storage key: existing holdings and trades live here.
 const KEY='marlowe_wealth_v2', BTC_STALE_HOURS=2;
 // V26.1113.09: monthly budget and reliable add-asset; historical contributions and snapshots visible in calendar; preserved storage.
@@ -90,7 +90,7 @@ function validBtcFeedQuote(p){if(!validQuote(p)||p.currency!=='TWD'||p.pair!=='b
 function btcQuote(){const p=feed.prices?.BTC;if(validBtcFeedQuote(p))return {...p,automatic:true};const m=state.manual?.BTC;return validQuote(m)?{...m,automatic:false}:null;}
 function price(a){if(a.id==='BTC')return btcQuote();if(a.id==='ETH'){const live=feed.prices?.ETH;if(validCryptoFeedQuote(live,'eth_twd'))return {...live,automatic:true};const m=state.manual?.ETH;return validQuote(m)?{...m,automatic:false}:null;}const manual=state.manual[a.id],live=feed.prices?.[a.id];if(validQuote(live)&&(!validQuote(manual)||(live.date||'')>=(manual.date||'')))return {...live,automatic:true};return validQuote(manual)?{...manual,automatic:false}:validQuote(live)?{...live,automatic:true}:null;}
 function validCryptoFeedQuote(p,pair){return validQuote(p)&&p.currency==='TWD'&&p.pair===pair&&Number.isFinite(Date.parse(p.retrieved_at||''))&&Date.parse(p.retrieved_at)<=Date.now()+300000;}
-function btcQuoteStatus(){const p=btcQuote();if(!p)return {label:'無可用報價',detail:'尚未取得 BTC/TWD 價格',stale:true};if(!p.automatic)return {label:'手動參考價',detail:'目前使用手動價格，並非即時行情',stale:true};const stale=Date.now()-Date.parse(p.retrieved_at)>BTC_STALE_HOURS*3600000;return {label:stale?'行情已過期':'自動行情正常',detail:stale?'超過 2 小時未取得新報價，仍顯示最後有效價格':'BitoPro 最近一次成功取得的行情快照',stale};}
+function btcQuoteStatus(){const p=btcQuote();if(!p)return {label:'無可用報價',detail:'尚未取得 BTC/TWD 價格',stale:true};if(!p.automatic)return {label:'手動參考價',detail:'目前使用手動價格，並非即時行情',stale:true};const stale=Date.now()-Date.parse(p.retrieved_at)>BTC_STALE_HOURS*3600000;return {label:stale?'行情已過期':'自動行情正常',detail:stale?'超過 2 小時未取得新報價，仍顯示最後有效價格':(p.usd_price?'美元行情換算台幣':'最近一次成功取得的行情快照'),stale};}
 function taiwanTime(value){const t=Date.parse(value||'');return Number.isFinite(t)?new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(t)):'時間未知';}
 function renderBtcStatus(){
   const el=byId('btcPriceNote');if(!el)return;
@@ -109,7 +109,7 @@ function renderBtcStatus(){
       <small>單價：${has?money(Number(p.value),a.currency):'缺少有效行情'}</small><br>
       <small>台幣估值：${z.value===null?'待估值':money(z.value)}</small><br>
       <small>來源：${has?safe(source):'未取得'} · 報價／擷取時間：${safe(time)}</small>
-      ${a.currency==='USD'?`<br><small>換算匯率 USD/TWD：${fx()?fx().toFixed(4):'待補'}</small>`:''}
+      ${p?.usd_price?`<br><small>美元單價：US$${Number(p.usd_price).toLocaleString('en-US')} · USD/TWD：${Number(p.usd_twd).toFixed(4)}（${safe(p.fx_date||'日期未知')}）</small>`:a.currency==='USD'?`<br><small>換算匯率 USD/TWD：${fx()?fx().toFixed(4):'待補'}</small>`:''}
       ${a.id==='ETH'&&!has?'<br><small>ETH/TWD 尚未取得有效報價；請檢查 market.json 或手動行情。</small>':''}
     </div>`;
   }).join('');
@@ -118,9 +118,9 @@ function renderBtcStatus(){
 function updateBuildVersion(){
   const heading=document.querySelector('h1');if(!heading||!heading.textContent.includes('WEALTH'))return;
   const small=heading.querySelector('small');
-  if(small)small.textContent='V26.1122.193000';
-  else heading.insertAdjacentHTML('beforeend',' <small>V26.1122.193000</small>');
-  document.title='MONO WEALTH V26.1122.193000';
+  if(small)small.textContent='V26.1123.233000';
+  else heading.insertAdjacentHTML('beforeend',' <small>V26.1123.233000</small>');
+  document.title='MONO WEALTH V26.1123.233000';
 }
 
 function position(a){let q=num(a.qty)||0,c=num(a.cost)||0;const trades=state.trades.filter(t=>t.asset===a.id).sort((x,y)=>String(x.date).localeCompare(String(y.date))||(x.created||0)-(y.created||0));for(const t of trades){const tq=num(t.qty)||0,tp=num(t.price)||0,tf=num(t.fee)||0;if(t.side==='buy'){q+=tq;c+=tq*tp+tf;}else if(t.side==='sell'&&tq<=q+1e-8){const avg=q>0?c/q:0;c-=avg*tq;q-=tq;if(Math.abs(q)<1e-8){q=0;c=0;}}}return {q,c};}
@@ -173,7 +173,7 @@ function installAssetCardInteractions(){document.querySelectorAll('.asset-card')
 function snapshotCandidate(){
   if(!feed.updated_at)return null;
   let value=0,cost=0,covered=0,all=0;
-  const positions={}, prices={};
+  const positions={}, prices={}, quoteDates={};
   for(const a of state.assets){
     const z=valuation(a);
     if(z.q<=0)continue;
@@ -182,10 +182,11 @@ function snapshotCandidate(){
     covered++;value+=z.value;cost+=z.costTwd;
     positions[a.id]={q:z.q,c:z.c,currency:a.currency};
     prices[a.id]=Number(z.p.value);
+    quoteDates[a.id]=z.p.date||'';
   }
   if(!all||covered!==all||!Number.isFinite(value)||!Number.isFinite(cost))return null;
   return {date:twDate(),observedAt:new Date().toISOString(),value,cost,
-    unrealized:value-cost,positions,prices,fx:fx(),coverage:covered};
+    unrealized:value-cost,positions,prices,quoteDates,fx:fx(),fxDate:feed.fx?.date||'',coverage:covered};
 }
 function recordSnapshot(){
   const s=snapshotCandidate();if(!s)return;
@@ -249,7 +250,7 @@ function archivedDailyChanges(){
   if(!anchors.length)return result;
   // For dates with a saved local snapshot, use its actual observed positions.
   // For later dates, advance those positions only through explicitly recorded trades.
-  const allDates=[...new Set([...observationByDay.keys(),...anchors.map(a=>a.date)])].sort();
+  const allDates=[...observationByDay.keys()].sort();
   const tradeDays=new Map();
   for(const t of state.trades){if(dateValid(t.date)){
     if(!tradeDays.has(t.date))tradeDays.set(t.date,[]);
@@ -264,8 +265,8 @@ function archivedDailyChanges(){
     if(obs)return {prices:obs.prices,fx:obs.fx,date,kind:'archive',capturedAt:obs.captured_at};
     const anchor=anchors.find(x=>x.date===date);
     if(!anchor)return null;
-    const prices=Object.fromEntries(Object.entries(anchor.prices).map(([id,value])=>[id,{value,date,source:'本機估值快照（各標的實際報價日可能不同）'}]));
-    return {prices,fx:{value:anchor.fx,date},date,kind:'snapshot',capturedAt:anchor.observedAt};
+    const prices=Object.fromEntries(Object.entries(anchor.prices).map(([id,value])=>[id,{value,date:anchor.quoteDates?.[id]||'',source:'本機估值快照（非同步報價）'}]));
+    return {prices,fx:{value:anchor.fx,date:anchor.fxDate||''},date,kind:'snapshot',capturedAt:anchor.observedAt};
   }
   const validRate=(x)=>x?.fx&&Number(x.fx.value)>0?Number(x.fx.value):null;
   for(let i=1;i<allDates.length;i++){
@@ -304,12 +305,13 @@ function archivedDailyChanges(){
       const r0=pos.currency==='USD'?validRate(before):1;
       const r1=pos.currency==='USD'?validRate(after):1;
       if(!p0||!p1||!r0||!r1){missing.push(id);continue;}
+      if(id==='BTC'||id==='ETH'){stale.push(id);continue;}
       const old=qty*p0.value*r0,now=qty*p1.value*r1;
       previousValue+=old;amount+=now-old;covered++;
       // Different source dates and repeated NAVs are not synchronous daily closes.
       if(!p0.date||!p1.date||p0.date!==prior||p1.date!==day)stale.push(id);
     }
-    if(missing.length||!covered)continue;
+    if(missing.length||!covered||stale.length)continue;
     const status=stale.length?'暫估（混合報價日期）':'行情估算（非券商結算）';
     result[day]={amount,pct:previousValue>0?amount/previousValue*100:null,
       previous:{date:prior,value:previousValue},current:{date:day,value:previousValue+amount},
@@ -319,7 +321,7 @@ function archivedDailyChanges(){
   return result;
 }
 function calendarDailyChanges(){
-  const derived=archivedDailyChanges(),saved=dailyChanges();
+  const derived=archivedDailyChanges(),saved={};
   // Local comparisons can use different mixed quote dates too: label as estimates.
   for(const [date,x] of Object.entries(saved)){
     if(!derived[date])derived[date]={...x,provisional:true,
@@ -696,7 +698,9 @@ function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fun
   const time=(a.id==='BTC'||a.id==='ETH')&&p?.retrieved_at?taiwanTime(p.retrieved_at):p?.date||'日期未知';
   const reason=!held?'目前無持倉':!quoteOk?'缺少有效行情':!(rate>0)?'缺少 USD/TWD 匯率':'已估值';
   const staleCrypto=automatic&&(a.id==='BTC'||a.id==='ETH')&&p?.retrieved_at&&Date.now()-Date.parse(p.retrieved_at)>BTC_STALE_HOURS*3600000;
-  const status=staleCrypto?'已估值・行情逾 2 小時':reason;
+  const ageDays=p?.date?Math.floor((Date.parse(twDate()+'T00:00:00Z')-Date.parse(p.date+'T00:00:00Z'))/86400000):Infinity;
+  const staleOther=automatic&&a.type==='fund'&&ageDays>5 || automatic&&(a.type==='tw'||a.type==='us')&&ageDays>5;
+  const status=staleCrypto?'行情過期・僅供參考':staleOther?'報價過期・僅供參考':reason;
   return `<div class="item"><div class="between"><b>${safe(a.name)}${a.id==='BTC'||a.id==='ETH'?' · '+safe(a.id):''}</b><small class="${priced?'positive':'negative'}">${safe(status)}</small></div>
     <small>持有數量：${fmtQty(z.q)} ${a.type==='crypto'?'幣':'單位'}</small><br>
     <small>參考單價：${quoteOk?money(Number(p.value),a.currency):'無有效報價'}</small><br>
@@ -706,7 +710,7 @@ function render(){const totals={tw:0,us:0,fund:0,crypto:0},counts={tw:0,us:0,fun
     ${a.id==='BTC'&&held?`<p class="hint">${safe(btcQuoteStatus().detail)}</p>`:''}
     ${a.id==='ETH'&&held&&!quoteOk?'<p class="hint">ETH/TWD 尚無有效報價，請檢查 market.json 是否提供 ETH 行情，或在下方輸入手動參考價。</p>':''}
   </div>`;
-}).join('');byId('holdlist').innerHTML=state.assets.map(a=>{const z=valuation(a),n=estimatedTrades(a.id).length,s=a.id==='BTC'?btcQuoteStatus():null;return `<div class="item"><div class="between"><b>${safe(a.name)}</b><small>${a.type==='fund'?'基金':a.type==='us'?'美股':a.type==='crypto'?'加密貨幣':'台股'}${n?' · 🟡 含預估 '+n+' 筆':''}</small></div><p class="muted">${safe(a.id)} · ${a.type==='crypto'?z.q.toFixed(8):z.q.toFixed(5)} 單位 · 成本 ${money(z.c,a.currency)}</p><div class="between"><b>${money(z.value)}</b><small>${z.value!==null&&z.costTwd!==null?money(z.value-z.costTwd):'損益待確認'}</small></div><small>${z.p?'報價 '+safe(z.p.automatic?taiwanTime(z.p.retrieved_at):z.p.date||'未知'):'尚未取得價格'} · ${a.verified?'已核對':'期初成本待核對'}${n?' · 預估持倉非券商正式股數':''}</small>${s?`<p class="hint ${s.stale?'negative':'positive'}">${safe(s.label)}</p>`:''}<details><summary>校正期初持倉</summary><label>期初數量<input type="number" step="any" id="q-${safe(a.id)}" value="${a.qty}"></label><label>期初總成本（${a.currency}）<input type="number" step="any" id="c-${safe(a.id)}" value="${a.cost}"></label><button onclick="updateBase('${safe(a.id)}')">儲存校正</button><p class="hint">此處只改期初基準，不會清除後續交易。</p></details></div>`;}).join('');for(const id of ['tradeasset','manualasset']){const el=byId(id),selected=el.value;el.innerHTML=state.assets.map(a=>`<option value="${safe(a.id)}">${safe(a.name)}</option>`).join('');if(state.assets.some(a=>a.id===selected))el.value=selected;}byId('feeddate').textContent=feed.updated_at?'行情檔更新：'+taiwanTime(feed.updated_at):'尚未取得自動行情';byId('feedstatus').textContent=feedError?'行情讀取失敗':feed.updated_at?'行情已讀取':'行情未就緒';updateEstimatePreview();renderPendingSummary();renderHistory();renderHistoricalArchive();renderCalendar();renderMonthlyBudget();renderTradeLedger();renderSavings();}
+}).join('');byId('holdlist').innerHTML=state.assets.map(a=>{const z=valuation(a),n=estimatedTrades(a.id).length,s=a.id==='BTC'?btcQuoteStatus():null;return `<div class="item"><div class="between"><b>${safe(a.name)}</b><small>${a.type==='fund'?'基金':a.type==='us'?'美股':a.type==='crypto'?'加密貨幣':'台股'}${n?' · 🟡 含預估 '+n+' 筆':''}</small></div><p class="muted">${safe(a.id)} · ${a.type==='crypto'?z.q.toFixed(8):z.q.toFixed(5)} 單位 · 成本 ${money(z.c,a.currency)}</p><div class="between"><b>${money(z.value)}</b><small>${z.value!==null&&z.costTwd!==null?money(z.value-z.costTwd):'損益待確認'}</small></div><small>${z.p?'報價 '+safe(z.p.automatic?taiwanTime(z.p.retrieved_at):z.p.date||'未知'):'尚未取得價格'} · ${a.verified?'已核對':'期初成本待核對'}${n?' · 預估持倉非券商正式股數':''}</small>${s?`<p class="hint ${s.stale?'negative':'positive'}">${safe(s.label)}</p>`:''}<details><summary>校正期初持倉</summary><label>期初數量<input type="number" step="any" id="q-${safe(a.id)}" value="${a.qty}"></label><label>期初總成本（${a.currency}）<input type="number" step="any" id="c-${safe(a.id)}" value="${a.cost}"></label><button onclick="updateBase('${safe(a.id)}')">儲存校正</button><p class="hint">此處只改期初基準，不會清除後續交易。</p></details></div>`;}).join('');for(const id of ['tradeasset','manualasset']){const el=byId(id),selected=el.value;el.innerHTML=state.assets.map(a=>`<option value="${safe(a.id)}">${safe(a.name)}</option>`).join('');if(state.assets.some(a=>a.id===selected))el.value=selected;}byId('feeddate').textContent=feed.updated_at?'行情檔更新：'+taiwanTime(feed.updated_at):'尚未取得自動行情';byId('feedstatus').textContent=feedError?'行情讀取失敗':feed.updated_at?('行情檔已讀取'+(feed.update_status?.failed_ids?.length?'・'+feed.update_status.failed_ids.length+' 檔更新失敗':'・逐檔核對日期')):'行情未就緒';updateEstimatePreview();renderPendingSummary();renderHistory();renderHistoricalArchive();renderCalendar();renderMonthlyBudget();renderTradeLedger();renderSavings();}
 function updateBase(id){const a=state.assets.find(x=>x.id===id),q=num(byId('q-'+id)?.value),c=num(byId('c-'+id)?.value);if(!a||!Number.isFinite(q)||q<0||!Number.isFinite(c)||c<0)return alert('請填入有效數值');a.qty=q;a.cost=c;a.verified=true;save();render();}
 function showAddAsset(){byId('assetform').classList.toggle('hidden');}
 
@@ -1039,7 +1043,7 @@ function renderPendingSummary(){let el=byId('estimatedSummary');if(!el){const ta
 const MONO_SAVINGS_GOAL=200000;let monoHeroMode='assets';
 function updateHeroAssetMode(){const el=document.getElementById('total');if(!el)return;const savings=typeof savingsBalance==='function'?savingsBalance():0;const invest=Number(window.monoInvestmentValue||0);const isSavings=monoHeroMode==='savings';el.textContent=money(isSavings?savings:invest+savings);document.getElementById('heroViewTitle').textContent=isSavings?'個人總存款':'個人總資產';document.getElementById('heroSummary').hidden=isSavings||!document.getElementById('heroPeriodView').hidden;document.getElementById('heroSavingsSummary').hidden=!isSavings;document.getElementById('heroSavingsProgress').hidden=!isSavings;if(isSavings){document.getElementById('heroPeriodView').hidden=true;document.getElementById('heroSummary').hidden=true;}document.getElementById('heroSavingsPercent').textContent=(savings/MONO_SAVINGS_GOAL*100).toFixed(2)+'%';document.getElementById('heroSavingsRemaining').textContent=money(Math.max(0,MONO_SAVINGS_GOAL-savings));document.getElementById('heroSavingsProgressFill').style.width=Math.min(100,Math.max(0,savings/MONO_SAVINGS_GOAL*100))+'%';}
 function installSavingsHeroSwitch(){const el=document.getElementById('heroModeSwitch');if(!el)return;const toggle=()=>{monoHeroMode=monoHeroMode==='assets'?'savings':'assets';document.getElementById('heroPeriodView').hidden=true;updateHeroAssetMode();};el.addEventListener('click',toggle);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});}
-// SAVINGS V26.1122.193000: separate ledger, never written to marlowe_wealth_v2.
+// SAVINGS V26.1123.233000: separate ledger, never written to marlowe_wealth_v2.
 const SAVINGS_KEY='mono_wealth_savings_v1';
 function savingsRead(){
   try{const x=JSON.parse(localStorage.getItem(SAVINGS_KEY));return x&&Array.isArray(x.entries)?x.entries:[];}

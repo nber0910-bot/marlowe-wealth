@@ -1,0 +1,8 @@
+V26.1123.230000
+- 每檔報價更新成功與失敗分別紀錄在 market.json:update_status。
+- BitoPro BTC/ETH 同交易所雙端點驗證；請勿把失敗時保留的舊報價當即時價。
+- 行情明細增加基金及股票過期提示。
+- 停用無報價日期證據的本機歷史損益推估；歷史日曆僅在完整逐檔同日行情可核實時估算。
+- 原本 daily-history.json/history.json 與 localStorage 持倉及存款皆不修改。
+- 請先手動執行 GitHub Actions Refresh MARLOWE WEALTH market prices，再確認 update_status.failed_ids。
+注意：無法保證 MoneyDJ 能取得富邦基金最新淨值；更新失敗時會顯示失敗，不捏造 NAV。

@@ -1,0 +1,5 @@
+V26.1123.233000
+富邦兩檔：優先富邦投信官方基金淨值（106A/107A），失敗後使用精確同級別 MoneyDJ 表格。僅採用附日期且驗證類別的淨值。
+BTC/ETH：Coinbase Exchange USD 即時成交價 -> Coinbase USD spot -> Yahoo Finance USD 日線收盤備援，依 USD/TWD 換算台幣供既有 APP 估值；保留美元單價、匯率日期、報價時間、來源。
+不修改 localStorage、持倉、交易或存款。
+限制：此環境無法直接連接上述資料源進行執行測試。部署後需確認 market.json 的 update_status.failed_ids 為空，且基金 date 與官方一致。

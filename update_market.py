@@ -12,6 +12,7 @@ import math
 import pathlib
 import re
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -29,6 +30,8 @@ if not isinstance(prices, dict):
     prices = {}
 fx = old.get("fx")
 HEADERS = {"User-Agent": "Mozilla/5.0", "Accept": "text/html,application/json"}
+errors = {}
+successful = []
 
 
 def utc_now():
@@ -41,8 +44,16 @@ def iso_utc(value):
 
 def download(url):
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=20) as response:
-        return response.read()
+    last = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=10) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:
+            last = exc
+            if attempt < 2:
+                time.sleep(1 + attempt)
+    raise last
 
 
 def chart(symbol):
@@ -113,8 +124,10 @@ for asset_id, symbol in MARKET_SECURITIES:
     try:
         item = chart(symbol)
         update_price(asset_id, item)
+        successful.append(asset_id)
         print("SECURITY", asset_id, item)
     except Exception as exc:
+        errors[asset_id] = str(exc)
         print("SECURITY unavailable", asset_id, exc)
     time.sleep(1)
 
@@ -160,43 +173,65 @@ except Exception as exc:
     print("FX unavailable", exc)
 
 
-# BitoPro spot quotes. Each pair is validated independently; a failed request
-# retains the last successfully recorded quote without inventing a live price.
-def fetch_bitopro_crypto(pair):
-    requested_at = utc_now()
-    raw = json.loads(download("https://api.bitopro.com/v3/tickers/" + pair))
-    data = raw.get("data")
-    if isinstance(data, list):
-        matches = [item for item in data if isinstance(item, dict) and str(item.get("pair", "")).lower() == pair]
-        if len(matches) != 1:
-            raise ValueError("Trading pair not uniquely found: " + pair)
-        data = matches[0]
-    if not isinstance(data, dict) or str(data.get("pair", "")).lower() != pair:
-        raise ValueError("Unexpected BitoPro pair: " + pair)
-    value = float(data["lastPrice"])
-    if not math.isfinite(value) or value <= 0:
-        raise ValueError("Invalid BitoPro lastPrice")
-    return {
-        "value": value, "date": requested_at.date().isoformat(),
-        "source": "BitoPro " + pair.upper().replace("_", "/") + " last traded price",
-        "retrieved_at": iso_utc(requested_at), "quote_type": "last_traded",
-        "currency": "TWD", "pair": pair,
-    }
-
-for asset_id, pair in (("BTC", "btc_twd"), ("ETH", "eth_twd")):
+# USD crypto quotes: independent exchange spot endpoints with Yahoo daily-close fallback.
+# The app's existing crypto assets are TWD-denominated. Convert the verified USD
+# quote to TWD before publishing, retaining the original USD price for audit.
+def usd_crypto_quote(asset_id):
+    symbol = {'BTC':'BTC-USD','ETH':'ETH-USD'}[asset_id]
+    pair = {'BTC':'BTC-USD','ETH':'ETH-USD'}[asset_id]
+    failures = []
+    endpoints = [
+        ('Coinbase Exchange USD spot', 'https://api.exchange.coinbase.com/products/'+pair+'/ticker'),
+        ('Coinbase USD spot', 'https://api.coinbase.com/v2/prices/'+pair+'/spot'),
+    ]
+    for label,url in endpoints:
+        try:
+            now=utc_now()
+            raw=json.loads(download(url))
+            if 'Coinbase Exchange' in label:
+                usd=float(raw['price'])
+                timestamp=raw.get('time') or iso_utc(now)
+            else:
+                usd=float(raw['data']['amount'])
+                if raw['data'].get('currency')!='USD' or raw['data'].get('base')!=asset_id:
+                    raise ValueError('Currency or base mismatch')
+                timestamp=iso_utc(now)
+            if not math.isfinite(usd) or usd<=0:raise ValueError('Invalid USD spot price')
+            return usd,label,timestamp
+        except Exception as exc:failures.append(label+': '+str(exc))
     try:
-        item = fetch_bitopro_crypto(pair)
-        previous = prices.get(asset_id, {})
-        if not isinstance(previous, dict):
-            previous = {}
-        if item["retrieved_at"] >= previous.get("retrieved_at", ""):
-            prices[asset_id] = item
-            print(asset_id, "UPDATED", item)
-        else:
-            print(asset_id, "older quote ignored")
+        daily=chart(symbol)
+        return daily['value'],'Yahoo Finance '+symbol+' daily close (delayed)',daily['date']+'T23:59:00+00:00'
     except Exception as exc:
-        print(asset_id, "unavailable; previous quote retained:", exc)
+        failures.append('Yahoo: '+str(exc))
+    raise ValueError('; '.join(failures))
 
+for asset_id in ('BTC','ETH'):
+    try:
+        usd,source,quote_time=usd_crypto_quote(asset_id)
+        rate=float(fx['value']) if isinstance(fx,dict) else 0
+        if not math.isfinite(rate) or rate<=0:raise ValueError('USD/TWD unavailable')
+        now=utc_now()
+        quote_dt=datetime.datetime.fromisoformat(quote_time.replace('Z','+00:00'))
+        if quote_dt.tzinfo is None:quote_dt=quote_dt.replace(tzinfo=UTC)
+        if quote_dt>now+datetime.timedelta(minutes=5):raise ValueError('Future crypto timestamp')
+        if now-quote_dt>datetime.timedelta(days=4):raise ValueError('Crypto USD quote is too old')
+        fxdate=datetime.date.fromisoformat(fx['date'])
+        if now.date()-fxdate>datetime.timedelta(days=5):raise ValueError('USD/TWD FX quote is too old')
+        item={'value':round(usd*rate,6),'date':quote_dt.date().isoformat(),
+              'source':source+' · USD/TWD converted',
+              'retrieved_at':iso_utc(now),'quote_time':quote_dt.isoformat(),
+              'quote_type':'usd_spot_converted' if 'spot' in source.lower() else 'usd_daily_close_converted',
+              'currency':'TWD','pair':asset_id.lower()+'_twd',
+              'usd_price':usd,'usd_twd':rate,'fx_date':fx['date'],'usd_source':source}
+        previous=prices.get(asset_id,{})
+        if not isinstance(previous,dict) or item['retrieved_at']>=previous.get('retrieved_at',''):
+            prices[asset_id]=item
+            successful.append(asset_id)
+            print('CRYPTO UPDATED',asset_id,item)
+    except Exception as exc:
+        errors[asset_id]=str(exc)
+        print('CRYPTO unavailable, previous retained:',asset_id,exc)
 
 # Confirmed NEXT BANK fund share classes
 FUNDS = {
@@ -205,9 +240,16 @@ FUNDS = {
     "YUANTA_NEW": {"code": "AYT0008", "name": "元大新主流基金A不配息(台幣)"},
     "YUANTA_DIV": {"code": "AYT0029", "name": "元大台灣高股息優質龍頭基金A不配息"},
 }
+# Exact A-class TWD fund IDs verified against Fubon Asset Management.
+# The source is the fund manager's dated NAV table, not a similar share class.
+FUBON_OFFICIAL = {
+    'FUBON_SP500':('106A','富邦標普500指數基金-A類型（新臺幣）'),
+    'FUBON_NASDAQ100':('107A','富邦NASDAQ-100指數基金-A類型（新臺幣）'),
+}
 NAV_PAGES = [
-    "https://fundv3new.moneydj.com/W2/ww/ww01.djhtm?a=BFZFPA&aspid=",
-    "https://fundv3new.moneydj.com/W2/ww/ww01.djhtm?a=BFZYTA&aspid=",
+    'https://tbbfws.moneydj.com/W4/ww/ww01.djhtm?a=BFZFPA&aspid=ESUN',
+    'https://fundv3new.moneydj.com/W2/ww/ww01.djhtm?a=BFZFPA&aspid=',
+    'https://fundv3new.moneydj.com/W2/ww/ww01.djhtm?a=BFZYTA&aspid=',
 ]
 
 
@@ -225,48 +267,74 @@ def parse_nav_date(value):
         return None
 
 
+def fetch_official_fubon_nav(asset_id):
+    from bs4 import BeautifulSoup
+    code,exact_name=FUBON_OFFICIAL[asset_id]
+    url='https://www.fubon.com/asset-management/fund/info/value?Fd='+code
+    soup=BeautifulSoup(download(url),'html.parser')
+    text=soup.get_text(' ',strip=True)
+    if normalize(exact_name) not in normalize(text):
+        raise ValueError('Official page fund/share class mismatch: '+asset_id)
+    # Parse dated rows. A row must contain exactly one date and a numeric NAV
+    # immediately after the date. Avoid NAV composition and other numeric fields.
+    observations=[]
+    for tr in soup.select('tr'):
+        cells=[c.get_text(' ',strip=True) for c in tr.find_all(['td','th'],recursive=False)]
+        for i,cell in enumerate(cells[:-1]):
+            d=parse_nav_date(cell)
+            if not d or len(cell.strip())>20:continue
+            for candidate in cells[i+1:i+3]:
+                m=re.fullmatch(r'\s*(\d{1,3}(?:\.\d{1,6})?)\s*',candidate)
+                if m:
+                    v=float(m.group(1))
+                    if 1<=v<=100:observations.append((d,v))
+                    break
+    # Some Fubon pages use date/value div layouts rather than <tr>.
+    if not observations:
+        pattern=r'(20\d{2}/\d{1,2}/\d{1,2})\s+(\d{1,3}\.\d{1,6})(?!\d)'
+        for d,v in re.findall(pattern,text):
+            date=parse_nav_date(d);value=float(v)
+            if date and 1<=value<=100:observations.append((date,value))
+    if not observations:raise ValueError('No verifiable dated NAV rows on official page')
+    date,value=max(observations)
+    if date>utc_now().date().isoformat():raise ValueError('Future NAV date')
+    return {'value':value,'date':date,'source':'富邦投信官方基金淨值 · '+code}
+
+
 def fetch_fund_navs():
     from bs4 import BeautifulSoup
-    found = {}
+    found={}
+    # Fund manager first; no cross-share-class or cross-currency substitution.
+    for asset_id in FUBON_OFFICIAL:
+        try:
+            found[asset_id]=fetch_official_fubon_nav(asset_id)
+            print('OFFICIAL FUBON NAV',asset_id,found[asset_id])
+        except Exception as exc:print('OFFICIAL FUBON NAV unavailable',asset_id,exc)
     for url in NAV_PAGES:
         try:
-            soup = BeautifulSoup(download(url), "html.parser")
-            for row in soup.select("tr"):
-                cells = [
-                    cell.get_text(" ", strip=True)
-                    for cell in row.find_all(["td", "th"], recursive=False)
-                ]
-                if len(cells) < 3:
-                    continue
-                for asset_id, fund in FUNDS.items():
-                    target = normalize(fund["name"])
-                    name_cells = [cell for cell in cells if normalize(cell).startswith(target)]
-                    if len(name_cells) != 1:
-                        continue
-                    date = None
-                    date_index = None
-                    for i, cell in enumerate(cells):
-                        candidate = parse_nav_date(cell)
-                        if candidate:
-                            date, date_index = candidate, i
-                            break
-                    if not date:
-                        continue
-                    value = None
-                    for cell in cells[date_index + 1:]:
-                        cleaned = cell.replace(",", "").strip()
-                        if re.fullmatch(r"\d+(?:\.\d+)?", cleaned):
-                            value = float(cleaned)
-                            break
-                    if not value or value <= 0:
-                        continue
-                    item = {"value": value, "date": date, "source": "MoneyDJ published fund NAV"}
-                    previous = found.get(asset_id)
-                    if previous is None or item["date"] > previous["date"]:
-                        found[asset_id] = item
-            print("NAV page checked:", url)
-        except Exception as exc:
-            print("NAV source unavailable:", url, exc)
+            soup=BeautifulSoup(download(url),'html.parser')
+            for row in soup.select('tr'):
+                cells=[cell.get_text(' ',strip=True) for cell in row.find_all(['td','th'],recursive=False)]
+                if len(cells)<3:continue
+                for asset_id,fund in FUNDS.items():
+                    target=normalize(fund['name'])
+                    if len([cell for cell in cells if normalize(cell).startswith(target)])!=1:continue
+                    for i,cell in enumerate(cells):
+                        date=parse_nav_date(cell)
+                        if not date:continue
+                        for value_cell in cells[i+1:]:
+                            cleaned=value_cell.replace(',','').strip()
+                            if re.fullmatch(r'\d+(?:\.\d+)?',cleaned):
+                                value=float(cleaned)
+                                if value>0 and date<=utc_now().date().isoformat():
+                                    item={'value':value,'date':date,'source':'MoneyDJ published fund NAV'}
+                                    previous=found.get(asset_id)
+                                    if previous is None or item['date']>previous['date']:
+                                        found[asset_id]=item
+                                break
+                        break
+            print('NAV page checked:',url)
+        except Exception as exc:print('NAV source unavailable:',url,exc)
     return found
 
 try:
@@ -274,10 +342,13 @@ try:
     for asset_id, fund in FUNDS.items():
         item = fund_prices.get(asset_id)
         if item and update_price(asset_id, item):
+            successful.append(asset_id)
             print("FUND UPDATED", asset_id, fund["code"], item)
         else:
+            errors[asset_id] = "NAV not verified from available published source"
             print("FUND NOT VERIFIED", asset_id, fund["code"])
 except Exception as exc:
+    for asset_id in FUNDS: errors[asset_id] = str(exc)
     print("Fund NAV update unavailable:", exc)
 
 
@@ -287,9 +358,15 @@ payload = {
     "fx": fx,
     "prices": prices,
     "indices": indices,
+    "update_status": {
+        "successful_ids": sorted(set(successful)),
+        "failed_ids": sorted(errors),
+        "errors": errors,
+        "note": "An updated_at timestamp only confirms the file was refreshed, not every quote."
+    },
     "notes": (
         "Taiwan/US securities: Yahoo Finance delayed daily close; "
-        "funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. "
+        "funds: official Fubon NAV or MoneyDJ published NAV; BTC/ETH: USD quotes converted using USD/TWD. "
         "Each quote may have a different timestamp. "
         "Previous verified values are retained when sources are unavailable."
     ),
