@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-23T21:06:19+00:00",
+  "updated_at": "2026-11-23T22:02:37+00:00",
   "fx": {
-    "value": 32.830002,
+    "value": 32.804001,
     "date": "2026-11-23",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -22,7 +22,7 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 664.179993,
+      "value": 663.909973,
       "date": "2026-11-23",
       "source": "Yahoo Finance daily close (delayed)"
     },
@@ -32,16 +32,16 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 2009420.023014,
+      "value": 2008462.357786,
       "date": "2026-11-23",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-23T21:06:05+00:00",
-      "quote_time": "2026-11-23T21:06:04.796208+00:00",
+      "retrieved_at": "2026-11-23T22:02:22+00:00",
+      "quote_time": "2026-11-23T22:02:21.790062+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "btc_twd",
-      "usd_price": 61206.82,
-      "usd_twd": 32.830002,
+      "usd_price": 61226.14,
+      "usd_twd": 32.804001,
       "fx_date": "2026-11-23",
       "usd_source": "Coinbase Exchange USD spot"
     },
@@ -66,21 +66,21 @@
       "source": "富邦投信官方基金淨值 · 107A"
     },
     "ETH": {
-      "value": 56553.289745,
+      "value": 56470.447521,
       "date": "2026-11-23",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-23T21:06:05+00:00",
-      "quote_time": "2026-11-23T21:06:04.025494+00:00",
+      "retrieved_at": "2026-11-23T22:02:22+00:00",
+      "quote_time": "2026-11-23T22:02:18.907096+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "eth_twd",
-      "usd_price": 1722.61,
-      "usd_twd": 32.830002,
+      "usd_price": 1721.45,
+      "usd_twd": 32.804001,
       "fx_date": "2026-11-23",
       "usd_source": "Coinbase Exchange USD spot"
     },
     "KO": {
-      "value": 95.974998,
+      "value": 95.879997,
       "date": "2026-11-23",
       "source": "Yahoo Finance daily close (delayed)"
     }
