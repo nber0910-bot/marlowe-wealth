@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T03:08:32+00:00",
+  "updated_at": "2026-11-23T04:22:02+00:00",
   "fx": {
     "value": 32.928001,
     "date": "2026-11-23",
@@ -7,17 +7,17 @@
   },
   "prices": {
     "009816": {
-      "value": 12.52,
+      "value": 12.91,
       "date": "2026-11-23",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00646": {
-      "value": 73.0,
+      "value": 73.349998,
       "date": "2026-11-23",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00713": {
-      "value": 57.549999,
+      "value": 58.299999,
       "date": "2026-11-23",
       "source": "Yahoo Finance daily close (delayed)"
     },
@@ -79,10 +79,10 @@
   },
   "indices": {
     "TWII": {
-      "value": 35721.628906,
+      "value": 36943.460938,
       "date": "2026-11-23",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -0.7438
+      "change_pct": 2.5259
     },
     "SP500": {
       "value": 6910.390137,
