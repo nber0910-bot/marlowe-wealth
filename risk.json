@@ -1,29 +1,29 @@
 {
-  "updated_at": "2026-11-21T13:24:27+00:00",
+  "updated_at": "2026-11-24T04:11:13+00:00",
   "metrics": {
     "vix": {
-      "value": 28.44,
-      "date": "2026-11-19",
+      "value": 35.89,
+      "date": "2026-11-20",
       "source": "FRED · CBOE VIX",
       "unit": "index"
     },
     "dxy": {
-      "value": 103.81,
-      "date": "2026-11-20",
+      "value": 104.273,
+      "date": "2026-11-24",
       "source": "Yahoo Finance · DX-Y.NYB (delayed)",
       "unit": "index",
-      "change_5d_pct": 0.387
+      "change_5d_pct": 0.757
     },
     "us10y": {
-      "value": 5.04,
-      "date": "2026-11-19",
+      "value": 4.92,
+      "date": "2026-11-20",
       "source": "FRED · US Treasury 10Y",
       "unit": "%",
-      "change_5d": -0.06
+      "change_5d": -0.23
     },
     "hyspread": {
-      "value": 3.52,
-      "date": "2026-11-19",
+      "value": 3.76,
+      "date": "2026-11-20",
       "source": "FRED · ICE BofA US HY OAS",
       "unit": "percentage points"
     },
@@ -34,11 +34,11 @@
       "unit": "%"
     },
     "foreign": {
-      "value": -95.11,
-      "date": "2026-11-20",
+      "value": -289.48,
+      "date": "2026-11-23",
       "source": "TWSE · 三大法人買賣金額統計表",
       "unit": "億元",
-      "sum_5d": -2186.69
+      "sum_5d": -1774.28
     }
   },
   "errors": {}
