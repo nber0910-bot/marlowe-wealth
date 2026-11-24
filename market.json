@@ -1,140 +1,113 @@
 {
-  "updated_at": "2026-11-24T04:13:12+00:00",
+  "updated_at": "2026-11-22T07:25:14+00:00",
   "fx": {
-    "value": 32.860001,
-    "date": "2026-11-24",
+    "value": 33.026299,
+    "date": "2026-11-20",
     "source": "Yahoo Finance daily close (delayed)"
   },
   "prices": {
     "009816": {
-      "value": 14.16,
-      "date": "2026-11-24",
+      "value": 12.6,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00646": {
-      "value": 75.349998,
-      "date": "2026-11-24",
+      "value": 74.050003,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00713": {
-      "value": 61.799999,
-      "date": "2026-11-24",
+      "value": 58.0,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 663.909973,
-      "date": "2026-11-23",
+      "value": 635.539978,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 165.050003,
-      "date": "2026-11-23",
+      "value": 125.529999,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 1984230.129984,
-      "date": "2026-11-24",
-      "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-24T04:13:03+00:00",
-      "quote_time": "2026-11-24T04:13:02.834475+00:00",
-      "quote_type": "usd_spot_converted",
+      "value": 2101757.0,
+      "date": "2026-11-19",
+      "source": "BitoPro BTC/TWD last traded price",
+      "retrieved_at": "2026-11-19T07:31:57+00:00",
+      "quote_type": "last_traded",
       "currency": "TWD",
-      "pair": "btc_twd",
-      "usd_price": 60384.36,
-      "usd_twd": 32.860001,
-      "fx_date": "2026-11-24",
-      "usd_source": "Coinbase Exchange USD spot"
+      "pair": "btc_twd"
     },
     "YUANTA_NEW": {
-      "value": 107.96,
-      "date": "2026-11-23",
+      "value": 104.11,
+      "date": "2026-11-20",
       "source": "MoneyDJ published fund NAV"
     },
     "YUANTA_DIV": {
-      "value": 34.11,
-      "date": "2026-11-23",
+      "value": 32.61,
+      "date": "2026-11-20",
       "source": "MoneyDJ published fund NAV"
     },
     "FUBON_SP500": {
-      "value": 11.22,
-      "date": "2026-11-23",
-      "source": "富邦投信官方基金淨值 · 106A"
+      "value": 11.8,
+      "date": "2026-11-11",
+      "source": "MoneyDJ published fund NAV",
+      "note": "Restored from prior user-provided market.json; not a new quote"
     },
     "FUBON_NASDAQ100": {
-      "value": 10.93,
-      "date": "2026-11-23",
-      "source": "富邦投信官方基金淨值 · 107A"
+      "value": 11.58,
+      "date": "2026-11-11",
+      "source": "MoneyDJ published fund NAV",
+      "note": "Restored from prior user-provided market.json; not a new quote"
     },
     "ETH": {
-      "value": 55737.133696,
-      "date": "2026-11-24",
-      "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-24T04:13:03+00:00",
-      "quote_time": "2026-11-24T04:13:01.479803+00:00",
-      "quote_type": "usd_spot_converted",
+      "value": 59541.0,
+      "date": "2026-11-19",
+      "source": "BitoPro ETH/TWD last traded price",
+      "retrieved_at": "2026-11-19T07:31:58+00:00",
+      "quote_type": "last_traded",
       "currency": "TWD",
-      "pair": "eth_twd",
-      "usd_price": 1696.2,
-      "usd_twd": 32.860001,
-      "fx_date": "2026-11-24",
-      "usd_source": "Coinbase Exchange USD spot"
+      "pair": "eth_twd"
     },
     "KO": {
-      "value": 95.879997,
-      "date": "2026-11-23",
+      "value": 96.989998,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)"
     }
   },
   "indices": {
     "TWII": {
-      "value": 40134.03125,
-      "date": "2026-11-24",
+      "value": 36033.289062,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 9.0246
+      "change_pct": -6.229
     },
     "SP500": {
-      "value": 7237.169922,
-      "date": "2026-11-23",
+      "value": 6910.390137,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 4.7288
+      "change_pct": -3.6991
     },
     "NASDAQ": {
-      "value": 24089.558594,
-      "date": "2026-11-23",
+      "value": 22617.730469,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 6.5074
+      "change_pct": -5.2827
     },
     "SOX": {
-      "value": 9588.049805,
-      "date": "2026-11-23",
+      "value": 8408.589844,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 14.0268
+      "change_pct": -10.7342
     },
     "DJI": {
-      "value": 49595.300781,
-      "date": "2026-11-23",
+      "value": 48147.328125,
+      "date": "2026-11-20",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 3.0074
+      "change_pct": -1.9344
     }
   },
-  "update_status": {
-    "successful_ids": [
-      "00646",
-      "00713",
-      "009816",
-      "BTC",
-      "ETH",
-      "FUBON_NASDAQ100",
-      "FUBON_SP500",
-      "KO",
-      "NVDA",
-      "VOO",
-      "YUANTA_DIV",
-      "YUANTA_NEW"
-    ],
-    "failed_ids": [],
-    "errors": {},
-    "note": "An updated_at timestamp only confirms the file was refreshed, not every quote."
-  },
-  "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: official Fubon NAV or MoneyDJ published NAV; BTC/ETH: USD quotes converted using USD/TWD. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
+  "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: MoneyDJ published NAV; BTC/ETH: BitoPro TWD last-traded snapshots. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
 }
