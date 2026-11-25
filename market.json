@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-25T07:38:39+00:00",
+  "updated_at": "2026-11-25T09:27:07+00:00",
   "fx": {
-    "value": 33.175999,
+    "value": 33.125999,
     "date": "2026-11-25",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -32,27 +32,27 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 1947218.483146,
+      "value": 1955684.447462,
       "date": "2026-11-25",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-25T07:38:26+00:00",
-      "quote_time": "2026-11-25T07:38:26.032179+00:00",
+      "retrieved_at": "2026-11-25T09:26:53+00:00",
+      "quote_time": "2026-11-25T09:26:52.907111+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "btc_twd",
-      "usd_price": 58693.59,
-      "usd_twd": 33.175999,
+      "usd_price": 59037.75,
+      "usd_twd": 33.125999,
       "fx_date": "2026-11-25",
       "usd_source": "Coinbase Exchange USD spot"
     },
     "YUANTA_NEW": {
-      "value": 117.32,
-      "date": "2026-11-24",
+      "value": 110.65,
+      "date": "2026-11-25",
       "source": "MoneyDJ published fund NAV"
     },
     "YUANTA_DIV": {
-      "value": 37.28,
-      "date": "2026-11-24",
+      "value": 35.35,
+      "date": "2026-11-25",
       "source": "MoneyDJ published fund NAV"
     },
     "FUBON_SP500": {
@@ -66,16 +66,16 @@
       "source": "富邦投信官方基金淨值 · 107A"
     },
     "ETH": {
-      "value": 54292.854123,
+      "value": 54388.915238,
       "date": "2026-11-25",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-25T07:38:26+00:00",
-      "quote_time": "2026-11-25T07:38:25.684999+00:00",
+      "retrieved_at": "2026-11-25T09:26:53+00:00",
+      "quote_time": "2026-11-25T09:26:50.903952+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "eth_twd",
-      "usd_price": 1636.51,
-      "usd_twd": 33.175999,
+      "usd_price": 1641.88,
+      "usd_twd": 33.125999,
       "fx_date": "2026-11-25",
       "usd_source": "Coinbase Exchange USD spot"
     },
