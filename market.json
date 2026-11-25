@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-25T20:08:18+00:00",
+  "updated_at": "2026-11-25T21:09:18+00:00",
   "fx": {
-    "value": 33.167999,
+    "value": 33.181999,
     "date": "2026-11-25",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -22,26 +22,26 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
-      "value": 658.669983,
+      "value": 658.840027,
       "date": "2026-11-25",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "NVDA": {
-      "value": 148.050003,
+      "value": 149.300003,
       "date": "2026-11-25",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 1983813.178269,
+      "value": 1998776.441903,
       "date": "2026-11-25",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-25T20:08:02+00:00",
-      "quote_time": "2026-11-25T20:08:01.234261+00:00",
+      "retrieved_at": "2026-11-25T21:08:59+00:00",
+      "quote_time": "2026-11-25T21:08:58.246619+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "btc_twd",
-      "usd_price": 59811.06,
-      "usd_twd": 33.167999,
+      "usd_price": 60236.77,
+      "usd_twd": 33.181999,
       "fx_date": "2026-11-25",
       "usd_source": "Coinbase Exchange USD spot"
     },
@@ -66,21 +66,21 @@
       "source": "富邦投信官方基金淨值 · 107A"
     },
     "ETH": {
-      "value": 55667.511122,
+      "value": 55981.018693,
       "date": "2026-11-25",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-25T20:08:02+00:00",
-      "quote_time": "2026-11-25T20:08:01.435475+00:00",
+      "retrieved_at": "2026-11-25T21:08:59+00:00",
+      "quote_time": "2026-11-25T21:08:56.127828+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "eth_twd",
-      "usd_price": 1678.35,
-      "usd_twd": 33.167999,
+      "usd_price": 1687.09,
+      "usd_twd": 33.181999,
       "fx_date": "2026-11-25",
       "usd_source": "Coinbase Exchange USD spot"
     },
     "KO": {
-      "value": 98.243599,
+      "value": 97.650002,
       "date": "2026-11-25",
       "source": "Yahoo Finance daily close (delayed)"
     }
@@ -93,28 +93,28 @@
       "change_pct": -4.8026
     },
     "SP500": {
-      "value": 7180.279785,
+      "value": 7182.779785,
       "date": "2026-11-25",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -0.289
+      "change_pct": -0.2543
     },
     "NASDAQ": {
-      "value": 23558.066406,
+      "value": 23585.802734,
       "date": "2026-11-25",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -0.7393
+      "change_pct": -0.6225
     },
     "SOX": {
-      "value": 8697.925781,
+      "value": 8774.862305,
       "date": "2026-11-25",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": -1.5236
+      "change_pct": -0.6526
     },
     "DJI": {
-      "value": 50245.011719,
+      "value": 50182.949219,
       "date": "2026-11-25",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 0.4525
+      "change_pct": 0.3284
     }
   },
   "update_status": {
