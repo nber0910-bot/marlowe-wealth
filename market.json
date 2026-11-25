@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-25T11:10:40+00:00",
+  "updated_at": "2026-11-25T12:15:51+00:00",
   "fx": {
     "value": 33.125999,
     "date": "2026-11-25",
@@ -32,15 +32,15 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 1946557.572218,
+      "value": 1937509.868111,
       "date": "2026-11-25",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-25T11:10:27+00:00",
-      "quote_time": "2026-11-25T11:10:26.107165+00:00",
+      "retrieved_at": "2026-11-25T12:15:41+00:00",
+      "quote_time": "2026-11-25T12:15:40.970816+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "btc_twd",
-      "usd_price": 58762.23,
+      "usd_price": 58489.1,
       "usd_twd": 33.125999,
       "fx_date": "2026-11-25",
       "usd_source": "Coinbase Exchange USD spot"
@@ -66,15 +66,15 @@
       "source": "富邦投信官方基金淨值 · 107A"
     },
     "ETH": {
-      "value": 54514.131514,
+      "value": 54313.38796,
       "date": "2026-11-25",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-25T11:10:27+00:00",
-      "quote_time": "2026-11-25T11:10:25.411182+00:00",
+      "retrieved_at": "2026-11-25T12:15:41+00:00",
+      "quote_time": "2026-11-25T12:15:40.611566+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "eth_twd",
-      "usd_price": 1645.66,
+      "usd_price": 1639.6,
       "usd_twd": 33.125999,
       "fx_date": "2026-11-25",
       "usd_source": "Coinbase Exchange USD spot"
@@ -128,12 +128,16 @@
       "FUBON_SP500",
       "KO",
       "NVDA",
-      "VOO",
+      "VOO"
+    ],
+    "failed_ids": [
       "YUANTA_DIV",
       "YUANTA_NEW"
     ],
-    "failed_ids": [],
-    "errors": {},
+    "errors": {
+      "YUANTA_NEW": "NAV not verified from available published source",
+      "YUANTA_DIV": "NAV not verified from available published source"
+    },
     "note": "An updated_at timestamp only confirms the file was refreshed, not every quote."
   },
   "notes": "Taiwan/US securities: Yahoo Finance delayed daily close; funds: official Fubon NAV or MoneyDJ published NAV; BTC/ETH: USD quotes converted using USD/TWD. Each quote may have a different timestamp. Previous verified values are retained when sources are unavailable."
