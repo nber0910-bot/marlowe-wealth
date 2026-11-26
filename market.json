@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-26T22:07:40+00:00",
+  "updated_at": "2026-11-26T23:10:23+00:00",
   "fx": {
-    "value": 32.935001,
+    "value": 32.916,
     "date": "2026-11-26",
     "source": "Yahoo Finance daily close (delayed)"
   },
@@ -32,16 +32,16 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 1994915.167371,
+      "value": 1987649.118,
       "date": "2026-11-26",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-26T22:07:27+00:00",
-      "quote_time": "2026-11-26T22:07:26.498743+00:00",
+      "retrieved_at": "2026-11-26T23:10:07+00:00",
+      "quote_time": "2026-11-26T23:10:06.046135+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "btc_twd",
-      "usd_price": 60571.28,
-      "usd_twd": 32.935001,
+      "usd_price": 60385.5,
+      "usd_twd": 32.916,
       "fx_date": "2026-11-26",
       "usd_source": "Coinbase Exchange USD spot"
     },
@@ -66,16 +66,16 @@
       "source": "富邦投信官方基金淨值 · 107A"
     },
     "ETH": {
-      "value": 55881.804247,
+      "value": 55528.96284,
       "date": "2026-11-26",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-26T22:07:27+00:00",
-      "quote_time": "2026-11-26T22:07:26.575861+00:00",
+      "retrieved_at": "2026-11-26T23:10:07+00:00",
+      "quote_time": "2026-11-26T23:10:06.387591+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "eth_twd",
-      "usd_price": 1696.73,
-      "usd_twd": 32.935001,
+      "usd_price": 1686.99,
+      "usd_twd": 32.916,
       "fx_date": "2026-11-26",
       "usd_source": "Coinbase Exchange USD spot"
     },
