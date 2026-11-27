@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T13:45:36+00:00",
+  "updated_at": "2026-11-27T13:42:28+00:00",
   "metrics": {
     "vix": {
       "value": 26.36,
@@ -8,11 +8,11 @@
       "unit": "index"
     },
     "dxy": {
-      "value": 103.705,
-      "date": "2026-11-26",
+      "value": 103.958,
+      "date": "2026-11-27",
       "source": "Yahoo Finance · DX-Y.NYB (delayed)",
       "unit": "index",
-      "change_5d_pct": -0.188
+      "change_5d_pct": 0.056
     },
     "us10y": {
       "value": 4.91,
@@ -34,11 +34,11 @@
       "unit": "%"
     },
     "foreign": {
-      "value": -491.81,
-      "date": "2026-11-26",
+      "value": -296.28,
+      "date": "2026-11-27",
       "source": "TWSE · 三大法人買賣金額統計表",
       "unit": "億元",
-      "sum_5d": -2616.84
+      "sum_5d": -2818.02
     }
   },
   "errors": {}
