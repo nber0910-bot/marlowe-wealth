@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-11-27T00:07:48+00:00",
+  "updated_at": "2026-11-27T01:34:05+00:00",
   "fx": {
-    "value": 33.188999,
-    "date": "2026-11-26",
+    "value": 32.962002,
+    "date": "2026-11-27",
     "source": "Yahoo Finance daily close (delayed)"
   },
   "prices": {
     "009816": {
-      "value": 13.71,
-      "date": "2026-11-26",
+      "value": 13.69,
+      "date": "2026-11-27",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00646": {
-      "value": 75.150002,
-      "date": "2026-11-26",
+      "value": 75.050003,
+      "date": "2026-11-27",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "00713": {
       "value": 60.0,
-      "date": "2026-11-26",
+      "date": "2026-11-27",
       "source": "Yahoo Finance daily close (delayed)"
     },
     "VOO": {
@@ -32,17 +32,17 @@
       "source": "Yahoo Finance daily close (delayed)"
     },
     "BTC": {
-      "value": 2008539.806842,
+      "value": 1998683.294032,
       "date": "2026-11-27",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-27T00:07:34+00:00",
-      "quote_time": "2026-11-27T00:07:33.815894+00:00",
+      "retrieved_at": "2026-11-27T01:33:53+00:00",
+      "quote_time": "2026-11-27T01:33:53.296051+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "btc_twd",
-      "usd_price": 60518.24,
-      "usd_twd": 33.188999,
-      "fx_date": "2026-11-26",
+      "usd_price": 60635.98,
+      "usd_twd": 32.962002,
+      "fx_date": "2026-11-27",
       "usd_source": "Coinbase Exchange USD spot"
     },
     "YUANTA_NEW": {
@@ -66,17 +66,17 @@
       "source": "富邦投信官方基金淨值 · 107A"
     },
     "ETH": {
-      "value": 56063.189001,
+      "value": 55962.227756,
       "date": "2026-11-27",
       "source": "Coinbase Exchange USD spot · USD/TWD converted",
-      "retrieved_at": "2026-11-27T00:07:34+00:00",
-      "quote_time": "2026-11-27T00:07:32.424120+00:00",
+      "retrieved_at": "2026-11-27T01:33:53+00:00",
+      "quote_time": "2026-11-27T01:33:45.320773+00:00",
       "quote_type": "usd_spot_converted",
       "currency": "TWD",
       "pair": "eth_twd",
-      "usd_price": 1689.21,
-      "usd_twd": 33.188999,
-      "fx_date": "2026-11-26",
+      "usd_price": 1697.78,
+      "usd_twd": 32.962002,
+      "fx_date": "2026-11-27",
       "usd_source": "Coinbase Exchange USD spot"
     },
     "KO": {
@@ -87,10 +87,10 @@
   },
   "indices": {
     "TWII": {
-      "value": 39151.808594,
-      "date": "2026-11-26",
+      "value": 39210.421875,
+      "date": "2026-11-27",
       "source": "Yahoo Finance daily close (delayed)",
-      "change_pct": 2.5039
+      "change_pct": 0.1497
     },
     "SP500": {
       "value": 7182.779785,
