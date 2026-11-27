@@ -833,6 +833,98 @@
       },
       "kind": "latest_available_observation",
       "note": "Mixed quote dates; NOT verified synchronized closing P&L."
+    },
+    {
+      "date": "2026-11-27",
+      "captured_at": "2026-11-27T22:27:45.821943+08:00",
+      "market_updated_at": "2026-11-27T13:30:30+00:00",
+      "fx": {
+        "value": 32.970001,
+        "date": "2026-11-27",
+        "source": "Yahoo Finance daily close (delayed)"
+      },
+      "prices": {
+        "009816": {
+          "value": 13.67,
+          "date": "2026-11-27",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "00646": {
+          "value": 75.900002,
+          "date": "2026-11-27",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "00713": {
+          "value": 59.75,
+          "date": "2026-11-27",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "VOO": {
+          "value": 658.869995,
+          "date": "2026-11-25",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "NVDA": {
+          "value": 149.300003,
+          "date": "2026-11-25",
+          "source": "Yahoo Finance daily close (delayed)"
+        },
+        "BTC": {
+          "value": 2022709.23165,
+          "date": "2026-11-27",
+          "source": "Coinbase Exchange USD spot · USD/TWD converted",
+          "retrieved_at": "2026-11-27T13:30:22+00:00",
+          "quote_time": "2026-11-27T13:30:20.596423+00:00",
+          "quote_type": "usd_spot_converted",
+          "currency": "TWD",
+          "pair": "btc_twd",
+          "usd_price": 61349.99,
+          "usd_twd": 32.970001,
+          "fx_date": "2026-11-27",
+          "usd_source": "Coinbase Exchange USD spot"
+        },
+        "YUANTA_NEW": {
+          "value": 114.0,
+          "date": "2026-11-27",
+          "source": "MoneyDJ published fund NAV"
+        },
+        "YUANTA_DIV": {
+          "value": 36.61,
+          "date": "2026-11-27",
+          "source": "MoneyDJ published fund NAV"
+        },
+        "FUBON_SP500": {
+          "value": 11.25,
+          "date": "2026-11-25",
+          "source": "富邦投信官方基金淨值 · 106A"
+        },
+        "FUBON_NASDAQ100": {
+          "value": 10.73,
+          "date": "2026-11-25",
+          "source": "富邦投信官方基金淨值 · 107A"
+        },
+        "ETH": {
+          "value": 56589.380016,
+          "date": "2026-11-27",
+          "source": "Coinbase Exchange USD spot · USD/TWD converted",
+          "retrieved_at": "2026-11-27T13:30:22+00:00",
+          "quote_time": "2026-11-27T13:30:20.398531+00:00",
+          "quote_type": "usd_spot_converted",
+          "currency": "TWD",
+          "pair": "eth_twd",
+          "usd_price": 1716.39,
+          "usd_twd": 32.970001,
+          "fx_date": "2026-11-27",
+          "usd_source": "Coinbase Exchange USD spot"
+        },
+        "KO": {
+          "value": 97.589996,
+          "date": "2026-11-25",
+          "source": "Yahoo Finance daily close (delayed)"
+        }
+      },
+      "kind": "latest_available_observation",
+      "note": "Mixed quote dates; NOT verified synchronized closing P&L."
     }
   ]
 }
