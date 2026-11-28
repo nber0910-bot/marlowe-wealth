@@ -1,25 +1,25 @@
 {
-  "updated_at": "2026-11-27T13:42:28+00:00",
+  "updated_at": "2026-11-28T13:31:01+00:00",
   "metrics": {
     "vix": {
-      "value": 26.36,
-      "date": "2026-11-24",
-      "source": "FRED · CBOE VIX",
+      "value": 23.81,
+      "date": "2026-11-27",
+      "source": "Yahoo Finance · CBOE VIX (delayed)",
       "unit": "index"
     },
     "dxy": {
-      "value": 103.958,
+      "value": 104.01,
       "date": "2026-11-27",
       "source": "Yahoo Finance · DX-Y.NYB (delayed)",
       "unit": "index",
-      "change_5d_pct": 0.056
+      "change_5d_pct": 0.106
     },
     "us10y": {
-      "value": 4.91,
-      "date": "2026-11-24",
-      "source": "FRED · US Treasury 10Y",
+      "value": 4.936,
+      "date": "2026-11-27",
+      "source": "Yahoo Finance · CBOE 10Y yield index (delayed)",
       "unit": "%",
-      "change_5d": -0.19
+      "change_5d": -0.116
     },
     "hyspread": {
       "value": 3.72,
@@ -41,5 +41,7 @@
       "sum_5d": -2818.02
     }
   },
-  "errors": {}
+  "errors": {
+    "hyspread": "FRED BAMLH0A0HYM2 unavailable: The read operation timed out | The read operation timed out | The read operation timed out"
+  }
 }
